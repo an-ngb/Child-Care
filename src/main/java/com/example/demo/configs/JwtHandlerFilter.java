@@ -51,7 +51,7 @@ public class JwtHandlerFilter extends OncePerRequestFilter {
             String email = tokenClaims.get("sub").asString();
             Map<String, Object> payloadMap = tokenClaims.get("user").asMap();
             UserDetails userDetails = userDetailsService.loadUserByUsername(email);
-            Payload payload = new Payload(Long.valueOf(payloadMap.get("id").toString()), (String) payloadMap.get("email"), (String) payloadMap.get("role"), Long.valueOf(payloadMap.get("department").toString()));
+            Payload payload = new Payload(Long.valueOf(payloadMap.get("id").toString()), (String) payloadMap.get("email"), (String) payloadMap.get("role"));
             UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(userDetails, payload, userDetails.getAuthorities());
             SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
             filterChain.doFilter(request, response);

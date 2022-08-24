@@ -1,4 +1,4 @@
-package com.example.demo.utils;
+package com.example.demo.dtos;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,8 +9,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Payload {
-    private Long userId;
+public class ChangeUserRoleDto {
     private String email;
-    private String roleName;
+    private String newRole;
 }

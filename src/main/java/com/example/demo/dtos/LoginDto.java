@@ -10,5 +10,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class LoginDto {
-    private String token;
+    private String tokenType;
+    private String accessToken;
+    private String expiredIn;
 }

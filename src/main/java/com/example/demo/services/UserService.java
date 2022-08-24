@@ -1,10 +1,14 @@
 package com.example.demo.services;
 
-import com.example.demo.dtos.LoginDto;
+import com.example.demo.dtos.AbstractResponse;
 import com.example.demo.dtos.LoginRequestDto;
+import com.example.demo.dtos.RegisterRequestDto;
 
 public interface UserService {
 
-    LoginDto login (LoginRequestDto loginRequestDto);
+    AbstractResponse login (LoginRequestDto loginRequestDto);
 
+    AbstractResponse logout(String token);
+
+    AbstractResponse register(RegisterRequestDto registerRequestDto);
 }

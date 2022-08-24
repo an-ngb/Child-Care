@@ -15,9 +15,9 @@ import java.util.Objects;
 @Table(name = "users")
 public class User {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_seq_generator")
-    @SequenceGenerator(name = "user_seq_generator", sequenceName = "users_user_id_seq", allocationSize = 1)
-    @Column(name = "user_id")
+    @SequenceGenerator(name = "userSeqGen", sequenceName = "userSeq", allocationSize = 1)
+    @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="userSeqGen")
+    @Column(name = "users_id")
     private Long id;
 
     @Column(name = "email", nullable = false, unique = true)
@@ -25,9 +25,6 @@ public class User {
 
     @Column(name = "password", nullable = false)
     private String password;
-
-    @Column(name = "display_name", nullable = false)
-    private String displayName;
 
     @Column(name = "full_name", nullable = false)
     private String fullName;
@@ -40,9 +37,6 @@ public class User {
 
     @Column(name = "phone")
     private String phone;
-
-    @Column(name = "national_id")
-    private String nationalId;
 
     @Column(name = "disable")
     private Boolean disable;
@@ -66,13 +60,5 @@ public class User {
     @Override
     public int hashCode() {
         return getClass().hashCode();
-    }
-
-    public User(String displayName, Integer age, Integer gender, String phone, String nationalId) {
-        this.displayName = displayName;
-        this.age = age;
-        this.gender = gender;
-        this.phone = phone;
-        this.nationalId = nationalId;
     }
 }
