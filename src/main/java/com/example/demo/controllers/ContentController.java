@@ -1,8 +1,6 @@
 package com.example.demo.controllers;
 
-import com.example.demo.dtos.AbstractResponse;
-import com.example.demo.dtos.CommentDto;
-import com.example.demo.dtos.PostDto;
+import com.example.demo.dtos.*;
 import com.example.demo.services.PostService;
 import com.example.demo.services.UserService;
 import lombok.RequiredArgsConstructor;
@@ -27,5 +25,30 @@ public class ContentController {
     @PostMapping("/comment")
     public ResponseEntity<AbstractResponse> comment(@RequestBody CommentDto commentDto){
         return ResponseEntity.ok().body(postService.comment(commentDto));
+    }
+
+    @PostMapping("/like")
+    public ResponseEntity<AbstractResponse> like(@RequestBody LikeDto likeDto){
+        return ResponseEntity.ok().body(postService.like(likeDto));
+    }
+
+    @PostMapping("/read/all")
+    public ResponseEntity<AbstractResponse> viewAllPost(){
+        return ResponseEntity.ok().body(postService.viewAllPost());
+    }
+
+    @PostMapping("/read/all/asc")
+    public ResponseEntity<AbstractResponse> viewAllPostAsc(){
+        return ResponseEntity.ok().body(postService.viewAllPostAsc());
+    }
+
+    @PostMapping("/read/all/desc")
+    public ResponseEntity<AbstractResponse> viewAllPostDesc(){
+        return ResponseEntity.ok().body(postService.viewAllPostDesc());
+    }
+
+    @PostMapping("/read/all/sort-by-most-liked")
+    public ResponseEntity<AbstractResponse> viewAllPostWithMostLiked(@RequestBody FilterRequest filterRequest){
+        return ResponseEntity.ok().body(postService.viewMostLikedPost(filterRequest));
     }
 }

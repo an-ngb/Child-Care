@@ -1,5 +1,6 @@
 package com.example.demo.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import org.hibernate.Hibernate;
 
@@ -23,7 +24,14 @@ public class Comment extends AbstractAuditing {
     @Column(name = "comment")
     private String comment;
 
+    @Column(name = "total_comment_like")
+    private Integer totalCommentLike;
+
+    @Column(name = "total_comment_dislike")
+    private Integer totalCommentDislike;
+
     @ManyToOne
+    @JsonIgnore
     @JoinColumn(name = "posts_id", nullable = false)
     private Post post;
 

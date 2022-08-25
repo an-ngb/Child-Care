@@ -1,13 +1,15 @@
 package com.example.demo.services;
 
-import com.example.demo.dtos.AbstractResponse;
-import com.example.demo.dtos.CommentDto;
-import com.example.demo.dtos.EditDto;
-import com.example.demo.dtos.PostDto;
+import com.example.demo.dtos.*;
 
 public interface PostService {
 
     AbstractResponse post(PostDto postDto);
     AbstractResponse edit(EditDto editDto);
     AbstractResponse comment(CommentDto commentDto);
+    AbstractResponse viewAllPost();
+    AbstractResponse viewAllPostAsc();
+    AbstractResponse viewAllPostDesc();
+    AbstractResponse viewMostLikedPost(FilterRequest filterRequest);
+    AbstractResponse like(LikeDto likeDto);
 }

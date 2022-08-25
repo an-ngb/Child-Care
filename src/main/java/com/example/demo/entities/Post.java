@@ -4,9 +4,7 @@ import lombok.*;
 import org.hibernate.Hibernate;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 @Getter
 @Setter
@@ -27,14 +25,17 @@ public class Post extends AbstractAuditing{
     @Column(name = "content", nullable = false)
     private String content;
 
-    @ManyToOne()
-    @JoinColumn(name = "role_id", nullable = false)
-    @ToString.Exclude
-    private Role role;
+    @Column(name = "total_post_like")
+    private Integer totalLike;
 
-    @OneToMany(mappedBy = "comment", fetch = FetchType.EAGER, cascade = CascadeType.ALL )
+    @Column(name = "total_post_dislike")
+    private Integer totalDislike;
+
+    @Column(name = "role_id", nullable = false)
+    private Long roleId;
+
+    @OneToMany(mappedBy = "post", fetch = FetchType.EAGER)
     private List<Comment> comment = new ArrayList<>();
-
 
     @Override
     public boolean equals(Object o) {
