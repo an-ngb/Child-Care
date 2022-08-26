@@ -11,5 +11,7 @@ public interface PostService {
     AbstractResponse viewAllPostAsc();
     AbstractResponse viewAllPostDesc();
     AbstractResponse viewMostLikedPost(FilterRequest filterRequest);
-    AbstractResponse like(LikeDto likeDto);
+    AbstractResponse viewPostByTag(FilterRequest filterRequest);
+    AbstractResponse like(InteractDto interactDto);
+    AbstractResponse dislike(InteractDto interactDto);
 }

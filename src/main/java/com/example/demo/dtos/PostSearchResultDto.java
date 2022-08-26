@@ -15,4 +15,5 @@ public class PostSearchResultDto {
     private Integer totalLike;
     private Integer totalDislike;
     private List<CommentResultDto> commentList;
+    private List<TagDto> tagListDto;
 }

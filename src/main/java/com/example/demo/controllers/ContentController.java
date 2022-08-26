@@ -28,8 +28,13 @@ public class ContentController {
     }
 
     @PostMapping("/like")
-    public ResponseEntity<AbstractResponse> like(@RequestBody LikeDto likeDto){
-        return ResponseEntity.ok().body(postService.like(likeDto));
+    public ResponseEntity<AbstractResponse> like(@RequestBody InteractDto interactDto){
+        return ResponseEntity.ok().body(postService.like(interactDto));
+    }
+
+    @PostMapping("/dislike")
+    public ResponseEntity<AbstractResponse> dislike(@RequestBody InteractDto interactDto){
+        return ResponseEntity.ok().body(postService.dislike(interactDto));
     }
 
     @PostMapping("/read/all")
@@ -50,5 +55,10 @@ public class ContentController {
     @PostMapping("/read/all/sort-by-most-liked")
     public ResponseEntity<AbstractResponse> viewAllPostWithMostLiked(@RequestBody FilterRequest filterRequest){
         return ResponseEntity.ok().body(postService.viewMostLikedPost(filterRequest));
+    }
+
+    @PostMapping("/search")
+    public ResponseEntity<AbstractResponse> viewPostByTag(@RequestBody FilterRequest filterRequest){
+        return ResponseEntity.ok().body(postService.viewPostByTag(filterRequest));
     }
 }

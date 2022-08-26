@@ -1,17 +1,17 @@
 package com.example.demo.specification;
 
 import com.example.demo.constant.ROLE_NAME;
+import com.example.demo.constant.TAGS;
 import com.example.demo.dtos.FilterRequest;
 import com.example.demo.entities.Post;
+import com.example.demo.entities.Post_;
 import com.example.demo.entities.User_;
 import org.apache.logging.log4j.util.Strings;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.util.CollectionUtils;
 
 import javax.persistence.criteria.Predicate;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 public class PostSpecs{
 
@@ -19,25 +19,25 @@ public class PostSpecs{
         return (root, query, builder) -> {
             List<Predicate> conditions = new ArrayList<>();
 
-            List<ROLE_NAME> roleList = Arrays.asList(
-                    ROLE_NAME.DOCTOR);
+            List<TAGS> tagsList = Arrays.asList(
+                    TAGS.DISCUSS,
+                    TAGS.EXPERIENCES,
+                    TAGS.INFORMATION);
 
-            if (!Strings.isEmpty(obj.getRoleName()) && roleList.contains(ROLE_NAME.valueOf(obj.getRoleName().toUpperCase()))) {
-                conditions.add(builder.equal(root.get(User_.ROLE), ROLE_NAME.valueOf(obj.getRoleName())));
-            } else if (!CollectionUtils.isEmpty(obj.getRoleNameList()) && obj.getRoleNameList() != null) {
-                List<ROLE_NAME> checkRoleList = new ArrayList<>();
-                obj.getRoleNameList().forEach(item -> {
-                            if (roleList.contains(ROLE_NAME.valueOf(item))) {
-                                checkRoleList.add(ROLE_NAME.valueOf(item));
+            if (!CollectionUtils.isEmpty(obj.getFilterList()) && obj.getFilterList() != null) {
+                Set<TAGS> checkTagList = new HashSet<>();
+                obj.getFilterList().forEach(item -> {
+                            if (tagsList.contains(TAGS.valueOf(item))) {
+                                checkTagList.add(TAGS.valueOf(item));
                             }
                         }
                 );
-                conditions.add(root.get(User_.ROLE).in(checkRoleList));
+                conditions.add(root.get(Post_.TAGS_LIST).in(checkTagList));
             } else {
-                conditions.add(root.get(User_.ROLE).in(roleList));
+                conditions.add(root.get(Post_.TAGS_LIST).in(tagsList));
             }
 
-            query.orderBy(builder.desc(root.get(User_.TOTAL_LIKE)));
+            query.orderBy(builder.desc(root.get(Post_.TOTAL_LIKE)));
             return builder.and(conditions.toArray(new Predicate[0]));
         };
     }

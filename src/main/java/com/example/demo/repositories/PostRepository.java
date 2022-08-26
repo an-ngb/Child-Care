@@ -14,6 +14,7 @@ public interface PostRepository extends AbstractRepository<Post, Long>{
     List<Post> findAllByOrderByIdAsc();
     List<Post> findAllByOrderByIdDesc();
     List<Post> findAllByRoleIdOrderByTotalLikeAsc(Long id);
+    List<Post> findAllByCreatedBy(String email);
 
     @Override
     @EntityGraph(attributePaths = {"comment"})

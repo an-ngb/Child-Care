@@ -3,13 +3,12 @@ package com.example.demo.services.impl;
 import com.example.demo.dtos.*;
 import com.example.demo.entities.Comment;
 import com.example.demo.entities.Post;
+import com.example.demo.entities.Tag;
 import com.example.demo.entities.User;
 import com.example.demo.exceptions.NotFoundException;
-import com.example.demo.repositories.CommentRepository;
-import com.example.demo.repositories.PostRepository;
-import com.example.demo.repositories.RoleRepository;
-import com.example.demo.repositories.UserRepository;
+import com.example.demo.repositories.*;
 import com.example.demo.services.PostService;
+import com.example.demo.specification.PostSpecs;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
@@ -34,6 +33,7 @@ public class PostServiceImpl implements PostService {
     private final CommentRepository commentRepository;
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
+    private final TagRepository tagRepository;
 
     public static String[] getNullPropertyNames(Object source) {
         final BeanWrapper src = new BeanWrapperImpl(source);
@@ -55,7 +55,26 @@ public class PostServiceImpl implements PostService {
         post.setTitle(postDto.getTitle());
         post.setContent(postDto.getContent());
         post.setRoleId(user.getRole().getId());
+        Set<Tag> tagList = new HashSet<>();
+        if(postDto.getTagList() != null){
+            for (String s : postDto.getTagList()) {
+                Tag tag = tagRepository.findByTagName(s);
+                if (tag != null){
+                    tagList.add(tag);
+                }
+            }
+        }
+        post.setTagsList(tagList);
         postRepository.save(post);
+
+        Integer prevPosts = user.getTotalPost();
+        if (prevPosts != null) {
+            user.setTotalPost(prevPosts + 1);
+        } else {
+            user.setTotalPost(0);
+        }
+        userRepository.save(user);
+
         return new AbstractResponse(post);
     }
 
@@ -82,6 +101,16 @@ public class PostServiceImpl implements PostService {
         commentRepository.save(comment);
         post.getComment().add(comment);
         postRepository.save(post);
+
+        User user = userRepository.findByEmail(post.getCreatedBy());
+        Integer prevComments = user.getTotalComment();
+        if (prevComments != null) {
+            user.setTotalComment(prevComments + 1);
+        } else {
+            user.setTotalComment(0);
+        }
+        userRepository.save(user);
+
         return new AbstractResponse();
     }
 
@@ -106,6 +135,18 @@ public class PostServiceImpl implements PostService {
     @Override
     public AbstractResponse viewMostLikedPost(FilterRequest filterRequest) {
         List<Post> postList = postRepository.findAllByRoleIdOrderByTotalLikeAsc(filterRequest.getRoleId());
+        List<PostSearchResultDto> postSearchResultDtoList = convertPostToPostDto(postList);
+        return new AbstractResponse(postSearchResultDtoList);
+    }
+
+    @Override
+    public AbstractResponse viewPostByTag(FilterRequest filterRequest) {
+        List<Post> postList = postRepository.findAll(PostSpecs.search(filterRequest));
+        List<PostSearchResultDto> postSearchResultDtoList = convertPostToPostDto(postList);
+        return new AbstractResponse(postSearchResultDtoList);
+    }
+
+    public List<PostSearchResultDto> convertPostToPostDto(List<Post> postList) {
         List<PostSearchResultDto> data = new ArrayList<>();
         for (Post post : postList) {
             PostSearchResultDto postSearchResultDto = new PostSearchResultDto();
@@ -145,22 +186,71 @@ public class PostServiceImpl implements PostService {
                 });
             }
             postSearchResultDto.setCommentList(commentResultDtoList);
+
+            Set<Tag> tagList = post.getTagsList();
+            List<TagDto> tagDtoList = new ArrayList<>();
+            if(!CollectionUtils.isEmpty(tagList)){
+                tagList.forEach(item -> {
+                    TagDto tagDto = new TagDto();
+                    tagDto.setTag(item.getTagName());
+                    tagDtoList.add(tagDto);
+                });
+            }
+            postSearchResultDto.setTagListDto(tagDtoList);
+
             data.add(postSearchResultDto);
         }
-        return new AbstractResponse(data);
+        return data;
     }
 
     @Override
-    public AbstractResponse like(LikeDto likeDto) {
-        Post post = postRepository.findPostById(likeDto.getId());
+    public AbstractResponse like(InteractDto interactDto) {
+        Post post = postRepository.findPostById(interactDto.getId());
         if (post == null) {
             throw new NotFoundException();
         }
+
+        //Prev likes of post.
         Integer prevLikes = post.getTotalLike();
         if (prevLikes == null) {
             prevLikes = 0;
         }
-        post.setTotalLike(prevLikes += 1);
+        post.setTotalLike(prevLikes + 1);
+
+        //Prev likes of author.
+        User user = userRepository.findByEmail(post.getCreatedBy());
+        Integer prevLikesAuthor = user.getTotalLike();
+        if (prevLikesAuthor == null) {
+            prevLikesAuthor = 0;
+        }
+        user.setTotalLike(prevLikesAuthor + 1);
+        userRepository.save(user);
+        postRepository.save(post);
+        return new AbstractResponse();
+    }
+
+    @Override
+    public AbstractResponse dislike(InteractDto interactDto) {
+        Post post = postRepository.findPostById(interactDto.getId());
+        if (post == null) {
+            throw new NotFoundException();
+        }
+
+        //Prev dislikes of post.
+        Integer prevDislikes = post.getTotalDislike();
+        if (prevDislikes == null) {
+            prevDislikes = 0;
+        }
+        post.setTotalDislike(prevDislikes + 1);
+
+        //Prev likes of author.
+        User user = userRepository.findByEmail(post.getCreatedBy());
+        Integer prevDislikesAuthor = user.getTotalDislike();
+        if (prevDislikesAuthor == null) {
+            prevDislikesAuthor = 0;
+        }
+        user.setTotalDislike(prevDislikesAuthor + 1);
+        userRepository.save(user);
         postRepository.save(post);
         return new AbstractResponse();
     }

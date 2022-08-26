@@ -16,5 +16,6 @@ public class FilterRequest extends PagingRequest {
     private String roleName;
     private Long roleId;
     private String filter;
+    private List<String> filterList;
     private Set<String> roleNameList = new HashSet<>();
 }

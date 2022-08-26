@@ -2,6 +2,8 @@ package com.example.demo.entities;
 
 import lombok.*;
 import org.hibernate.Hibernate;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 
 import javax.persistence.*;
 import java.util.*;
@@ -36,6 +38,10 @@ public class Post extends AbstractAuditing{
 
     @OneToMany(mappedBy = "post", fetch = FetchType.EAGER)
     private List<Comment> comment = new ArrayList<>();
+
+//    @LazyCollection(LazyCollectionOption.FALSE)
+    @OneToMany(fetch = FetchType.EAGER)
+    private Set<Tag> tagsList;
 
     @Override
     public boolean equals(Object o) {

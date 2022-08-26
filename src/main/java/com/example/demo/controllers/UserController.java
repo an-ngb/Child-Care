@@ -5,10 +5,7 @@ import com.example.demo.dtos.RegisterRequestDto;
 import com.example.demo.services.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/users")
@@ -19,5 +16,10 @@ public class UserController {
     @PostMapping("/register")
     public ResponseEntity<AbstractResponse> register(@RequestBody RegisterRequestDto registerRequestDto) {
         return ResponseEntity.ok().body(userService.register(registerRequestDto));
+    }
+
+    @PostMapping("/profile/{id}")
+    public ResponseEntity<AbstractResponse> getUserProfile(@PathVariable("id") String id) {
+        return ResponseEntity.ok().body(userService.getUserProfile(id));
     }
 }

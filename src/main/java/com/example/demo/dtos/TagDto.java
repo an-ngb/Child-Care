@@ -9,7 +9,6 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class LikeDto {
-    private Long id;
-    private String content;
+public class TagDto {
+    private String tag;
 }

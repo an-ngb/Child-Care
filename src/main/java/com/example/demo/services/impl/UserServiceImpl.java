@@ -2,15 +2,15 @@ package com.example.demo.services.impl;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
-import com.example.demo.dtos.AbstractResponse;
-import com.example.demo.dtos.LoginDto;
-import com.example.demo.dtos.LoginRequestDto;
-import com.example.demo.dtos.RegisterRequestDto;
-import com.example.demo.entities.Role;
+import com.example.demo.dtos.*;
+import com.example.demo.entities.Comment;
+import com.example.demo.entities.Post;
 import com.example.demo.entities.User;
 import com.example.demo.exceptions.ConflictException;
 import com.example.demo.exceptions.ErrorCode;
+import com.example.demo.exceptions.NotFoundException;
 import com.example.demo.exceptions.UnauthorizedException;
+import com.example.demo.repositories.PostRepository;
 import com.example.demo.repositories.RoleRepository;
 import com.example.demo.repositories.UserRepository;
 import com.example.demo.services.UserService;
@@ -26,10 +26,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Properties;
+import java.util.*;
+import java.util.concurrent.atomic.AtomicReference;
 
 import static com.example.demo.utils.Utils.loadProperties;
 
@@ -43,6 +41,8 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final RoleRepository roleRepository;
+    private final PostRepository postRepository;
+    private final PostServiceImpl postServiceImpl;
 
     public static String generateToken(Map<String, Object> payload, org.springframework.security.core.userdetails.User user) {
         Properties prop = loadProperties("jwt.setting.properties");
@@ -132,5 +132,50 @@ public class UserServiceImpl implements UserService {
         user = userRepository.save(user);
 
         return new AbstractResponse();
+    }
+
+    @Override
+    public AbstractResponse getUserProfile(String id) {
+        User user = userRepository.findUserById(Long.valueOf(id));
+        if (user == null) {
+            throw new NotFoundException();
+        }
+        UserProfileDto userProfileDto = new UserProfileDto();
+        userProfileDto.setId(user.getId());
+        userProfileDto.setEmail(user.getEmail());
+        userProfileDto.setFullName(user.getFullName());
+        userProfileDto.setAge(user.getAge());
+        userProfileDto.setGender(user.getGender());
+        userProfileDto.setPhone(user.getPhone());
+        List<Post> postList = postRepository.findAllByCreatedBy(user.getEmail());
+        int totalLike = 0;
+        int totalDislike = 0;
+        int totalComment = 0;
+        for(Post post : postList){
+            if(post.getTotalLike() != null){
+                totalLike += post.getTotalLike();
+            } else {
+                totalLike = 0;
+            }
+            if(post.getTotalDislike() != null){
+                totalDislike += post.getTotalDislike();
+            } else {
+                totalDislike = 0;
+            }
+            List<Comment> commentList = post.getComment();
+            if(commentList != null){
+                totalComment += commentList.size();
+            } else {
+                totalComment = 0;
+            }
+        }
+        userProfileDto.setTotalLike(totalLike);
+        userProfileDto.setTotalDislike(totalDislike);
+        userProfileDto.setTotalPost(postList.size());
+        userProfileDto.setTotalComment(totalComment);
+        List<PostSearchResultDto> postSearchResultDtoList;
+        postSearchResultDtoList = postServiceImpl.convertPostToPostDto(postList);
+        userProfileDto.setPostSearchResultDtoList(postSearchResultDtoList);
+        return new AbstractResponse(userProfileDto);
     }
 }
