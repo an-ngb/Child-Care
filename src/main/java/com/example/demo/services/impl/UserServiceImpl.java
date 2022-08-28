@@ -14,6 +14,7 @@ import com.example.demo.repositories.PostRepository;
 import com.example.demo.repositories.RoleRepository;
 import com.example.demo.repositories.UserRepository;
 import com.example.demo.services.UserService;
+import com.sun.jdi.AbsentInformationException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -43,6 +44,7 @@ public class UserServiceImpl implements UserService {
     private final RoleRepository roleRepository;
     private final PostRepository postRepository;
     private final PostServiceImpl postServiceImpl;
+    private final SessionServiceImpl sessionService;
 
     public static String generateToken(Map<String, Object> payload, org.springframework.security.core.userdetails.User user) {
         Properties prop = loadProperties("jwt.setting.properties");
@@ -75,7 +77,11 @@ public class UserServiceImpl implements UserService {
         User detectedUser = userRepository.findByEmail(email);
 
         if (detectedUser == null || detectedUser.getDisable()) {
-            throw new UnauthorizedException("UNAUTHORIZED", "USER_NOT_FOUND_OR_DISABLED");
+            return new AbstractResponse("FAILED", "FORBIDDEN", 400);
+        }
+
+        if (detectedUser.getToken() != null) {
+            return new AbstractResponse("FAILED", "ALREADY_LOGGED_IN", 400, detectedUser.getToken());
         }
 
         Map<String, Object> payload = new HashMap<>();
@@ -103,7 +109,9 @@ public class UserServiceImpl implements UserService {
         token = token.split(" ")[1];
         User user = userRepository.findByToken(token);
         if (user == null) {
-            throw new UnauthorizedException("401", "Token expired.");
+            return new AbstractResponse("FAILED", "TOKEN_EXPIRED", 400);
+        } else if (user.getToken() == null) {
+            return new AbstractResponse("FAILED", "TOKEN_EXPIRED", 400);
         }
         user.setToken(null);
         userRepository.save(user);
@@ -116,7 +124,7 @@ public class UserServiceImpl implements UserService {
         User foundUser = userRepository.findByEmail(registerRequestDto.getEmail().trim());
 
         if (foundUser != null) {
-            throw new ConflictException(ErrorCode.EMAIL_EXIST, "Email existed.");
+            return new AbstractResponse("FAILED", "EMAIL_EXISTED", 400);
         }
 
         User user = new User();
@@ -136,6 +144,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public AbstractResponse getUserProfile(String id) {
+        if (sessionService.isTokenExpire()) {
+            return new AbstractResponse("FAILED", "TOKEN EXPIRED", 400);
+        }
         User user = userRepository.findUserById(Long.valueOf(id));
         if (user == null) {
             throw new NotFoundException();
@@ -151,19 +162,19 @@ public class UserServiceImpl implements UserService {
         int totalLike = 0;
         int totalDislike = 0;
         int totalComment = 0;
-        for(Post post : postList){
-            if(post.getTotalLike() != null){
+        for (Post post : postList) {
+            if (post.getTotalLike() != null) {
                 totalLike += post.getTotalLike();
             } else {
                 totalLike = 0;
             }
-            if(post.getTotalDislike() != null){
+            if (post.getTotalDislike() != null) {
                 totalDislike += post.getTotalDislike();
             } else {
                 totalDislike = 0;
             }
             List<Comment> commentList = post.getComment();
-            if(commentList != null){
+            if (commentList != null) {
                 totalComment += commentList.size();
             } else {
                 totalComment = 0;

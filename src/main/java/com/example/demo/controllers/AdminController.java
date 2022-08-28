@@ -17,8 +17,13 @@ public class AdminController {
 
     private final AdminService adminService;
 
-    @PostMapping("/change-user-role")
+    @PostMapping("/role/change-user-role")
     public ResponseEntity<AbstractResponse> changeUserRole(@RequestBody ChangeUserRoleDto changeUserRoleDto) {
         return ResponseEntity.ok().body(adminService.changeUserRole(changeUserRoleDto));
+    }
+
+    @PostMapping("/user/all")
+    public ResponseEntity<AbstractResponse> getAllUser() {
+        return ResponseEntity.ok().body(adminService.getAllUser());
     }
 }

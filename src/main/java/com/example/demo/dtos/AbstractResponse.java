@@ -44,6 +44,19 @@ public class AbstractResponse {
         this.message_code = message_code;
     }
 
+    public AbstractResponse(String status, String message, int message_code) {
+        this.status = status;
+        this.message = message;
+        this.message_code = message_code;
+    }
+
+    public AbstractResponse(String status, String message, int message_code, Object data) {
+        this.status = status;
+        this.message = message;
+        this.message_code = message_code;
+        this.data = data;
+    }
+
     public AbstractResponse(String message, Object data) {
         this.message = message;
         this.data = data;

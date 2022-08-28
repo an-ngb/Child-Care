@@ -6,6 +6,7 @@ import com.example.demo.entities.Post;
 import com.example.demo.entities.Tag;
 import com.example.demo.entities.User;
 import com.example.demo.exceptions.NotFoundException;
+import com.example.demo.exceptions.UnauthorizedException;
 import com.example.demo.repositories.*;
 import com.example.demo.services.PostService;
 import com.example.demo.specification.PostSpecs;
@@ -34,6 +35,7 @@ public class PostServiceImpl implements PostService {
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final TagRepository tagRepository;
+    private final SessionServiceImpl sessionService;
 
     public static String[] getNullPropertyNames(Object source) {
         final BeanWrapper src = new BeanWrapperImpl(source);
@@ -49,6 +51,11 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public AbstractResponse post(PostDto postDto) {
+
+        if(sessionService.isTokenExpire()){
+            return new AbstractResponse("FAILED", "TOKEN_EXPIRED", 400);
+        }
+
         Post post = new Post();
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User user = userRepository.findByEmail(authentication.getName());
@@ -80,6 +87,9 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public AbstractResponse edit(EditDto editDto) {
+        if(sessionService.isTokenExpire()){
+            return new AbstractResponse("FAILED", "TOKEN_EXPIRED", 400);
+        }
         Post post = postRepository.findById(editDto.getId()).orElse(null);
         if (post == null) {
             throw new NotFoundException();
@@ -91,6 +101,9 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public AbstractResponse comment(CommentDto commentDto) {
+        if(sessionService.isTokenExpire()){
+            return new AbstractResponse("FAILED", "TOKEN_EXPIRED", 400);
+        }
         Post post = postRepository.findPostById(commentDto.getId());
         if (post == null) {
             throw new NotFoundException();
@@ -116,24 +129,36 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public AbstractResponse viewAllPost() {
+        if(sessionService.isTokenExpire()){
+            return new AbstractResponse("FAILED", "TOKEN_EXPIRED", 400);
+        }
         List<Post> list = postRepository.findAll();
         return new AbstractResponse(list);
     }
 
     @Override
     public AbstractResponse viewAllPostAsc() {
+        if(sessionService.isTokenExpire()){
+            return new AbstractResponse("FAILED", "TOKEN_EXPIRED", 400);
+        }
         List<Post> list = postRepository.findAllByOrderByIdAsc();
         return new AbstractResponse(list);
     }
 
     @Override
     public AbstractResponse viewAllPostDesc() {
+        if(sessionService.isTokenExpire()){
+            return new AbstractResponse("FAILED", "TOKEN_EXPIRED", 400);
+        }
         List<Post> list = postRepository.findAllByOrderByIdDesc();
         return new AbstractResponse(list);
     }
 
     @Override
     public AbstractResponse viewMostLikedPost(FilterRequest filterRequest) {
+        if(sessionService.isTokenExpire()){
+            return new AbstractResponse("FAILED", "TOKEN_EXPIRED", 400);
+        }
         List<Post> postList = postRepository.findAllByRoleIdOrderByTotalLikeAsc(filterRequest.getRoleId());
         List<PostSearchResultDto> postSearchResultDtoList = convertPostToPostDto(postList);
         return new AbstractResponse(postSearchResultDtoList);
@@ -141,6 +166,9 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public AbstractResponse viewPostByTag(FilterRequest filterRequest) {
+        if(sessionService.isTokenExpire()){
+            return new AbstractResponse("FAILED", "TOKEN_EXPIRED", 400);
+        }
         List<Post> postList = postRepository.findAll(PostSpecs.search(filterRequest));
         List<PostSearchResultDto> postSearchResultDtoList = convertPostToPostDto(postList);
         return new AbstractResponse(postSearchResultDtoList);
@@ -205,6 +233,9 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public AbstractResponse like(InteractDto interactDto) {
+        if(sessionService.isTokenExpire()){
+            return new AbstractResponse("FAILED", "TOKEN_EXPIRED", 400);
+        }
         Post post = postRepository.findPostById(interactDto.getId());
         if (post == null) {
             throw new NotFoundException();
@@ -231,6 +262,9 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public AbstractResponse dislike(InteractDto interactDto) {
+        if(sessionService.isTokenExpire()){
+            return new AbstractResponse("FAILED", "TOKEN_EXPIRED", 400);
+        }
         Post post = postRepository.findPostById(interactDto.getId());
         if (post == null) {
             throw new NotFoundException();
