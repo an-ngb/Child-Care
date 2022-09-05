@@ -1,19 +1,10 @@
 package com.example.demo;
 
-import com.example.demo.entities.Comment;
-import com.example.demo.entities.Post;
-import com.example.demo.entities.Role;
-import com.example.demo.entities.User;
-import com.example.demo.repositories.PostRepository;
-import com.example.demo.repositories.RoleRepository;
-import com.example.demo.repositories.UserRepository;
-import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.domain.AuditorAware;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 @SpringBootApplication
 @EnableJpaAuditing(auditorAwareRef = "auditorProvider")

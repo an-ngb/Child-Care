@@ -9,8 +9,6 @@ public interface UserService {
     AbstractResponse login (LoginRequestDto loginRequestDto);
 
     AbstractResponse logout(String token);
-
     AbstractResponse register(RegisterRequestDto registerRequestDto);
-
-    AbstractResponse getUserProfile(String id);
+    AbstractResponse getUserProfile(Integer id);
 }

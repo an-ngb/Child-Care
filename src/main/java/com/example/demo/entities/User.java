@@ -1,90 +1,49 @@
 package com.example.demo.entities;
 
-import lombok.*;
-import org.hibernate.Hibernate;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
-import java.util.Objects;
+import java.time.Instant;
 
+@Entity
 @Getter
 @Setter
-@ToString
 @NoArgsConstructor
-@AllArgsConstructor
-@Entity
 @Table(name = "users")
-public class User {
-    @Id
-    @SequenceGenerator(name = "userSeqGen", sequenceName = "userSeq", allocationSize = 1)
-    @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="userSeqGen")
-    @Column(name = "users_id")
-    private Long id;
+public class User{
 
-    @Column(name = "email", nullable = false, unique = true)
+    @Id
+    @SequenceGenerator(name = "userSeqGen", sequenceName = "userSeq")
+    @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="userSeqGen")
+    @Column(name = "id", nullable = false)
+    private Integer id;
+
+    @Column(name = "email")
     private String email;
 
-    @Column(name = "password", nullable = false)
+    @Column(name = "password")
     private String password;
-
-    @Column(name = "full_name", nullable = false)
-    private String fullName;
-
-    @Column(name = "age")
-    private Integer age;
-
-    @Column(name = "gender")
-    private Integer gender;
-
-    @Column(name = "phone")
-    private String phone;
-
-    @Column(name = "disable")
-    private Boolean disable;
-
-    @Column(name = "total_like")
-    private Integer totalLike;
-
-    @Column(name = "total_dislike")
-    private Integer totalDislike;
-
-    @Column(name = "total_comment")
-    private Integer totalComment;
-
-    @Column(name = "total_post")
-    private Integer totalPost;
-
-    @Column(name = "trust")
-    private Double trust;
-
-    @ManyToOne()
-    @JoinColumn(name = "role_id", nullable = false)
-    @ToString.Exclude
-    private Role role;
 
     @Column(name = "token")
     private String token;
 
-    public User(String email, String password, String fullName, Integer age, Integer gender, String phone, Role role) {
-        this.email = email;
-        this.password = password;
-        this.fullName = fullName;
-        this.age = age;
-        this.gender = gender;
-        this.phone = phone;
-        this.role = role;
-        this.setDisable(false);
-    }
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "role_id")
+    private Role role;
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
-        User user = (User) o;
-        return id != null && Objects.equals(id, user.id);
-    }
+    @Column(name = "is_active")
+    private Boolean isActive = false;
 
-    @Override
-    public int hashCode() {
-        return getClass().hashCode();
-    }
+    @CreationTimestamp
+    @Column(name = "created_at", nullable = false, updatable = false)
+    protected Instant createdAt;
+
+    @UpdateTimestamp
+    @Column(name = "updated_at", nullable = false)
+    protected Instant updatedAt;
 }

@@ -19,7 +19,7 @@ public class UserController {
     }
 
     @PostMapping("/profile/{id}")
-    public ResponseEntity<AbstractResponse> getUserProfile(@PathVariable("id") String id) {
+    public ResponseEntity<AbstractResponse> getUserProfile(@PathVariable("id") Integer id) {
         return ResponseEntity.ok().body(userService.getUserProfile(id));
     }
 

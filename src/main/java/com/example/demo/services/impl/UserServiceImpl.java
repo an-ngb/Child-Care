@@ -3,18 +3,12 @@ package com.example.demo.services.impl;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.example.demo.dtos.*;
-import com.example.demo.entities.Comment;
 import com.example.demo.entities.Post;
+import com.example.demo.entities.Reaction;
 import com.example.demo.entities.User;
-import com.example.demo.exceptions.ConflictException;
-import com.example.demo.exceptions.ErrorCode;
-import com.example.demo.exceptions.NotFoundException;
-import com.example.demo.exceptions.UnauthorizedException;
-import com.example.demo.repositories.PostRepository;
-import com.example.demo.repositories.RoleRepository;
-import com.example.demo.repositories.UserRepository;
+import com.example.demo.entities.UserProfile;
+import com.example.demo.repositories.*;
 import com.example.demo.services.UserService;
-import com.sun.jdi.AbsentInformationException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -28,7 +22,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
-import java.util.concurrent.atomic.AtomicReference;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import static com.example.demo.utils.Utils.loadProperties;
 
@@ -40,6 +34,8 @@ public class UserServiceImpl implements UserService {
     private final AuthenticationManager authenticationManager;
     private final UserDetailsService userDetailsService;
     private final UserRepository userRepository;
+    private final UserProfileRepository userProfileRepository;
+    private final ReactionRepository reactionRepository;
     private final PasswordEncoder passwordEncoder;
     private final RoleRepository roleRepository;
     private final PostRepository postRepository;
@@ -76,7 +72,7 @@ public class UserServiceImpl implements UserService {
 
         User detectedUser = userRepository.findByEmail(email);
 
-        if (detectedUser == null || detectedUser.getDisable()) {
+        if (detectedUser == null || detectedUser.getIsActive()) {
             return new AbstractResponse("FAILED", "FORBIDDEN", 400);
         }
 
@@ -104,7 +100,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public AbstractResponse logout(String token) {
         if (!token.startsWith("Bearer")) {
-            throw new IllegalArgumentException("Missing Bearer prefix");
+            return new AbstractResponse("FAILED", "MISSING_BEARER_PREFIX", 400);
         }
         token = token.split(" ")[1];
         User user = userRepository.findByToken(token);
@@ -130,63 +126,39 @@ public class UserServiceImpl implements UserService {
         User user = new User();
 
         user.setEmail(registerRequestDto.getEmail());
-        user.setFullName(registerRequestDto.getFullName());
-        user.setPhone(registerRequestDto.getPhone());
         user.setPassword(passwordEncoder.encode(registerRequestDto.getPassword()));
-        user.setAge(registerRequestDto.getAge());
-        user.setGender(registerRequestDto.getGender());
-        user.setRole(roleRepository.findRoleById(registerRequestDto.getRole()));
-        user.setDisable(registerRequestDto.getDisable());
+        user.setRole(roleRepository.findRoleById(3));
         user = userRepository.save(user);
+
+        UserProfile userProfile = new UserProfile(user, registerRequestDto.getFullName(), registerRequestDto.getAddress(), registerRequestDto.getAge(), registerRequestDto.getGender(), registerRequestDto.getPhone());
+
+        userProfileRepository.save(userProfile);
 
         return new AbstractResponse();
     }
 
     @Override
-    public AbstractResponse getUserProfile(String id) {
+    public AbstractResponse getUserProfile(Integer id) {
         if (sessionService.isTokenExpire()) {
-            return new AbstractResponse("FAILED", "TOKEN EXPIRED", 400);
+            return new AbstractResponse("FAILED", "TOKEN_EXPIRED", 400);
         }
         User user = userRepository.findUserById(Long.valueOf(id));
-        if (user == null) {
-            throw new NotFoundException();
+        if(user == null){
+            return new AbstractResponse("FAILED", "USER_NOT_FOUND", 404);
         }
+        UserProfile userProfile = userProfileRepository.findByUser(user);
+
         UserProfileDto userProfileDto = new UserProfileDto();
-        userProfileDto.setId(user.getId());
+        userProfileDto.setId(user.getId().longValue());
         userProfileDto.setEmail(user.getEmail());
-        userProfileDto.setFullName(user.getFullName());
-        userProfileDto.setAge(user.getAge());
-        userProfileDto.setGender(user.getGender());
-        userProfileDto.setPhone(user.getPhone());
-        List<Post> postList = postRepository.findAllByCreatedBy(user.getEmail());
-        int totalLike = 0;
-        int totalDislike = 0;
-        int totalComment = 0;
-        for (Post post : postList) {
-            if (post.getTotalLike() != null) {
-                totalLike += post.getTotalLike();
-            } else {
-                totalLike = 0;
-            }
-            if (post.getTotalDislike() != null) {
-                totalDislike += post.getTotalDislike();
-            } else {
-                totalDislike = 0;
-            }
-            List<Comment> commentList = post.getComment();
-            if (commentList != null) {
-                totalComment += commentList.size();
-            } else {
-                totalComment = 0;
-            }
-        }
-        userProfileDto.setTotalLike(totalLike);
-        userProfileDto.setTotalDislike(totalDislike);
-        userProfileDto.setTotalPost(postList.size());
-        userProfileDto.setTotalComment(totalComment);
+        userProfileDto.setFullName(userProfile.getFullName());
+        userProfileDto.setAge(userProfile.getAge());
+        userProfileDto.setGender(userProfile.getGender());
+        userProfileDto.setPhone(userProfile.getPhone());
+        List<Post> postList = postRepository.findAllByUserId(user.getId());
         List<PostSearchResultDto> postSearchResultDtoList;
-        postSearchResultDtoList = postServiceImpl.convertPostToPostDto(postList);
-        userProfileDto.setPostSearchResultDtoList(postSearchResultDtoList);
+//        postSearchResultDtoList = postServiceImpl.convertPostToPostDto(postList);
+//        userProfileDto.setPostSearchResultDtoList(postSearchResultDtoList);
         return new AbstractResponse(userProfileDto);
     }
 }

@@ -26,6 +26,8 @@ public class RegisterRequestDto {
 
     private String fullName;
 
+    private String address;
+
     @Max(65)
     @Min(18)
     private Integer age;
@@ -40,6 +42,4 @@ public class RegisterRequestDto {
     private String phone;
 
     private Boolean disable = false;
-
-    private Long role = 3L;
 }
