@@ -3,10 +3,7 @@ package com.example.demo.services.impl;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.example.demo.dtos.*;
-import com.example.demo.entities.Post;
-import com.example.demo.entities.Reaction;
-import com.example.demo.entities.User;
-import com.example.demo.entities.UserProfile;
+import com.example.demo.entities.*;
 import com.example.demo.repositories.*;
 import com.example.demo.services.UserService;
 import lombok.RequiredArgsConstructor;
@@ -35,6 +32,7 @@ public class UserServiceImpl implements UserService {
     private final UserDetailsService userDetailsService;
     private final UserRepository userRepository;
     private final UserProfileRepository userProfileRepository;
+    private final GroupPostRepository groupPostRepository;
     private final ReactionRepository reactionRepository;
     private final PasswordEncoder passwordEncoder;
     private final RoleRepository roleRepository;
@@ -155,7 +153,7 @@ public class UserServiceImpl implements UserService {
         userProfileDto.setAge(userProfile.getAge());
         userProfileDto.setGender(userProfile.getGender());
         userProfileDto.setPhone(userProfile.getPhone());
-        List<Post> postList = postRepository.findAllByUserId(user.getId());
+        List<GroupPost> groupPostList = groupPostRepository.findAllByUserId(user.getId());
         List<PostSearchResultDto> postSearchResultDtoList;
 //        postSearchResultDtoList = postServiceImpl.convertPostToPostDto(postList);
 //        userProfileDto.setPostSearchResultDtoList(postSearchResultDtoList);

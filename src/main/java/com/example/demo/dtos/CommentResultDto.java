@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.Instant;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -12,6 +14,7 @@ import lombok.Setter;
 public class CommentResultDto {
     private Long id;
     private String content;
-    private Integer totalLike;
-    private Integer totalDislike;
+    private String createdBy;
+    private Instant createdAt;
+    private Instant updatedAt;
 }

@@ -8,7 +8,7 @@ import java.util.List;
 @Getter
 @Setter
 public class PostSearchResultDto {
-    private Long id;
+    private Integer id;
     private String title;
     private String content;
     private String doctorName;

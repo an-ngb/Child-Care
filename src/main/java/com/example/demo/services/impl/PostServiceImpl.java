@@ -1,6 +1,8 @@
 package com.example.demo.services.impl;
 
+import com.example.demo.dtos.CommentResultDto;
 import com.example.demo.dtos.PostSearchResultDto;
+import com.example.demo.entities.GroupPost;
 import com.example.demo.entities.Post;
 import com.example.demo.entities.User;
 import com.example.demo.repositories.*;
@@ -146,18 +148,17 @@ public class PostServiceImpl implements PostService {
 ////        return new AbstractResponse(postSearchResultDtoList);
 ////    }
 //
-    public List<PostSearchResultDto> convertPostToPostDto(List<Post> postList) {
+    public List<PostSearchResultDto> convertPostToPostDto(List<GroupPost> groupPostList) {
         List<PostSearchResultDto> data = new ArrayList<>();
-        for (Post post : postList) {
+        for (GroupPost groupPost : groupPostList) {
             PostSearchResultDto postSearchResultDto = new PostSearchResultDto();
-            User user = userRepository.findByEmail(post.getCreatedBy());
-            postSearchResultDto.setId(post.getId().longValue());
-            postSearchResultDto.setTitle(post.getGroupPost().getTitle());
-            postSearchResultDto.setContent(post.getContent());
-
+            User user = userRepository.findByEmail(groupPost.getCreatedBy());
+            postSearchResultDto.setId(groupPost.getId());
+            postSearchResultDto.setTitle(groupPost.getTitle());
+            postSearchResultDto.setContent(postRepository.findByGroupPost(groupPost).get(0).getContent());
             postSearchResultDto.setDoctorName(userProfileRepository.findByUser(user).getFullName());
-//            List<Post> commentList = postRepository.findByGroupPost(post);
-//            List<CommentResultDto> commentResultDtoList = new ArrayList<>();
+            List<Post> commentList = postRepository.findByGroupPost(groupPost);
+            List<CommentResultDto> commentResultDtoList = new ArrayList<>();
 //            if (!CollectionUtils.isEmpty(commentList)) {
 //                commentList.forEach(item -> {
 //                    CommentResultDto commentResultDto = new CommentResultDto();
@@ -190,7 +191,7 @@ public class PostServiceImpl implements PostService {
 //            postSearchResultDto.setTagListDto(tagDtoList);
 //
 //            data.add(postSearchResultDto);
-//        }
+        }
         return data;
     }
 //
