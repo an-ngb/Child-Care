@@ -23,4 +23,8 @@ public class GroupPost extends AbstractAuditing{
 
     @Column(name = "parent_group")
     private Integer parentGroup;
+
+    public GroupPost(String title) {
+        this.title = title;
+    }
 }

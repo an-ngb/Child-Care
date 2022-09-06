@@ -1,16 +1,16 @@
 package com.example.demo.services.impl;
 
-import com.example.demo.dtos.CommentResultDto;
-import com.example.demo.dtos.PostSearchResultDto;
-import com.example.demo.entities.GroupPost;
-import com.example.demo.entities.Post;
-import com.example.demo.entities.User;
+import com.example.demo.dtos.*;
+import com.example.demo.entities.*;
 import com.example.demo.repositories.*;
 import com.example.demo.services.PostService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.BeanWrapper;
 import org.springframework.beans.BeanWrapperImpl;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -28,6 +28,8 @@ public class PostServiceImpl implements PostService {
     private final UserProfileRepository userProfileRepository;
     private final RoleRepository roleRepository;
     private final GroupTagRepository groupTagRepository;
+    private final GroupPostRepository groupPostRepository;
+    private final GroupPostTagRepository groupPostTagRepository;
     private final SessionServiceImpl sessionService;
 
     public static String[] getNullPropertyNames(Object source) {
@@ -42,64 +44,64 @@ public class PostServiceImpl implements PostService {
         return emptyNames.toArray(result);
     }
 
-//    @Override
-//    public AbstractResponse post(PostDto postDto) {
-//
-//        if(sessionService.isTokenExpire()){
-//            return new AbstractResponse("FAILED", "TOKEN_EXPIRED", 400);
-//        }
-//
-//        Post post = new Post();
-//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-//        User user = userRepository.findByEmail(authentication.getName());
-//        post.setTitle(postDto.getTitle());
-//        post.setContent(postDto.getContent());
-//        post.setRoleId(user.getRole().getId());
-//        Set<Tag> tagList = new HashSet<>();
-//        if(postDto.getTagList() != null){
-//            for (String s : postDto.getTagList()) {
-//                Tag tag = groupTagRepository.findByTagName(s);
-//                if (tag != null){
-//                    tagList.add(tag);
-//                }
-//            }
-//        }
-//        post.setTagsList(tagList);
-//        postRepository.save(post);
-//        return new AbstractResponse(post);
-//    }
-//
-//    @Override
-//    public AbstractResponse edit(EditDto editDto) {
-//        if(sessionService.isTokenExpire()){
-//            return new AbstractResponse("FAILED", "TOKEN_EXPIRED", 400);
-//        }
-//        Post post = postRepository.findById(editDto.getId()).orElse(null);
-//        if (post == null) {
-//            return new AbstractResponse("FAILED", "POST_NOT_FOUND", 404);
-//        }
-//        BeanUtils.copyProperties(editDto, post, getNullPropertyNames(editDto));
-//        postRepository.save(post);
-//        return new AbstractResponse(post);
-//    }
-//
-//    @Override
-//    public AbstractResponse comment(CommentDto commentDto) {
-//        if(sessionService.isTokenExpire()){
-//            return new AbstractResponse("FAILED", "TOKEN_EXPIRED", 400);
-//        }
-//        Post post = postRepository.findPostById(commentDto.getId());
-//        if (post == null) {
-//            return new AbstractResponse("FAILED", "POST_NOT_FOUND", 404);
-//        }
-//        Comment comment = new Comment();
-//        comment.setComment(commentDto.getContent());
-//        comment.setPost(post);
-//        commentRepository.save(comment);
-//        post.getComment().add(comment);
-//        postRepository.save(post);
-//        return new AbstractResponse();
-//    }
+    @Override
+    public AbstractResponse post(PostDto postDto) {
+
+        if(sessionService.isTokenExpire()){
+            return new AbstractResponse("FAILED", "TOKEN_EXPIRED", 400);
+        }
+
+        GroupPost groupPost = new GroupPost(postDto.getTitle());
+        groupPostRepository.save(groupPost);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User user = userRepository.findByEmail(authentication.getName());
+        Post post = new Post();
+        post.setGroupPost(groupPost);
+        post.setContent(postDto.getContent());
+        post.setUserId(user.getId());
+        if(postDto.getTagList() != null){
+            for (String s : postDto.getTagList()) {
+                GroupTag tag = groupTagRepository.findGroupTagByName(s);
+                if (tag != null){
+                    GroupPostTag groupPostTag = new GroupPostTag(groupPost, tag);
+                    groupPostTagRepository.save(groupPostTag);
+                }
+            }
+        }
+        postRepository.save(post);
+        return new AbstractResponse(post);
+    }
+
+    @Override
+    public AbstractResponse edit(EditDto editDto) {
+        if(sessionService.isTokenExpire()){
+            return new AbstractResponse("FAILED", "TOKEN_EXPIRED", 400);
+        }
+        Post post = postRepository.findById(editDto.getId()).orElse(null);
+        if (post == null) {
+            return new AbstractResponse("FAILED", "POST_NOT_FOUND", 404);
+        }
+        BeanUtils.copyProperties(editDto, post, getNullPropertyNames(editDto));
+        postRepository.save(post);
+        return new AbstractResponse(post);
+    }
+
+    @Override
+    public AbstractResponse comment(CommentDto commentDto) {
+        if(sessionService.isTokenExpire()){
+            return new AbstractResponse("FAILED", "TOKEN_EXPIRED", 400);
+        }
+        GroupPost groupPost = groupPostRepository.findGroupPostById(commentDto.getId());
+
+        if (groupPost == null) {
+            return new AbstractResponse("FAILED", "POST_NOT_FOUND", 404);
+        }
+        //Comment
+        Post comment = new Post(groupPost);
+        comment.setContent(commentDto.getContent());
+        postRepository.save(comment);
+        return new AbstractResponse();
+    }
 //
 //    @Override
 //    public AbstractResponse viewAllPost() {
@@ -235,3 +237,4 @@ public class PostServiceImpl implements PostService {
 //        return new AbstractResponse();
 //    }
 }
+

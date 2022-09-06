@@ -18,11 +18,16 @@ public class GroupPostTag {
     @Column(name = "id", nullable = false)
     private Integer id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "group_post_id")
     private GroupPost groupPost;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "group_tag_id")
     private GroupTag groupTag;
+
+    public GroupPostTag(GroupPost groupPost, GroupTag groupTag) {
+        this.groupPost = groupPost;
+        this.groupTag = groupTag;
+    }
 }

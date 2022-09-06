@@ -9,7 +9,7 @@ import org.springframework.data.jpa.repository.EntityGraph;
 
 import java.util.List;
 
-public interface PostRepository extends AbstractRepository<Post, Long>{
+public interface PostRepository extends AbstractRepository<Post, Integer>{
 
 //    Post findPostById(Long id);
 //    List<Post> findAllByOrderByIdAsc();

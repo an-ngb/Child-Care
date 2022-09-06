@@ -63,14 +63,14 @@ public class UserServiceImpl implements UserService {
             Authentication auth = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(email, password));
             SecurityContextHolder.getContext().setAuthentication(auth);
         } catch (BadCredentialsException e) {
-            throw new BadCredentialsException("INCORRECT_EMAIL_OR_PASSWORD", e);
+            return new AbstractResponse("FAILED", "INCORRECT_EMAIL_OR_PASSWORD", 400);
         }
 
         UserDetails userDetails = userDetailsService.loadUserByUsername(email);
 
         User detectedUser = userRepository.findByEmail(email);
 
-        if (detectedUser == null || detectedUser.getIsActive()) {
+        if (detectedUser == null || !detectedUser.getIsActive()) {
             return new AbstractResponse("FAILED", "FORBIDDEN", 400);
         }
 
@@ -140,7 +140,7 @@ public class UserServiceImpl implements UserService {
         if (sessionService.isTokenExpire()) {
             return new AbstractResponse("FAILED", "TOKEN_EXPIRED", 400);
         }
-        User user = userRepository.findUserById(Long.valueOf(id));
+        User user = userRepository.findUserById(id);
         if(user == null){
             return new AbstractResponse("FAILED", "USER_NOT_FOUND", 404);
         }
@@ -153,7 +153,7 @@ public class UserServiceImpl implements UserService {
         userProfileDto.setAge(userProfile.getAge());
         userProfileDto.setGender(userProfile.getGender());
         userProfileDto.setPhone(userProfile.getPhone());
-        List<GroupPost> groupPostList = groupPostRepository.findAllByUserId(user.getId());
+        List<GroupPost> groupPostList = groupPostRepository.findAllByCreatedBy(user.getEmail());
         List<PostSearchResultDto> postSearchResultDtoList;
 //        postSearchResultDtoList = postServiceImpl.convertPostToPostDto(postList);
 //        userProfileDto.setPostSearchResultDtoList(postSearchResultDtoList);

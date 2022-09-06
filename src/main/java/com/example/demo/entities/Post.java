@@ -19,7 +19,7 @@ public class Post extends AbstractAuditing{
     @Column(name = "post_id", nullable = false)
     private Integer id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "group_post_id")
     private GroupPost groupPost;
 
@@ -29,4 +29,8 @@ public class Post extends AbstractAuditing{
     @Column(name = "content")
     @Type(type = "org.hibernate.type.TextType")
     private String content;
+
+    public Post(GroupPost groupPost) {
+        this.groupPost = groupPost;
+    }
 }

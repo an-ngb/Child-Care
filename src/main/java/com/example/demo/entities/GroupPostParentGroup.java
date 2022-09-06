@@ -13,24 +13,7 @@ public class GroupPostParentGroup {
     @Column(name = "id", nullable = false)
     private Integer id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "group_post_id")
     private GroupPost groupPost;
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public GroupPost getGroupPost() {
-        return groupPost;
-    }
-
-    public void setGroupPost(GroupPost groupPost) {
-        this.groupPost = groupPost;
-    }
-
 }

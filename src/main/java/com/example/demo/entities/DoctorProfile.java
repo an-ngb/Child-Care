@@ -20,7 +20,7 @@ public class DoctorProfile {
     @Column(name = "doctor_profile_id", nullable = false)
     private Integer id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
     private User user;
 
@@ -33,7 +33,6 @@ public class DoctorProfile {
     private String degree;
 
     @Column(name = "exp_year")
-    @Type(type = "org.hibernate.type.TextType")
     private String expYear;
 
     @Column(name = "specialist")
@@ -41,20 +40,30 @@ public class DoctorProfile {
     private String specialist;
 
     @Column(name = "working_at")
-    @Type(type = "org.hibernate.type.TextType")
     private String workingAt;
 
     @Column(name = "private_web")
-    @Type(type = "org.hibernate.type.TextType")
     private String privateWeb;
 
     @Column(name = "start_work_at_time")
-    private LocalDate startWorkAtTime;
+    private String startWorkAtTime;
 
     @Column(name = "end_work_at_time")
-    private LocalDate endWorkAtTime;
+    private String endWorkAtTime;
 
     @Column(name = "work_at")
-    @Type(type = "org.hibernate.type.TextType")
     private String workAt;
+
+    public DoctorProfile(User user, String certificate, String degree, String expYear, String specialist, String workingAt, String privateWeb, String startWorkAtTime, String endWorkAtTime, String workAt) {
+        this.user = user;
+        this.certificate = certificate;
+        this.degree = degree;
+        this.expYear = expYear;
+        this.specialist = specialist;
+        this.workingAt = workingAt;
+        this.privateWeb = privateWeb;
+        this.startWorkAtTime = startWorkAtTime;
+        this.endWorkAtTime = endWorkAtTime;
+        this.workAt = workAt;
+    }
 }

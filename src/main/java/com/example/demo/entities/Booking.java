@@ -20,11 +20,11 @@ public class Booking extends AbstractAuditing{
     @Column(name = "booking_id", nullable = false)
     private Integer id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
     private User user;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "doctor_id")
     private User doctor;
 
@@ -32,13 +32,20 @@ public class Booking extends AbstractAuditing{
     private Instant bookedAt;
 
     @Column(name = "booked_time")
-    private Instant bookedTime;
+    private Integer bookedTime;
 
     @Column(name = "content")
     @Type(type = "org.hibernate.type.TextType")
     private String content;
 
     @Column(name = "is_approved")
-    private Boolean isApproved;
+    private Boolean isApproved = false;
 
+    public Booking(User user, User doctor, Instant bookedAt, Integer bookedTime, String content) {
+        this.user = user;
+        this.doctor = doctor;
+        this.bookedAt = bookedAt;
+        this.bookedTime = bookedTime;
+        this.content = content;
+    }
 }

@@ -17,13 +17,17 @@ public class AdminController {
 
     private final AdminService adminService;
 
-//    @PostMapping("/role/change-user-role")
-//    public ResponseEntity<AbstractResponse> changeUserRole(@RequestBody ChangeUserRoleDto changeUserRoleDto) {
-//        return ResponseEntity.ok().body(adminService.changeUserRole(changeUserRoleDto));
-//    }
-//
-//    @PostMapping("/user/all")
-//    public ResponseEntity<AbstractResponse> getAllUser() {
-//        return ResponseEntity.ok().body(adminService.getAllUser());
-//    }
+    @PostMapping("/role/change-user-role")
+    public ResponseEntity<AbstractResponse> changeUserRole(@RequestBody ChangeUserRoleDto changeUserRoleDto) {
+        return ResponseEntity.ok().body(adminService.promoteUserToDoctor(changeUserRoleDto));
+    }
+
+    @PostMapping("/user/all")
+    public ResponseEntity<AbstractResponse> getAllUser() {
+        return ResponseEntity.ok().body(adminService.getAllUser());
+    }
+    @PostMapping("/booking/all")
+    public ResponseEntity<AbstractResponse> getAllBooking() {
+        return ResponseEntity.ok().body(adminService.getAllBooking());
+    }
 }

@@ -17,15 +17,15 @@ public class ContentController {
     private final UserService userService;
     private final PostService postService;
 
-//    @PostMapping("/post")
-//    public ResponseEntity<AbstractResponse> post(@RequestBody PostDto postDto) {
-//        return ResponseEntity.ok().body(postService.post(postDto));
-//    }
-//
-//    @PostMapping("/comment")
-//    public ResponseEntity<AbstractResponse> comment(@RequestBody CommentDto commentDto){
-//        return ResponseEntity.ok().body(postService.comment(commentDto));
-//    }
+    @PostMapping("/post")
+    public ResponseEntity<AbstractResponse> post(@RequestBody PostDto postDto) {
+        return ResponseEntity.ok().body(postService.post(postDto));
+    }
+
+    @PostMapping("/comment")
+    public ResponseEntity<AbstractResponse> comment(@RequestBody CommentDto commentDto){
+        return ResponseEntity.ok().body(postService.comment(commentDto));
+    }
 //
 //    @PostMapping("/like")
 //    public ResponseEntity<AbstractResponse> like(@RequestBody InteractDto interactDto){
