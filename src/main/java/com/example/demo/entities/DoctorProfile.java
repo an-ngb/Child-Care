@@ -28,6 +28,9 @@ public class DoctorProfile {
     @Type(type = "org.hibernate.type.TextType")
     private String certificate;
 
+    @Column(name = "full_name")
+    private String fullName;
+
     @Column(name = "degree")
     @Type(type = "org.hibernate.type.TextType")
     private String degree;
@@ -54,8 +57,9 @@ public class DoctorProfile {
     @Column(name = "work_at")
     private String workAt;
 
-    public DoctorProfile(User user, String certificate, String degree, String expYear, String specialist, String workingAt, String privateWeb, String startWorkAtTime, String endWorkAtTime, String workAt) {
+    public DoctorProfile(User user,String fullName, String certificate, String degree, String expYear, String specialist, String workingAt, String privateWeb, String startWorkAtTime, String endWorkAtTime, String workAt) {
         this.user = user;
+        this.fullName = fullName;
         this.certificate = certificate;
         this.degree = degree;
         this.expYear = expYear;

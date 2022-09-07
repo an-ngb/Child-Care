@@ -14,9 +14,14 @@ public class UserProfileDto {
     private Integer age;
     private Integer gender;
     private String phone;
-    private Integer totalPost;
-    private Integer totalComment;
-    private Integer totalLike;
-    private Integer totalDislike;
+    private String certificate;
+    private String degree;
+    private String expYear;
+    private String specialist;
+    private String workingAt;
+    private String privateWeb;
+    private String startWorkAtTime;
+    private String endWorkAtTime;
+    private String workAt;
     private List<PostSearchResultDto> postSearchResultDtoList;
 }

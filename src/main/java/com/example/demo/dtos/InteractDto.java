@@ -10,5 +10,5 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class InteractDto {
-    private Long id;
+    private Boolean approve;
 }

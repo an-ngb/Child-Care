@@ -12,7 +12,7 @@ import java.time.Instant;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CommentResultDto {
-    private Long id;
+    private Integer id;
     private String content;
     private String createdBy;
     private Instant createdAt;

@@ -2,13 +2,11 @@ package com.example.demo.controllers;
 
 import com.example.demo.dtos.AbstractResponse;
 import com.example.demo.dtos.ChangeUserRoleDto;
+import com.example.demo.dtos.InteractDto;
 import com.example.demo.services.AdminService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/admin")
@@ -26,8 +24,14 @@ public class AdminController {
     public ResponseEntity<AbstractResponse> getAllUser() {
         return ResponseEntity.ok().body(adminService.getAllUser());
     }
+
     @PostMapping("/booking/all")
     public ResponseEntity<AbstractResponse> getAllBooking() {
         return ResponseEntity.ok().body(adminService.getAllBooking());
+    }
+
+    @PostMapping("/booking/approve/{id}")
+    public ResponseEntity<AbstractResponse> approveBooking(@PathVariable Integer id, @RequestBody InteractDto interactDto) {
+        return ResponseEntity.ok().body(adminService.approveOrDisapproveBooking(id, interactDto));
     }
 }

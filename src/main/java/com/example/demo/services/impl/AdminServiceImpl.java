@@ -1,16 +1,20 @@
 package com.example.demo.services.impl;
 
 import com.example.demo.dtos.AbstractResponse;
+import com.example.demo.dtos.BookingSearchResultDto;
 import com.example.demo.dtos.ChangeUserRoleDto;
+import com.example.demo.dtos.InteractDto;
 import com.example.demo.entities.Booking;
 import com.example.demo.entities.DoctorProfile;
 import com.example.demo.entities.User;
+import com.example.demo.entities.UserProfile;
 import com.example.demo.repositories.*;
 import com.example.demo.services.AdminService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
@@ -24,6 +28,7 @@ public class AdminServiceImpl implements AdminService {
     private final DoctorProfileRepository doctorProfileRepository;
     private final BookingRepository bookingRepository;
     private final SessionServiceImpl sessionService;
+    private final BookingServiceImpl bookingService;
 
     @Override
     public AbstractResponse promoteUserToDoctor(ChangeUserRoleDto changeUserRoleDto) {
@@ -34,7 +39,16 @@ public class AdminServiceImpl implements AdminService {
             return new AbstractResponse("FAILED", "USER_NOT_FOUND", 404);
         }
 
+        DoctorProfile foundDoctorProfile = doctorProfileRepository.findByUser(user);
+
+        if(foundDoctorProfile != null){
+            return new AbstractResponse("FAILED", "USER_ALREADY_DOCTOR", 400);
+        }
+
+        UserProfile userProfile = userProfileRepository.findByUser(user);
+
         DoctorProfile doctorProfile = new DoctorProfile(user,
+                userProfile.getFullName(),
                 changeUserRoleDto.getCertificate(),
                 changeUserRoleDto.getDegree(),
                 changeUserRoleDto.getExpYear(),
@@ -47,9 +61,6 @@ public class AdminServiceImpl implements AdminService {
 
         user.setRole(roleRepository.findRoleById(2));
         userRepository.save(user);
-        if(userProfileRepository.findByUser(user) != null){
-            userProfileRepository.delete(userProfileRepository.findByUser(user));
-        }
         doctorProfileRepository.save(doctorProfile);
         return new AbstractResponse();
     }
@@ -63,6 +74,29 @@ public class AdminServiceImpl implements AdminService {
     @Override
     public AbstractResponse getAllBooking() {
         List<Booking> bookingList = bookingRepository.findAll();
-        return new AbstractResponse(bookingList);
+        List<BookingSearchResultDto> bookingSearchResultDtoList = new ArrayList<>();
+        bookingList.forEach(item ->{
+            BookingSearchResultDto bookingSearchResultDto = bookingService.convertBookingToBookingDto(item);
+            bookingSearchResultDtoList.add(bookingSearchResultDto);
+        });
+        return new AbstractResponse(bookingSearchResultDtoList);
+    }
+
+    @Override
+    public AbstractResponse approveOrDisapproveBooking(Integer id, InteractDto interactDto) {
+
+        Booking booking = bookingRepository.findById(id).orElse(null);
+
+        if(booking == null){
+            return new AbstractResponse("FAILED", "BOOKING_SESSION_NOT_FOUND", 404);
+        }
+
+        if(booking.getIsApproved() != null && booking.getIsApproved()){
+            return new AbstractResponse("FAILED", "BOOKING_SESSION_ALREADY_APPROVED", 400);
+        }
+
+        booking.setIsApproved(interactDto.getApprove());
+        bookingRepository.save(booking);
+        return new AbstractResponse();
     }
 }

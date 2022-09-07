@@ -11,9 +11,8 @@ public class PostSearchResultDto {
     private Integer id;
     private String title;
     private String content;
-    private String doctorName;
+    private String author;
     private Integer totalLike;
     private Integer totalDislike;
     private List<CommentResultDto> commentList;
-    private List<TagDto> tagListDto;
 }

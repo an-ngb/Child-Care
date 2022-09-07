@@ -39,7 +39,7 @@ public class Booking extends AbstractAuditing{
     private String content;
 
     @Column(name = "is_approved")
-    private Boolean isApproved = false;
+    private Boolean isApproved;
 
     public Booking(User user, User doctor, Instant bookedAt, Integer bookedTime, String content) {
         this.user = user;

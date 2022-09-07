@@ -12,6 +12,7 @@ import org.springframework.beans.BeanWrapperImpl;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -26,6 +27,7 @@ public class PostServiceImpl implements PostService {
     private final PostRepository postRepository;
     private final UserRepository userRepository;
     private final UserProfileRepository userProfileRepository;
+    private final DoctorProfileRepository doctorProfileRepository;
     private final RoleRepository roleRepository;
     private final GroupTagRepository groupTagRepository;
     private final GroupPostRepository groupPostRepository;
@@ -158,41 +160,33 @@ public class PostServiceImpl implements PostService {
             postSearchResultDto.setId(groupPost.getId());
             postSearchResultDto.setTitle(groupPost.getTitle());
             postSearchResultDto.setContent(postRepository.findByGroupPost(groupPost).get(0).getContent());
-            postSearchResultDto.setDoctorName(userProfileRepository.findByUser(user).getFullName());
+            postSearchResultDto.setAuthor(userProfileRepository.findByUser(user).getFullName());
             List<Post> commentList = postRepository.findByGroupPost(groupPost);
             List<CommentResultDto> commentResultDtoList = new ArrayList<>();
-//            if (!CollectionUtils.isEmpty(commentList)) {
-//                commentList.forEach(item -> {
-//                    CommentResultDto commentResultDto = new CommentResultDto();
-//                    commentResultDto.setId(item.getId());
-//                    commentResultDto.setContent(item.getComment());
-//                    if (item.getTotalCommentDislike() != null) {
-//                        commentResultDto.setTotalDislike(item.getTotalCommentDislike());
-//                    } else {
-//                        commentResultDto.setTotalDislike(0);
-//                    }
-//                    if (item.getTotalCommentLike() != null) {
-//                        commentResultDto.setTotalLike(item.getTotalCommentLike());
-//                    } else {
-//                        commentResultDto.setTotalLike(0);
-//                    }
-//                    commentResultDtoList.add(commentResultDto);
-//                });
-//            }
-//            postSearchResultDto.setCommentList(commentResultDtoList);
-//
-//            Set<Tag> tagList = post.getTagsList();
-//            List<TagDto> tagDtoList = new ArrayList<>();
-//            if(!CollectionUtils.isEmpty(tagList)){
-//                tagList.forEach(item -> {
-//                    TagDto tagDto = new TagDto();
-//                    tagDto.setTag(item.getTagName());
-//                    tagDtoList.add(tagDto);
-//                });
-//            }
-//            postSearchResultDto.setTagListDto(tagDtoList);
-//
-//            data.add(postSearchResultDto);
+            if (!CollectionUtils.isEmpty(commentList)) {
+                commentList.forEach(item -> {
+                    CommentResultDto commentResultDto = new CommentResultDto();
+                    commentResultDto.setId(item.getId());
+                    commentResultDto.setContent(item.getContent());
+                    commentResultDto.setCreatedAt(item.getCreatedAt());
+
+                    User foundUser = userRepository.findByEmail(item.getCreatedBy());
+
+                    UserProfile userProfile = userProfileRepository.findByUser(foundUser);
+
+                    if(userProfile != null){
+                        commentResultDto.setCreatedBy(userProfile.getFullName());
+                    } else {
+                        DoctorProfile doctorProfile = doctorProfileRepository.findByUser(foundUser);
+                        commentResultDto.setCreatedBy(doctorProfile.getFullName());
+                    }
+
+                    commentResultDto.setUpdatedAt(item.getUpdatedAt());
+                    commentResultDtoList.add(commentResultDto);
+                });
+            }
+            postSearchResultDto.setCommentList(commentResultDtoList);
+            data.add(postSearchResultDto);
         }
         return data;
     }

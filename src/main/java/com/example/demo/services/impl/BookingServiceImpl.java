@@ -25,6 +25,7 @@ import java.util.Set;
 public class BookingServiceImpl implements BookingService {
     private final UserRepository userRepository;
     private final UserProfileRepository userProfileRepository;
+    private final DoctorProfileRepository doctorProfileRepository;
     private final SessionServiceImpl sessionService;
     private final BookingRepository bookingRepository;
 
@@ -34,6 +35,7 @@ public class BookingServiceImpl implements BookingService {
         User doctor = userRepository.findUserById(bookingDto.getDoctorId());
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
         User user = userRepository.findByEmail(authentication.getName());
 
         if(doctor == null){
@@ -45,6 +47,22 @@ public class BookingServiceImpl implements BookingService {
         bookingRepository.save(booking);
 
         return new AbstractResponse();
+    }
+
+    public BookingSearchResultDto convertBookingToBookingDto(Booking booking){
+        BookingSearchResultDto bookingSearchResultDto = new BookingSearchResultDto();
+        bookingSearchResultDto.setId(booking.getId());
+        bookingSearchResultDto.setCreatedAt(booking.getCreatedAt());
+        bookingSearchResultDto.setUpdatedAt(booking.getUpdatedAt());
+        bookingSearchResultDto.setCreatedBy(booking.getCreatedBy());
+        bookingSearchResultDto.setUpdatedBy(booking.getUpdatedBy());
+        bookingSearchResultDto.setDoctorId(booking.getDoctor().getId());
+        bookingSearchResultDto.setDoctorName(doctorProfileRepository.findByUser(booking.getDoctor()).getFullName());
+        bookingSearchResultDto.setBookedAt(booking.getBookedAt());
+        bookingSearchResultDto.setBookedTime(booking.getBookedTime());
+        bookingSearchResultDto.setContent(booking.getContent());
+        bookingSearchResultDto.setIsApproved(booking.getIsApproved() == null ? null : booking.getIsApproved());
+        return bookingSearchResultDto;
     }
 }
 
