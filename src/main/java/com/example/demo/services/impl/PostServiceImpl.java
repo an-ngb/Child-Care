@@ -76,16 +76,27 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public AbstractResponse edit(EditDto editDto) {
-        if(sessionService.isTokenExpire()){
+        if (sessionService.isTokenExpire()) {
             return new AbstractResponse("FAILED", "TOKEN_EXPIRED", 400);
         }
-        Post post = postRepository.findById(editDto.getId()).orElse(null);
-        if (post == null) {
+        GroupPost groupPost = groupPostRepository.findById(editDto.getId()).orElse(null);
+        if (groupPost == null) {
             return new AbstractResponse("FAILED", "POST_NOT_FOUND", 404);
         }
-        BeanUtils.copyProperties(editDto, post, getNullPropertyNames(editDto));
-        postRepository.save(post);
-        return new AbstractResponse(post);
+
+        if (editDto.getTitle() != null) {
+            groupPost.setTitle(editDto.getTitle());
+        }
+
+        List<Post> postList = null;
+        if (editDto.getContent() != null) {
+            postList = postRepository.findByGroupPost(groupPost);
+            postList.get(0).setContent(editDto.getContent());
+        }
+
+        groupPostRepository.save(groupPost);
+        postRepository.saveAll(postList);
+        return new AbstractResponse();
     }
 
     @Override
@@ -159,7 +170,7 @@ public class PostServiceImpl implements PostService {
             User user = userRepository.findByEmail(groupPost.getCreatedBy());
             postSearchResultDto.setId(groupPost.getId());
             postSearchResultDto.setTitle(groupPost.getTitle());
-            postSearchResultDto.setContent(postRepository.findByGroupPost(groupPost).get(0).getContent());
+            postSearchResultDto.setContent(postRepository.findByGroupPostOrderById(groupPost).get(0).getContent());
             postSearchResultDto.setAuthor(userProfileRepository.findByUser(user).getFullName());
             List<Post> commentList = postRepository.findByGroupPost(groupPost);
             List<CommentResultDto> commentResultDtoList = new ArrayList<>();

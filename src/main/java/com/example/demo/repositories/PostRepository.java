@@ -17,6 +17,7 @@ public interface PostRepository extends AbstractRepository<Post, Integer>{
 //    List<Post> findAllByRoleIdOrderByTotalLikeAsc(Long id);
     List<Post> findAllByUserId(Integer id);
     List<Post> findByGroupPost(GroupPost groupPost);
+    List<Post> findByGroupPostOrderById(GroupPost groupPost);
 //
 //    @Override
 //    @EntityGraph(attributePaths = {"comment"})

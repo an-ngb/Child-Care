@@ -26,6 +26,11 @@ public class ContentController {
     public ResponseEntity<AbstractResponse> comment(@RequestBody CommentDto commentDto){
         return ResponseEntity.ok().body(postService.comment(commentDto));
     }
+
+    @PostMapping("/edit")
+    public ResponseEntity<AbstractResponse> edit(@RequestBody EditDto editDto){
+        return ResponseEntity.ok().body(postService.edit(editDto));
+    }
 //
 //    @PostMapping("/like")
 //    public ResponseEntity<AbstractResponse> like(@RequestBody InteractDto interactDto){
