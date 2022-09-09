@@ -1,14 +1,5 @@
 package com.example.demo.specification;
 
-import com.example.demo.constant.TAGS;
-import com.example.demo.dtos.FilterRequest;
-import com.example.demo.entities.Post_;
-import org.springframework.data.jpa.domain.Specification;
-import org.springframework.util.CollectionUtils;
-
-import javax.persistence.criteria.Predicate;
-import java.util.*;
-
 public class PostSpecs{
 //
 //    public static Specification<Post> search(FilterRequest obj) {
