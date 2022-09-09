@@ -8,5 +8,4 @@ public interface AdminService {
     AbstractResponse promoteUserToDoctor(ChangeUserRoleDto changeUserRoleDto);
     AbstractResponse getAllUser();
     AbstractResponse getAllBooking();
-    AbstractResponse approveOrDisapproveBooking(Integer id, InteractDto interactDto);
 }

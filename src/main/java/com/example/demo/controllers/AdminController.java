@@ -29,9 +29,4 @@ public class AdminController {
     public ResponseEntity<AbstractResponse> getAllBooking() {
         return ResponseEntity.ok().body(adminService.getAllBooking());
     }
-
-    @PostMapping("/booking/approve/{id}")
-    public ResponseEntity<AbstractResponse> approveBooking(@PathVariable Integer id, @RequestBody InteractDto interactDto) {
-        return ResponseEntity.ok().body(adminService.approveOrDisapproveBooking(id, interactDto));
-    }
 }

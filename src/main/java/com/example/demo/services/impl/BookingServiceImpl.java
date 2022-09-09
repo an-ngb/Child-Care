@@ -64,5 +64,36 @@ public class BookingServiceImpl implements BookingService {
         bookingSearchResultDto.setIsApproved(booking.getIsApproved() == null ? null : booking.getIsApproved());
         return bookingSearchResultDto;
     }
+
+    @Override
+    public AbstractResponse getBookingListOfDoctor() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        User user = userRepository.findByEmail(authentication.getName());
+        List<Booking> bookingList = bookingRepository.findAllByDoctor(user);
+        List<BookingSearchResultDto> bookingSearchResultDtoList = new ArrayList<>();
+        bookingList.forEach(item -> {
+            bookingSearchResultDtoList.add(convertBookingToBookingDto(item));
+        });
+        return new AbstractResponse(bookingSearchResultDtoList);
+    }
+
+    @Override
+    public AbstractResponse approveOrDisapproveBooking(Integer id, InteractDto interactDto) {
+
+        Booking booking = bookingRepository.findById(id).orElse(null);
+
+        if(booking == null){
+            return new AbstractResponse("FAILED", "BOOKING_SESSION_NOT_FOUND", 404);
+        }
+
+        if(booking.getIsApproved() != null && booking.getIsApproved()){
+            return new AbstractResponse("FAILED", "BOOKING_SESSION_ALREADY_APPROVED", 400);
+        }
+
+        booking.setIsApproved(interactDto.getApprove());
+        bookingRepository.save(booking);
+        return new AbstractResponse();
+    }
 }
 
