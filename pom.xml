@@ -87,32 +87,32 @@
 
 	<build>
 		<plugins>
-			<plugin>
-				<groupId>org.bsc.maven</groupId>
-				<artifactId>maven-processor-plugin</artifactId>
-				<version>2.0.5</version>
-				<executions>
-					<execution>
-						<id>process</id>
-						<goals>
-							<goal>process</goal>
-						</goals>
-						<phase>generate-sources</phase>
-						<configuration>
-							<processors>
-								<processor>org.hibernate.jpamodelgen.JPAMetaModelEntityProcessor</processor>
-							</processors>
-						</configuration>
-					</execution>
-				</executions>
-				<dependencies>
-					<dependency>
-						<groupId>org.hibernate</groupId>
-						<artifactId>hibernate-jpamodelgen</artifactId>
-						<version>5.4.3.Final</version>
-					</dependency>
-				</dependencies>
-			</plugin>
+<!--			<plugin>-->
+<!--				<groupId>org.bsc.maven</groupId>-->
+<!--				<artifactId>maven-processor-plugin</artifactId>-->
+<!--				<version>2.0.5</version>-->
+<!--				<executions>-->
+<!--					<execution>-->
+<!--						<id>process</id>-->
+<!--						<goals>-->
+<!--							<goal>process</goal>-->
+<!--						</goals>-->
+<!--						<phase>generate-sources</phase>-->
+<!--						<configuration>-->
+<!--							<processors>-->
+<!--								<processor>org.hibernate.jpamodelgen.JPAMetaModelEntityProcessor</processor>-->
+<!--							</processors>-->
+<!--						</configuration>-->
+<!--					</execution>-->
+<!--				</executions>-->
+<!--				<dependencies>-->
+<!--					<dependency>-->
+<!--						<groupId>org.hibernate</groupId>-->
+<!--						<artifactId>hibernate-jpamodelgen</artifactId>-->
+<!--						<version>5.4.3.Final</version>-->
+<!--					</dependency>-->
+<!--				</dependencies>-->
+<!--			</plugin>-->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
@@ -120,7 +120,6 @@
 				<configuration>
 					<source>1.8</source>
 					<target>1.8</target>
-					<compilerArgument>-proc:none</compilerArgument>
 				</configuration>
 			</plugin>
 		</plugins>
