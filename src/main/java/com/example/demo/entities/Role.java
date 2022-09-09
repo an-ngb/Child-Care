@@ -21,4 +21,9 @@ public class Role {
 
     @Column(name = "role_name", nullable = false)
     private String roleName;
+
+    public Role(Integer id, String roleName) {
+        this.id = id;
+        this.roleName = roleName;
+    }
 }
