@@ -4,6 +4,7 @@ import com.example.demo.dtos.AbstractResponse;
 import com.example.demo.dtos.RegisterRequestDto;
 import com.example.demo.services.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,10 +14,8 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
     private final UserService userService;
 
-//    @PostMapping("/register")
-    @RequestMapping(value = "/register",
-            method = RequestMethod.POST,
-            consumes="multipart/form-data")
+    //    @PostMapping("/register")
+    @PostMapping("/register")
     public ResponseEntity<AbstractResponse> register(@RequestBody RegisterRequestDto registerRequestDto) {
         return ResponseEntity.ok().body(userService.register(registerRequestDto));
     }
