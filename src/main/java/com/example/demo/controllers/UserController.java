@@ -13,7 +13,10 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
     private final UserService userService;
 
-    @PostMapping("/register")
+//    @PostMapping("/register")
+    @RequestMapping(value = "/register",
+            method = RequestMethod.POST,
+            consumes="multipart/form-data")
     public ResponseEntity<AbstractResponse> register(@RequestBody RegisterRequestDto registerRequestDto) {
         return ResponseEntity.ok().body(userService.register(registerRequestDto));
     }
