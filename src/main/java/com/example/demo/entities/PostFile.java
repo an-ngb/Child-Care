@@ -18,11 +18,16 @@ public class PostFile {
     @Column(name = "id", nullable = false)
     private Integer id;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "post_id")
     private Post post;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "post_file_id")
     private File postFile;
+
+    public PostFile(Post post, File postFile) {
+        this.post = post;
+        this.postFile = postFile;
+    }
 }

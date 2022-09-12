@@ -116,7 +116,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public AbstractResponse register(RegisterRequestDto registerRequestDto) {
 
-        User foundUser = userRepository.findByEmail(registerRequestDto.getEmail().trim());
+        User foundUser = userRepository.findByEmail(registerRequestDto.getEmail());
 
         if (foundUser != null) {
             return new AbstractResponse("FAILED", "EMAIL_EXISTED", 400);

@@ -6,14 +6,18 @@ import com.example.demo.repositories.*;
 import com.example.demo.services.PostService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.BeanWrapper;
 import org.springframework.beans.BeanWrapperImpl;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -24,6 +28,7 @@ import java.util.Set;
 @RequiredArgsConstructor
 public class PostServiceImpl implements PostService {
 
+    private static final String UPLOADED_FOLDER = System.getProperty("user.dir") + "/uploads";
     private final PostRepository postRepository;
     private final UserRepository userRepository;
     private final UserProfileRepository userProfileRepository;
@@ -33,6 +38,8 @@ public class PostServiceImpl implements PostService {
     private final GroupPostRepository groupPostRepository;
     private final GroupPostTagRepository groupPostTagRepository;
     private final SessionServiceImpl sessionService;
+    private final FileRepository fileRepository;
+    private final PostFileRepository postFileRepository;
 
     public static String[] getNullPropertyNames(Object source) {
         final BeanWrapper src = new BeanWrapperImpl(source);
@@ -46,8 +53,22 @@ public class PostServiceImpl implements PostService {
         return emptyNames.toArray(result);
     }
 
+    private void saveUploadedFile(Post post, MultipartFile file) throws IOException {
+//        if (!file.isEmpty()) {
+//            byte[] bytes = file.getBytes();
+//            Path path = Paths.get(UPLOADED_FOLDER + file.getOriginalFilename());
+//            Files.write(path, bytes);
+//        }
+        Path fileNameAndPath = Paths.get(UPLOADED_FOLDER, file.getOriginalFilename());
+        Files.write(fileNameAndPath, file.getBytes());
+        File file1 = new File(fileNameAndPath.toString());
+        fileRepository.save(file1);
+        PostFile postFile = new PostFile(post, file1);
+        postFileRepository.save(postFile);
+    }
+
     @Override
-    public AbstractResponse post(PostDto postDto) {
+    public AbstractResponse post(PostDto postDto) throws IOException {
 
         if(sessionService.isTokenExpire()){
             return new AbstractResponse("FAILED", "TOKEN_EXPIRED", 400);
@@ -61,16 +82,17 @@ public class PostServiceImpl implements PostService {
         post.setGroupPost(groupPost);
         post.setContent(postDto.getContent());
         post.setUserId(user.getId());
-        if(postDto.getTagList() != null){
-            for (String s : postDto.getTagList()) {
-                GroupTag tag = groupTagRepository.findGroupTagByName(s);
-                if (tag != null){
-                    GroupPostTag groupPostTag = new GroupPostTag(groupPost, tag);
-                    groupPostTagRepository.save(groupPostTag);
-                }
-            }
-        }
         postRepository.save(post);
+        saveUploadedFile(post, postDto.getImage());
+//        if(postDto.getTagList() != null){
+//            for (String s : postDto.getTagList()) {
+//                GroupTag tag = groupTagRepository.findGroupTagByName(s);
+//                if (tag != null){
+//                    GroupPostTag groupPostTag = new GroupPostTag(groupPost, tag);
+//                    groupPostTagRepository.save(groupPostTag);
+//                }
+//            }
+//        }
         return new AbstractResponse(post);
     }
 
@@ -171,6 +193,11 @@ public class PostServiceImpl implements PostService {
             postSearchResultDto.setId(groupPost.getId());
             postSearchResultDto.setTitle(groupPost.getTitle());
             postSearchResultDto.setContent(postRepository.findByGroupPostOrderById(groupPost).get(0).getContent());
+            if(postFileRepository.findByPost(postRepository.findByGroupPostOrderById(groupPost).get(0)) != null){
+                postSearchResultDto.setFile(postFileRepository.findByPost(postRepository.findByGroupPostOrderById(groupPost).get(0)).getPostFile().getResourceLink());
+            } else {
+                postSearchResultDto.setFile(null);
+            }
             postSearchResultDto.setAuthor(userProfileRepository.findByUser(user).getFullName());
             List<Post> commentList = postRepository.findByGroupPost(groupPost);
             List<CommentResultDto> commentResultDtoList = new ArrayList<>();
@@ -180,7 +207,11 @@ public class PostServiceImpl implements PostService {
                     commentResultDto.setId(item.getId());
                     commentResultDto.setContent(item.getContent());
                     commentResultDto.setCreatedAt(item.getCreatedAt());
-
+                    if(postFileRepository.findByPost(item) != null){
+                        commentResultDto.setFile(postFileRepository.findByPost(item).getPostFile().getResourceLink());
+                    } else {
+                        commentResultDto.setFile(null);
+                    }
                     User foundUser = userRepository.findByEmail(item.getCreatedBy());
 
                     UserProfile userProfile = userProfileRepository.findByUser(foundUser);

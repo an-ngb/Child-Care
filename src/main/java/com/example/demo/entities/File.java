@@ -20,4 +20,8 @@ public class File extends AbstractAuditing{
 
     @Column(name = "resource_link")
     private String resourceLink;
+
+    public File(String resourceLink) {
+        this.resourceLink = resourceLink;
+    }
 }

@@ -1,10 +1,14 @@
 package com.example.demo;
 
+import com.cloudinary.Cloudinary;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.domain.AuditorAware;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @SpringBootApplication
 @EnableJpaAuditing(auditorAwareRef = "auditorProvider")
@@ -19,6 +23,17 @@ public class Demo1Application {
         return new UsernameAuditorAware();
     }
 
+    @Bean
+    public Cloudinary cloudinaryConfig() {
+        Cloudinary cloudinary;
+        Map config = new HashMap();
+        config.put("cloud_name", "annb");
+        config.put("api_key", "544826756355157");
+        config.put("api_secret", "KOi-qJgeNjS8kuWTggHAydUtl3g");
+        cloudinary = new Cloudinary(config);
+        return cloudinary;
+    }
+}
 //	@Bean
 //    CommandLineRunner runner(RoleRepository roleRepo, PostRepository postRepository, UserRepository userRepository) {
 //		return args -> {
@@ -33,4 +48,3 @@ public class Demo1Application {
 //            userRepository.save(user1);
 //		};
 //	}
-}

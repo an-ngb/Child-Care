@@ -2,9 +2,11 @@ package com.example.demo.services;
 
 import com.example.demo.dtos.*;
 
+import java.io.IOException;
+
 public interface PostService {
 
-    AbstractResponse post(PostDto postDto);
+    AbstractResponse post(PostDto postDto) throws IOException;
     AbstractResponse edit(EditDto editDto);
     AbstractResponse comment(CommentDto commentDto);
 //    AbstractResponse viewAllPost();
