@@ -1,6 +1,9 @@
 package com.example.demo;
 
 import com.cloudinary.Cloudinary;
+import com.example.demo.entities.Role;
+import com.example.demo.repositories.RoleRepository;
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
@@ -33,8 +36,8 @@ public class Demo1Application {
         cloudinary = new Cloudinary(config);
         return cloudinary;
     }
-}
-//	@Bean
+
+    //	@Bean
 //    CommandLineRunner runner(RoleRepository roleRepo, PostRepository postRepository, UserRepository userRepository) {
 //		return args -> {
 //			Role admin = new Role(1L, "admin");
@@ -48,3 +51,16 @@ public class Demo1Application {
 //            userRepository.save(user1);
 //		};
 //	}
+    @Bean
+    CommandLineRunner runner(RoleRepository roleRepo) {
+        return args -> {
+            Role admin = new Role(1, "admin");
+            Role doctor = new Role(2, "doctor");
+            Role user = new Role(3, "user");
+            roleRepo.save(admin);
+            roleRepo.save(doctor);
+            roleRepo.save(user);
+
+        };
+    }
+}
