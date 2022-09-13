@@ -25,6 +25,11 @@ public class ContentController {
         return ResponseEntity.ok().body(postService.post(postDto));
     }
 
+    @PostMapping(value = "/post", consumes = {MediaType.APPLICATION_JSON_VALUE})
+    public ResponseEntity<AbstractResponse> postV2(@RequestBody PostDto postDto) throws IOException {
+        return ResponseEntity.ok().body(postService.post(postDto));
+    }
+
     @PostMapping("/comment")
     public ResponseEntity<AbstractResponse> comment(@RequestBody CommentDto commentDto){
         return ResponseEntity.ok().body(postService.comment(commentDto));
