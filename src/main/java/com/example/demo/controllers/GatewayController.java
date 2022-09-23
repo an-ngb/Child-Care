@@ -16,6 +16,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api")
+@CrossOrigin
 public class GatewayController {
     private final UserService userService;
 
