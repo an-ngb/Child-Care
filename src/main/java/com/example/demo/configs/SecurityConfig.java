@@ -18,6 +18,10 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 @Configuration
 @EnableWebSecurity
@@ -38,7 +42,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.csrf().disable();
+        http.csrf().disable().cors().and();
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         http.addFilterBefore(new JwtHandlerFilter(userDetailsService), BasicAuthenticationFilter.class);
 //        http.authorizeRequests().antMatchers("/api/admin/**").hasAuthority("admin");
@@ -64,6 +68,38 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 //        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
 //        source.registerCorsConfiguration("/**", new CorsConfiguration().applyPermitDefaultValues());
 //        return source;
+//    }
+
+//    @Configuration
+//    public class CorsConfig {
+//
+//        @Bean
+//        public WebMvcConfigurer corsConfigurer() {
+//            return new WebMvcConfigurerAdapter() {
+//                @Override
+//                public void addCorsMappings(CorsRegistry registry) {
+//                    registry.addMapping("/**").allowedMethods("GET", "POST", "PUT", "DELETE").allowedOrigins("*")
+//                            .allowedHeaders("*");
+//                }
+//            };
+//        }
+//    }
+//
+//    @EnableWebSecurity
+//    public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+//
+//        @Override
+//        protected void configure(HttpSecurity http) throws Exception {
+//            http.cors();
+//        }
+//    }
+//
+//    @EnableWebMvc
+//    public class CorsConfig implements WebMvcConfigurer {
+//        @Override
+//        public void addCorsMappings(CorsRegistry registry) {
+//            registry.addMapping("/**");
+//        }
 //    }
 
     @Bean
