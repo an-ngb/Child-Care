@@ -19,6 +19,7 @@ import java.util.Map;
 public class GatewayController {
     private final UserService userService;
 
+    @CrossOrigin
     @PostMapping("/login")
     public ResponseEntity<AbstractResponse> login(@RequestBody @Valid LoginRequestDto loginRequest) {
         try {
@@ -30,6 +31,7 @@ public class GatewayController {
         }
     }
 
+    @CrossOrigin
     @PostMapping("/logout")
     public ResponseEntity<AbstractResponse> logout(@RequestHeader("Authorization") String token) {
         return ResponseEntity.ok().body(userService.logout(token));
