@@ -4,6 +4,7 @@ import com.example.demo.dtos.AbstractResponse;
 import com.example.demo.dtos.BookingDto;
 import com.example.demo.dtos.InteractDto;
 import com.example.demo.services.BookingService;
+import com.example.demo.services.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class DoctorController {
     private final BookingService bookingService;
+    private final UserService userService;
 
     @PostMapping("/booking/gets")
     public ResponseEntity<AbstractResponse> getBookingList() {
@@ -22,5 +24,10 @@ public class DoctorController {
     @PostMapping("/booking/approve/{id}")
     public ResponseEntity<AbstractResponse> approveBooking(@PathVariable Integer id, @RequestBody InteractDto interactDto) {
         return ResponseEntity.ok().body(bookingService.approveOrDisapproveBooking(id, interactDto));
+    }
+
+    @PostMapping("/gets")
+    public ResponseEntity<AbstractResponse> getDoctorList() {
+        return ResponseEntity.ok().body(userService.getDoctorList());
     }
 }
