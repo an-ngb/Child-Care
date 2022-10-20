@@ -147,7 +147,7 @@ public class UserServiceImpl implements UserService {
         }
         UserProfile userProfile = userProfileRepository.findByUser(user);
         UserProfileDto userProfileDto = new UserProfileDto();
-        userProfileDto.setId(user.getId().longValue());
+        userProfileDto.setId(user.getId());
         userProfileDto.setEmail(user.getEmail());
         userProfileDto.setFullName(userProfile.getFullName());
         userProfileDto.setAge(userProfile.getAge());
@@ -172,5 +172,20 @@ public class UserServiceImpl implements UserService {
             userProfileDto.setWorkAt(doctorProfile.getWorkAt());
         }
         return new AbstractResponse(userProfileDto);
+    }
+
+    @Override
+    public AbstractResponse getDoctorList() {
+        List<DoctorProfile> doctorProfileList = doctorProfileRepository.findAll();
+        List<UserProfileDto> userProfileDtos = new ArrayList<>();
+
+        for (DoctorProfile doctorProfile : doctorProfileList) {
+            UserProfileDto userProfileDto = new UserProfileDto();
+            userProfileDto.setId(doctorProfile.getId());
+            userProfileDto.setFullName(doctorProfile.getFullName());
+            userProfileDtos.add(userProfileDto);
+        }
+
+        return new AbstractResponse(userProfileDtos);
     }
 }

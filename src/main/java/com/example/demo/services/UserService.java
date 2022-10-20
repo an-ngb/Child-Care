@@ -11,4 +11,6 @@ public interface UserService {
     AbstractResponse logout(String token);
     AbstractResponse register(RegisterRequestDto registerRequestDto);
     AbstractResponse getUserProfile(Integer id);
+
+    AbstractResponse getDoctorList();
 }
