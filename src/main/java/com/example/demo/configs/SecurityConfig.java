@@ -23,6 +23,9 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
+import java.util.Arrays;
+import java.util.Collections;
+
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
@@ -42,11 +45,23 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.csrf().disable().cors().and();
+        http.csrf().disable().exceptionHandling();
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         http.addFilterBefore(new JwtHandlerFilter(userDetailsService), BasicAuthenticationFilter.class);
 //        http.authorizeRequests().antMatchers("/api/admin/**").hasAuthority("admin");
         http.authorizeRequests().anyRequest().permitAll();
+    }
+
+    @Bean
+    public CorsFilter corsFilter() {
+        final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        final CorsConfiguration config = new CorsConfiguration();
+        config.setAllowedOrigins(Collections.singletonList("http://localhost:3000")); // Provide list of origins if you want multiple origins
+        config.setAllowedHeaders(Arrays.asList("Origin", "Content-Type", "Accept"));
+        config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "OPTIONS", "DELETE", "PATCH"));
+        config.setAllowCredentials(true);
+        source.registerCorsConfiguration("/**", config);
+        return new CorsFilter(source);
     }
 
 
@@ -70,21 +85,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 //        return source;
 //    }
 
-//    @Configuration
-//    public class CorsConfig {
-//
-//        @Bean
-//        public WebMvcConfigurer corsConfigurer() {
-//            return new WebMvcConfigurerAdapter() {
-//                @Override
-//                public void addCorsMappings(CorsRegistry registry) {
-//                    registry.addMapping("/**").allowedMethods("GET", "POST", "PUT", "DELETE").allowedOrigins("*")
-//                            .allowedHeaders("*");
-//                }
-//            };
-//        }
-//    }
-//
 //    @EnableWebSecurity
 //    public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 //
@@ -96,9 +96,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 //
 //    @EnableWebMvc
 //    public class CorsConfig implements WebMvcConfigurer {
-//        @Override
-//        public void addCorsMappings(CorsRegistry registry) {
-//            registry.addMapping("/**");
+//        @Bean
+//        public WebMvcConfigurer corsConfigurer() {
+//            return new WebMvcConfigurerAdapter() {
+//                @Override
+//                public void addCorsMappings(CorsRegistry registry) {
+//                    registry.addMapping("/**").allowedMethods("GET", "POST", "PUT", "DELETE").allowedOrigins("*")
+//                            .allowedHeaders("*");
+//                }
+//            };
 //        }
 //    }
 
