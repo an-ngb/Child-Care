@@ -70,10 +70,6 @@ public class PostServiceImpl implements PostService {
     @Override
     public AbstractResponse post(PostDto postDto) throws IOException {
 
-        if(sessionService.isTokenExpire()){
-            return new AbstractResponse("FAILED", "TOKEN_EXPIRED", 400);
-        }
-
         GroupPost groupPost = new GroupPost(postDto.getTitle());
         groupPostRepository.save(groupPost);
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -98,9 +94,6 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public AbstractResponse edit(EditDto editDto) {
-        if (sessionService.isTokenExpire()) {
-            return new AbstractResponse("FAILED", "TOKEN_EXPIRED", 400);
-        }
         GroupPost groupPost = groupPostRepository.findById(editDto.getId()).orElse(null);
         if (groupPost == null) {
             return new AbstractResponse("FAILED", "POST_NOT_FOUND", 404);
@@ -123,9 +116,6 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public AbstractResponse comment(CommentDto commentDto) {
-        if(sessionService.isTokenExpire()){
-            return new AbstractResponse("FAILED", "TOKEN_EXPIRED", 400);
-        }
         GroupPost groupPost = groupPostRepository.findGroupPostById(commentDto.getId());
 
         if (groupPost == null) {

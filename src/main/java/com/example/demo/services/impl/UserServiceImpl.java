@@ -75,10 +75,6 @@ public class UserServiceImpl implements UserService {
             return new AbstractResponse("FAILED", "FORBIDDEN", 400);
         }
 
-        if (detectedUser.getToken() != null) {
-            return new AbstractResponse("FAILED", "ALREADY_LOGGED_IN", 400, detectedUser.getToken());
-        }
-
         Map<String, Object> payload = new HashMap<>();
 
         payload.put("id", detectedUser.getId());
@@ -103,11 +99,6 @@ public class UserServiceImpl implements UserService {
         }
         token = token.split(" ")[1];
         User user = userRepository.findByToken(token);
-        if (user == null) {
-            return new AbstractResponse("FAILED", "TOKEN_EXPIRED", 400);
-        } else if (user.getToken() == null) {
-            return new AbstractResponse("FAILED", "TOKEN_EXPIRED", 400);
-        }
         user.setToken(null);
         userRepository.save(user);
         return new AbstractResponse();
@@ -138,9 +129,6 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public AbstractResponse getUserProfile(Integer id) {
-        if (sessionService.isTokenExpire()) {
-            return new AbstractResponse("FAILED", "TOKEN_EXPIRED", 400);
-        }
         User user = userRepository.findUserById(id);
         if(user == null){
             return new AbstractResponse("FAILED", "USER_NOT_FOUND", 404);
