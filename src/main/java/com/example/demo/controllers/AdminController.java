@@ -32,4 +32,11 @@ public class AdminController {
     }
 
     @PostMapping("/clear-booking-list")
+    public ResponseEntity<AbstractResponse> clearBookingList(){
+        return ResponseEntity.ok().body(adminService.clearBookingList());
+    }
+    @PostMapping("/clear-user")
+    public ResponseEntity<AbstractResponse> clearUser(){
+        return ResponseEntity.ok().body(adminService.clearUserList());
+    }
 }
