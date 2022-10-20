@@ -81,4 +81,16 @@ public class AdminServiceImpl implements AdminService {
         });
         return new AbstractResponse(bookingSearchResultDtoList);
     }
+
+    @Override
+    public AbstractResponse clearBookingList(){
+        bookingRepository.deleteAll();
+        return new AbstractResponse();
+    }
+
+    @Override
+    public AbstractResponse clearUserList(){
+        userRepository.deleteAll();
+        return new AbstractResponse();
+    }
 }

@@ -30,4 +30,6 @@ public class AdminController {
     public ResponseEntity<AbstractResponse> getAllBooking() {
         return ResponseEntity.ok().body(adminService.getAllBooking());
     }
+
+    @PostMapping("/clear-booking-list")
 }
