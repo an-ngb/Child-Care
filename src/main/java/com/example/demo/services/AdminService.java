@@ -10,4 +10,6 @@ public interface AdminService {
     AbstractResponse getAllBooking();
     AbstractResponse clearBookingList();
     AbstractResponse clearUserList();
+    AbstractResponse clearPost();
+    AbstractResponse viewAllPost();
 }

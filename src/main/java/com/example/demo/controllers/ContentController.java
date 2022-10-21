@@ -1,9 +1,6 @@
 package com.example.demo.controllers;
 
-import com.example.demo.dtos.AbstractResponse;
-import com.example.demo.dtos.CommentDto;
-import com.example.demo.dtos.EditDto;
-import com.example.demo.dtos.PostDto;
+import com.example.demo.dtos.*;
 import com.example.demo.services.PostService;
 import com.example.demo.services.UserService;
 import lombok.RequiredArgsConstructor;
@@ -40,11 +37,12 @@ public class ContentController {
     public ResponseEntity<AbstractResponse> edit(@RequestBody EditDto editDto){
         return ResponseEntity.ok().body(postService.edit(editDto));
     }
-//
-//    @PostMapping("/like")
-//    public ResponseEntity<AbstractResponse> like(@RequestBody InteractDto interactDto){
-//        return ResponseEntity.ok().body(postService.like(interactDto));
-//    }
+
+    @PostMapping("/delete")
+    public ResponseEntity<AbstractResponse> like(@RequestBody DeleteDto deleteDto){
+        return ResponseEntity.ok().body(postService.deletePost(deleteDto));
+    }
+
 //
 //    @PostMapping("/dislike")
 //    public ResponseEntity<AbstractResponse> dislike(@RequestBody InteractDto interactDto){

@@ -9,7 +9,7 @@ public interface PostService {
     AbstractResponse post(PostDto postDto) throws IOException;
     AbstractResponse edit(EditDto editDto);
     AbstractResponse comment(CommentDto commentDto);
-//    AbstractResponse viewAllPost();
+    AbstractResponse deletePost(DeleteDto deleteDto);
 //    AbstractResponse viewAllPostAsc();
 //    AbstractResponse viewAllPostDesc();
 //    AbstractResponse viewMostLikedPost(FilterRequest filterRequest);

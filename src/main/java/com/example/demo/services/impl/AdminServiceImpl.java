@@ -4,10 +4,7 @@ import com.example.demo.dtos.AbstractResponse;
 import com.example.demo.dtos.BookingSearchResultDto;
 import com.example.demo.dtos.ChangeUserRoleDto;
 import com.example.demo.dtos.InteractDto;
-import com.example.demo.entities.Booking;
-import com.example.demo.entities.DoctorProfile;
-import com.example.demo.entities.User;
-import com.example.demo.entities.UserProfile;
+import com.example.demo.entities.*;
 import com.example.demo.repositories.*;
 import com.example.demo.services.AdminService;
 import lombok.RequiredArgsConstructor;
@@ -96,5 +93,17 @@ public class AdminServiceImpl implements AdminService {
         userRepository.deleteAll();
         postRepository.deleteAll();
         return new AbstractResponse();
+    }
+
+    @Override
+    public AbstractResponse clearPost(){
+        postRepository.deleteAll();
+        return new AbstractResponse();
+    }
+
+    @Override
+    public AbstractResponse viewAllPost() {
+        List<Post> list = postRepository.findAll();
+        return new AbstractResponse(list);
     }
 }

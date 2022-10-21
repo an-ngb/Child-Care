@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.swing.*;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -79,7 +80,6 @@ public class PostServiceImpl implements PostService {
         post.setContent(postDto.getContent());
         post.setUserId(user.getId());
         postRepository.save(post);
-        saveUploadedFile(post, postDto.getImage());
 //        if(postDto.getTagList() != null){
 //            for (String s : postDto.getTagList()) {
 //                GroupTag tag = groupTagRepository.findGroupTagByName(s);
@@ -89,7 +89,7 @@ public class PostServiceImpl implements PostService {
 //                }
 //            }
 //        }
-        return new AbstractResponse(post);
+        return new AbstractResponse();
     }
 
     @Override
@@ -103,7 +103,7 @@ public class PostServiceImpl implements PostService {
             groupPost.setTitle(editDto.getTitle());
         }
 
-        List<Post> postList = null;
+        List<Post> postList = new ArrayList<>();
         if (editDto.getContent() != null) {
             postList = postRepository.findByGroupPost(groupPost);
             postList.get(0).setContent(editDto.getContent());
@@ -121,21 +121,34 @@ public class PostServiceImpl implements PostService {
         if (groupPost == null) {
             return new AbstractResponse("FAILED", "POST_NOT_FOUND", 404);
         }
+
         //Comment
         Post comment = new Post(groupPost);
         comment.setContent(commentDto.getContent());
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User user = userRepository.findByEmail(authentication.getName());
+
+        comment.setUserId(user.getId());
+
         postRepository.save(comment);
         return new AbstractResponse();
     }
-//
-//    @Override
-//    public AbstractResponse viewAllPost() {
-//        if(sessionService.isTokenExpire()){
-//            return new AbstractResponse("FAILED", "TOKEN_EXPIRED", 400);
-//        }
-//        List<Post> list = postRepository.findAll();
-//        return new AbstractResponse(list);
-//    }
+
+    @Override
+    public AbstractResponse deletePost(DeleteDto deleteDto) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User user = userRepository.findByEmail(authentication.getName());
+        List<Post> postList = postRepository.findAllByUserId(user.getId());
+        postList.forEach(item -> {
+            if(item.getId().equals(deleteDto.getId())){
+                postRepository.delete(item);
+            }
+        });
+        return new AbstractResponse();
+    }
+
+    //
 //
 //    @Override
 //    public AbstractResponse viewAllPostAsc() {
