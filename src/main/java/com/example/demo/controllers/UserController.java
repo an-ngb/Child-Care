@@ -16,19 +16,16 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping(value = "/register", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
-    @CrossOrigin
     public ResponseEntity<AbstractResponse> register(@ModelAttribute RegisterRequestDto registerRequestDto) {
         return ResponseEntity.ok().body(userService.register(registerRequestDto));
     }
 
     @PostMapping(value = "/register", consumes = {MediaType.APPLICATION_JSON_VALUE})
-    @CrossOrigin
     public ResponseEntity<AbstractResponse> registerV2(@RequestBody RegisterRequestDto registerRequestDto) {
         return ResponseEntity.ok().body(userService.register(registerRequestDto));
     }
 
     @PostMapping("/profile/{id}")
-    @CrossOrigin
     public ResponseEntity<AbstractResponse> getUserProfile(@PathVariable("id") Integer id) {
         return ResponseEntity.ok().body(userService.getUserProfile(id));
     }
