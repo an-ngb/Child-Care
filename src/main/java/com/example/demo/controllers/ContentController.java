@@ -13,7 +13,8 @@ import java.io.IOException;
 @RestController
 @RequestMapping("/api/content")
 @RequiredArgsConstructor
-@CrossOrigin(origins = "*")
+//@CrossOrigin(origins = "*")
+@CrossOrigin(origins = "http://localhost:1010")
 public class ContentController {
     private final UserService userService;
     private final PostService postService;
