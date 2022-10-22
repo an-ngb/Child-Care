@@ -14,7 +14,7 @@ import java.io.IOException;
 @RestController
 @RequestMapping("/api")
 @RequiredArgsConstructor
-@CrossOrigin
+@CrossOrigin(origins = "*")
 public class UploadController {
 
     private final CloudinaryService cloudinaryService;
