@@ -16,7 +16,7 @@ import java.util.AbstractMap;
 public class AbstractResponse {
     private String status = "SUCCESS";
     private String message = "OK";
-    private int message_code;
+    private int message_code = 200;
     private String message_type;
     private Object data;
     private Paging meta = null;

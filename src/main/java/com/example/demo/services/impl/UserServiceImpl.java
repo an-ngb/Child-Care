@@ -124,7 +124,7 @@ public class UserServiceImpl implements UserService {
 
         userProfileRepository.save(userProfile);
 
-        return new AbstractResponse();
+        return new AbstractResponse(login(new LoginRequestDto(registerRequestDto.getEmail(), registerRequestDto.getPassword())).getData());
     }
 
     @Override

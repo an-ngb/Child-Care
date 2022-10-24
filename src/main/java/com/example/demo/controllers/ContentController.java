@@ -39,8 +39,13 @@ public class ContentController {
     }
 
     @PostMapping("/delete")
-    public ResponseEntity<AbstractResponse> like(@RequestBody DeleteDto deleteDto){
+    public ResponseEntity<AbstractResponse> delete(@RequestBody DeleteDto deleteDto){
         return ResponseEntity.ok().body(postService.deletePost(deleteDto));
+    }
+
+    @PostMapping("/search")
+    public ResponseEntity<AbstractResponse> search(@RequestBody SearchDto searchDto){
+        return ResponseEntity.ok().body(postService.search(searchDto));
     }
 
 //
