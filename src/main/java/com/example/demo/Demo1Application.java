@@ -66,8 +66,8 @@ public class Demo1Application {
             roleRepo.save(doctor);
             roleRepo.save(user);
 
-            if(userRepository.findByEmail("admin@gmail.com") == null){
-                User user1 = new User("admin@gmail.com", "admin", admin);
+            if(userRepository.findByEmail("adminUser@gmail.com") == null){
+                User user1 = new User("adminUser@gmail.com", "Admin123!@#", admin);
                 userRepository.save(user1);
             }
         };
