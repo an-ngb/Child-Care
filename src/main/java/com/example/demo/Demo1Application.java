@@ -3,7 +3,9 @@ package com.example.demo;
 import com.cloudinary.Cloudinary;
 import com.example.demo.entities.Role;
 import com.example.demo.entities.User;
+import com.example.demo.entities.UserProfile;
 import com.example.demo.repositories.RoleRepository;
+import com.example.demo.repositories.UserProfileRepository;
 import com.example.demo.repositories.UserRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -59,7 +61,7 @@ public class Demo1Application {
 //		};
 //	}
     @Bean
-    CommandLineRunner runner(RoleRepository roleRepo, UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    CommandLineRunner runner(RoleRepository roleRepo, UserRepository userRepository, UserProfileRepository userProfileRepository, PasswordEncoder passwordEncoder) {
         return args -> {
             Role admin = new Role(1, "admin");
             Role doctor = new Role(2, "doctor");
@@ -68,9 +70,12 @@ public class Demo1Application {
             roleRepo.save(doctor);
             roleRepo.save(user);
 
-            if(userRepository.findByEmail("admin@admin.com") == null){
-                User user1 = new User("admin@admin.com", passwordEncoder.encode("Admin123!@#"), admin);
+            if(userRepository.findByEmail("adminUser@adminUser.com") == null){
+                User user1 = new User("adminUser@adminUser.com", passwordEncoder.encode("Admin123!@#"), admin);
+                UserProfile userProfile = new UserProfile(user1, "Admin Fullname", "Admin Address", 25, 1, "Admin Phone Number");
+
                 userRepository.save(user1);
+                userProfileRepository.save(userProfile);
             }
         };
     }
