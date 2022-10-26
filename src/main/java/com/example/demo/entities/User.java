@@ -46,4 +46,10 @@ public class User{
     @UpdateTimestamp
     @Column(name = "updated_at", nullable = false)
     protected Instant updatedAt;
+
+    public User(String email, String password, Role role) {
+        this.email = email;
+        this.password = password;
+        this.role = role;
+    }
 }
