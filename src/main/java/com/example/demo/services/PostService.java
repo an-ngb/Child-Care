@@ -10,6 +10,7 @@ public interface PostService {
     AbstractResponse edit(EditDto editDto);
     AbstractResponse comment(CommentDto commentDto);
     AbstractResponse deletePost(DeleteDto deleteDto);
+    AbstractResponse search(SearchDto searchDto);
 //    AbstractResponse viewAllPostAsc();
 //    AbstractResponse viewAllPostDesc();
 //    AbstractResponse viewMostLikedPost(FilterRequest filterRequest);

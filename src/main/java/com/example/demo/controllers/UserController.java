@@ -30,5 +30,4 @@ public class UserController {
     public ResponseEntity<AbstractResponse> getUserProfile(@PathVariable("id") Integer id) {
         return ResponseEntity.ok().body(userService.getUserProfile(id));
     }
-
 }

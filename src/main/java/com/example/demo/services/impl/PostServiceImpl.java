@@ -4,8 +4,10 @@ import com.example.demo.dtos.*;
 import com.example.demo.entities.*;
 import com.example.demo.repositories.*;
 import com.example.demo.services.PostService;
+import com.example.demo.specification.PostSpecs;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.BeanWrapper;
 import org.springframework.beans.BeanWrapperImpl;
 import org.springframework.security.core.Authentication;
@@ -146,6 +148,14 @@ public class PostServiceImpl implements PostService {
             }
         });
         return new AbstractResponse();
+    }
+
+    @Override
+    public AbstractResponse search(SearchDto searchDto) {
+        if(Strings.isEmpty(searchDto.getKey())){
+            return new AbstractResponse();
+        }
+        return new AbstractResponse(postRepository.findAll(PostSpecs.search(searchDto)));
     }
 
     //
