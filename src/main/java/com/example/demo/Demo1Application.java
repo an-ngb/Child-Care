@@ -11,6 +11,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.domain.AuditorAware;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
@@ -57,7 +59,7 @@ public class Demo1Application {
 //		};
 //	}
     @Bean
-    CommandLineRunner runner(RoleRepository roleRepo, UserRepository userRepository) {
+    CommandLineRunner runner(RoleRepository roleRepo, UserRepository userRepository, PasswordEncoder passwordEncoder) {
         return args -> {
             Role admin = new Role(1, "admin");
             Role doctor = new Role(2, "doctor");
@@ -66,8 +68,8 @@ public class Demo1Application {
             roleRepo.save(doctor);
             roleRepo.save(user);
 
-            if(userRepository.findByEmail("adminUser@gmail.com") == null){
-                User user1 = new User("adminUser@gmail.com", "Admin123!@#", admin);
+            if(userRepository.findByEmail("admin@admin.com") == null){
+                User user1 = new User("admin@admin.com", passwordEncoder.encode("Admin123!@#"), admin);
                 userRepository.save(user1);
             }
         };
