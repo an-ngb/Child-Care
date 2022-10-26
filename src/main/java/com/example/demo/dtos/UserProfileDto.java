@@ -12,6 +12,7 @@ import java.util.List;
 public class UserProfileDto {
     private Integer id;
     private String fullName;
+    private String role;
     private String email;
     private Integer age;
     private Integer gender;
