@@ -30,4 +30,9 @@ public class UserController {
     public ResponseEntity<AbstractResponse> getUserProfile(@PathVariable("id") Integer id) {
         return ResponseEntity.ok().body(userService.getUserProfile(id));
     }
+
+    @PostMapping("/my-profile")
+    public ResponseEntity<AbstractResponse> getMyProfile() {
+        return ResponseEntity.ok().body(userService.getMyProfile());
+    }
 }

@@ -13,4 +13,6 @@ public interface UserService {
     AbstractResponse getUserProfile(Integer id);
 
     AbstractResponse getDoctorList();
+
+    AbstractResponse getMyProfile();
 }

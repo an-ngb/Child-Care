@@ -164,6 +164,45 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public AbstractResponse getMyProfile() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        User user = userRepository.findByEmail(authentication.getName());
+
+        if(user == null){
+            return new AbstractResponse("FAILED", "USER_NOT_FOUND", 404);
+        }
+        UserProfile userProfile = userProfileRepository.findByUser(user);
+        UserProfileDto userProfileDto = new UserProfileDto();
+        userProfileDto.setId(user.getId());
+        userProfileDto.setEmail(user.getEmail());
+        userProfileDto.setRole(user.getRole().getRoleName());
+        userProfileDto.setFullName(userProfile.getFullName());
+        userProfileDto.setAge(userProfile.getAge());
+        userProfileDto.setGender(userProfile.getGender());
+        userProfileDto.setPhone(userProfile.getPhone());
+        List<GroupPost> groupPostList = groupPostRepository.findAllByCreatedBy(user.getEmail());
+        List<PostSearchResultDto> postSearchResultDtoList;
+        postSearchResultDtoList = postServiceImpl.convertPostToPostDto(groupPostList);
+        userProfileDto.setPostSearchResultDtoList(postSearchResultDtoList);
+        DoctorProfile doctorProfile = doctorProfileRepository.findByUser(user);
+        if(doctorProfile == null){
+            return new AbstractResponse(userProfileDto);
+        } else {
+            userProfileDto.setCertificate(doctorProfile.getCertificate());
+            userProfileDto.setDegree(doctorProfile.getDegree());
+            userProfileDto.setExpYear(doctorProfile.getExpYear());
+            userProfileDto.setSpecialist(doctorProfile.getSpecialist());
+            userProfileDto.setWorkingAt(doctorProfile.getWorkingAt());
+            userProfileDto.setPrivateWeb(doctorProfile.getPrivateWeb());
+            userProfileDto.setStartWorkAtTime(doctorProfile.getStartWorkAtTime());
+            userProfileDto.setEndWorkAtTime(doctorProfile.getEndWorkAtTime());
+            userProfileDto.setWorkAt(doctorProfile.getWorkAt());
+        }
+        return new AbstractResponse(userProfileDto);
+    }
+
+    @Override
     public AbstractResponse getDoctorList() {
         List<DoctorProfile> doctorProfileList = doctorProfileRepository.findAll();
         List<UserProfileDto> userProfileDtos = new ArrayList<>();
