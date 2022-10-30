@@ -27,12 +27,12 @@ public class CloudinaryService {
 
     private final UserRepository userRepository;
 
-    public AbstractResponse upload(MultipartFile file) {
+    public String upload(MultipartFile file) {
             try {
                 Map uploadResult = cloudinary.uploader().upload(file.getBytes(), ObjectUtils.emptyMap());
                 File file1 = new File(uploadResult.get("url").toString());
                 fileRepository.save(file1);
-                return new AbstractResponse(uploadResult.get("url").toString());
+                return uploadResult.get("url").toString();
             } catch (Exception ex) {
                 logger.error(ex.getMessage());
                 return null;
