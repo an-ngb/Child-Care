@@ -13,8 +13,6 @@ import java.io.IOException;
 @RestController
 @RequestMapping("/api/content")
 @RequiredArgsConstructor
-//@CrossOrigin(origins = "*")
-@CrossOrigin(origins = "http://localhost:1010")
 public class ContentController {
     private final UserService userService;
     private final PostService postService;
@@ -47,6 +45,16 @@ public class ContentController {
     @PostMapping("/search")
     public ResponseEntity<AbstractResponse> search(@RequestBody SearchDto searchDto){
         return ResponseEntity.ok().body(postService.search(searchDto));
+    }
+
+    @PostMapping("/get-all-thread")
+    public ResponseEntity<AbstractResponse> getAllParentGroup(){
+        return ResponseEntity.ok().body(postService.getAllParentGroup());
+    }
+
+    @PostMapping("/get-post-inside-thread")
+    public ResponseEntity<AbstractResponse> getPostInsideThread(@RequestBody Integer id){
+        return ResponseEntity.ok().body(postService.getPostInsideThread(id));
     }
 
 //

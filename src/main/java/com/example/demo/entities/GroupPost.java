@@ -27,4 +27,9 @@ public class GroupPost extends AbstractAuditing{
     public GroupPost(String title) {
         this.title = title;
     }
+
+    public GroupPost(String title, Integer parentGroup) {
+        this.title = title;
+        this.parentGroup = parentGroup;
+    }
 }

@@ -12,8 +12,6 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/doctor")
 @RequiredArgsConstructor
-//@CrossOrigin(origins = "*")
-@CrossOrigin(origins = "http://localhost:1010")
 public class DoctorController {
     private final BookingService bookingService;
     private final UserService userService;

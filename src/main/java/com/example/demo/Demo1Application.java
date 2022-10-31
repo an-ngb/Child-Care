@@ -1,9 +1,11 @@
 package com.example.demo;
 
 import com.cloudinary.Cloudinary;
+import com.example.demo.entities.ParentGroup;
 import com.example.demo.entities.Role;
 import com.example.demo.entities.User;
 import com.example.demo.entities.UserProfile;
+import com.example.demo.repositories.ParentGroupRepository;
 import com.example.demo.repositories.RoleRepository;
 import com.example.demo.repositories.UserProfileRepository;
 import com.example.demo.repositories.UserRepository;
@@ -61,21 +63,31 @@ public class Demo1Application {
 //		};
 //	}
     @Bean
-    CommandLineRunner runner(RoleRepository roleRepo, UserRepository userRepository, UserProfileRepository userProfileRepository, PasswordEncoder passwordEncoder) {
+    CommandLineRunner runner(RoleRepository roleRepo, UserRepository userRepository, UserProfileRepository userProfileRepository, PasswordEncoder passwordEncoder, ParentGroupRepository parentGroupRepository) {
         return args -> {
-            Role admin = new Role(1, "admin");
-            Role doctor = new Role(2, "doctor");
-            Role user = new Role(3, "user");
-            roleRepo.save(admin);
-            roleRepo.save(doctor);
-            roleRepo.save(user);
+            if(roleRepo.findRoleById(1) == null && roleRepo.findRoleById(2) == null && roleRepo.findRoleById(3) == null){
+                Role admin = new Role(1, "admin");
+                Role doctor = new Role(2, "doctor");
+                Role user = new Role(3, "user");
+                roleRepo.save(admin);
+                roleRepo.save(doctor);
+                roleRepo.save(user);
+            }
 
-            if(userRepository.findByEmail("adminUser@adminUser.com") == null){
-                User user1 = new User("adminUser@adminUser.com", passwordEncoder.encode("Admin123!@#"), admin);
+            if(userRepository.findByEmail("adminUser@adminUser.com") == null && roleRepo.findRoleById(1) != null){
+                User user1 = new User("adminUser@adminUser.com", passwordEncoder.encode("Admin123!@#"), roleRepo.findRoleById(1));
                 UserProfile userProfile = new UserProfile(user1, "Admin Fullname", "Admin Address", 25, 1, "Admin Phone Number");
 
                 userRepository.save(user1);
                 userProfileRepository.save(userProfile);
+            }
+
+            if(parentGroupRepository.findAll().size() == 0){
+                parentGroupRepository.save(new ParentGroup(1, "THREAD1"));
+                parentGroupRepository.save(new ParentGroup(2, "THREAD2"));
+                parentGroupRepository.save(new ParentGroup(3, "THREAD3"));
+                parentGroupRepository.save(new ParentGroup(4, "THREAD4"));
+                parentGroupRepository.save(new ParentGroup(5, "THREAD5"));
             }
         };
     }

@@ -11,6 +11,8 @@ public interface PostService {
     AbstractResponse comment(CommentDto commentDto);
     AbstractResponse deletePost(DeleteDto deleteDto);
     AbstractResponse search(SearchDto searchDto);
+    AbstractResponse getAllParentGroup();
+    AbstractResponse getPostInsideThread(Integer id);
 //    AbstractResponse viewAllPostAsc();
 //    AbstractResponse viewAllPostDesc();
 //    AbstractResponse viewMostLikedPost(FilterRequest filterRequest);

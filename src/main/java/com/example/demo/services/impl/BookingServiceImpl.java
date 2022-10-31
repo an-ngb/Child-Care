@@ -14,6 +14,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -42,7 +43,7 @@ public class BookingServiceImpl implements BookingService {
             return new AbstractResponse("FAILED", "DOCTOR_NOT_FOUND", 404);
         }
 
-        Booking booking = new Booking(user, doctor, bookingDto.getBookedAt(), bookingDto.getBookedTime(), bookingDto.getContent());
+        Booking booking = new Booking(user, doctor, bookingDto.getBookedAt(), bookingDto.getBookedTime(), bookingDto.getContent(), bookingDto.getShift());
 
         bookingRepository.save(booking);
 
@@ -60,6 +61,7 @@ public class BookingServiceImpl implements BookingService {
         bookingSearchResultDto.setDoctorName(doctorProfileRepository.findByUser(booking.getDoctor()).getFullName());
         bookingSearchResultDto.setBookedAt(booking.getBookedAt());
         bookingSearchResultDto.setBookedTime(booking.getBookedTime());
+        bookingSearchResultDto.setBookedShift(booking.getShiftBooked());
         bookingSearchResultDto.setContent(booking.getContent());
         bookingSearchResultDto.setIsApproved(booking.getIsApproved() == null ? null : booking.getIsApproved());
         return bookingSearchResultDto;
@@ -94,6 +96,16 @@ public class BookingServiceImpl implements BookingService {
         booking.setIsApproved(interactDto.getApprove());
         bookingRepository.save(booking);
         return new AbstractResponse();
+    }
+
+    @Override
+    public AbstractResponse getBookingListByDay(Instant time) {
+        List<Booking> bookingList = bookingRepository.findAllByBookedAt(time);
+        List<BookingSearchResultDto> bookingSearchResultDtoList = new ArrayList<>();
+        bookingList.forEach(item -> {
+            bookingSearchResultDtoList.add(convertBookingToBookingDto(item));
+        });
+        return new AbstractResponse(bookingSearchResultDtoList);
     }
 }
 

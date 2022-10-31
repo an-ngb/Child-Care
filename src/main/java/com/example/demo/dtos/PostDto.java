@@ -15,5 +15,6 @@ import java.util.List;
 public class PostDto {
     private String title;
     private String content;
+    private Integer threadId;
 //    private List<String> tagList;
 }

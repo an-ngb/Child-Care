@@ -16,8 +16,6 @@ import java.util.Map;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api")
-//@CrossOrigin(origins = "*")
-@CrossOrigin(origins = "http://localhost:1010")
 public class GatewayController {
     private final UserService userService;
 

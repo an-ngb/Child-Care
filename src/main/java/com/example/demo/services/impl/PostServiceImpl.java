@@ -43,6 +43,7 @@ public class PostServiceImpl implements PostService {
     private final SessionServiceImpl sessionService;
     private final FileRepository fileRepository;
     private final PostFileRepository postFileRepository;
+    private final ParentGroupRepository parentGroupRepository;
 
     public static String[] getNullPropertyNames(Object source) {
         final BeanWrapper src = new BeanWrapperImpl(source);
@@ -73,7 +74,7 @@ public class PostServiceImpl implements PostService {
     @Override
     public AbstractResponse post(PostDto postDto) throws IOException {
 
-        GroupPost groupPost = new GroupPost(postDto.getTitle());
+        GroupPost groupPost = new GroupPost(postDto.getTitle(), postDto.getThreadId());
         groupPostRepository.save(groupPost);
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User user = userRepository.findByEmail(authentication.getName());
@@ -158,6 +159,21 @@ public class PostServiceImpl implements PostService {
         return new AbstractResponse(postRepository.findAll(PostSpecs.search(searchDto)));
     }
 
+    @Override
+    public AbstractResponse getAllParentGroup() {
+        return new AbstractResponse(parentGroupRepository.findAll());
+    }
+
+    @Override
+    public AbstractResponse getPostInsideThread(Integer id) {
+
+        List<GroupPost> groupPostList = groupPostRepository.findAllByParentGroup(id);
+
+        List<PostSearchResultDto> postSearchResultDtoList = convertPostToPostDto(groupPostList);
+
+        return new AbstractResponse(postSearchResultDtoList);
+    }
+
     //
 //
 //    @Override
@@ -206,11 +222,6 @@ public class PostServiceImpl implements PostService {
             postSearchResultDto.setId(groupPost.getId());
             postSearchResultDto.setTitle(groupPost.getTitle());
             postSearchResultDto.setContent(postRepository.findByGroupPostOrderById(groupPost).get(0).getContent());
-            if(postFileRepository.findByPost(postRepository.findByGroupPostOrderById(groupPost).get(0)) != null){
-                postSearchResultDto.setFile(postFileRepository.findByPost(postRepository.findByGroupPostOrderById(groupPost).get(0)).getPostFile().getResourceLink());
-            } else {
-                postSearchResultDto.setFile(null);
-            }
             postSearchResultDto.setAuthor(userProfileRepository.findByUser(user).getFullName());
             List<Post> commentList = postRepository.findByGroupPost(groupPost);
             List<CommentResultDto> commentResultDtoList = new ArrayList<>();
@@ -220,11 +231,6 @@ public class PostServiceImpl implements PostService {
                     commentResultDto.setId(item.getId());
                     commentResultDto.setContent(item.getContent());
                     commentResultDto.setCreatedAt(item.getCreatedAt());
-                    if(postFileRepository.findByPost(item) != null){
-                        commentResultDto.setFile(postFileRepository.findByPost(item).getPostFile().getResourceLink());
-                    } else {
-                        commentResultDto.setFile(null);
-                    }
                     User foundUser = userRepository.findByEmail(item.getCreatedBy());
 
                     UserProfile userProfile = userProfileRepository.findByUser(foundUser);

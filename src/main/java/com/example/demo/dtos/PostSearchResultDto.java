@@ -14,6 +14,5 @@ public class PostSearchResultDto {
     private String author;
     private Integer totalLike;
     private Integer totalDislike;
-    private String file;
     private List<CommentResultDto> commentList;
 }

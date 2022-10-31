@@ -11,4 +11,6 @@ public interface GroupPostRepository extends AbstractRepository<GroupPost, Integ
     List<GroupPost> findAllByCreatedBy(String email);
 
     GroupPost findGroupPostById(Integer id);
+
+    List<GroupPost> findAllByParentGroup(Integer id);
 }

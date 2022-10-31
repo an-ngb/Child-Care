@@ -34,6 +34,9 @@ public class Booking extends AbstractAuditing{
     @Column(name = "booked_time")
     private Integer bookedTime;
 
+    @Column(name = "shiftBooked")
+    private Integer shiftBooked;
+
     @Column(name = "content")
     @Type(type = "org.hibernate.type.TextType")
     private String content;
@@ -41,11 +44,12 @@ public class Booking extends AbstractAuditing{
     @Column(name = "is_approved")
     private Boolean isApproved;
 
-    public Booking(User user, User doctor, Instant bookedAt, Integer bookedTime, String content) {
+    public Booking(User user, User doctor, Instant bookedAt, Integer bookedTime, String content, Integer shiftBooked) {
         this.user = user;
         this.doctor = doctor;
         this.bookedAt = bookedAt;
         this.bookedTime = bookedTime;
         this.content = content;
+        this.shiftBooked = shiftBooked;
     }
 }

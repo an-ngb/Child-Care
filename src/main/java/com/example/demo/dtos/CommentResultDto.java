@@ -17,5 +17,4 @@ public class CommentResultDto {
     private String createdBy;
     private Instant createdAt;
     private Instant updatedAt;
-    private String file;
 }

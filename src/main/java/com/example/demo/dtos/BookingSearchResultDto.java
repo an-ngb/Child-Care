@@ -23,4 +23,5 @@ public class BookingSearchResultDto {
     private Integer bookedTime;
     private String content;
     private Boolean isApproved;
+    private Integer bookedShift;
 }

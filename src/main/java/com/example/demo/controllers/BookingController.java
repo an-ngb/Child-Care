@@ -7,16 +7,21 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.Instant;
+
 @RestController
 @RequestMapping("/api/booking")
 @RequiredArgsConstructor
-//@CrossOrigin(origins = "*")
-@CrossOrigin(origins = "http://localhost:1010")
 public class BookingController {
     private final BookingService bookingService;
 
     @PostMapping("/book")
     public ResponseEntity<AbstractResponse> booking(@RequestBody BookingDto bookingDto) {
         return ResponseEntity.ok().body(bookingService.booking(bookingDto));
+    }
+
+    @PostMapping("/get-booking-list-by-day")
+    public ResponseEntity<AbstractResponse> booking(@RequestBody Instant time) {
+        return ResponseEntity.ok().body(bookingService.getBookingListByDay(time));
     }
 }
