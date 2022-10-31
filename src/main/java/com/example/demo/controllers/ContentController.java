@@ -57,6 +57,11 @@ public class ContentController {
         return ResponseEntity.ok().body(postService.getPostInsideThread(id));
     }
 
+    @PostMapping("/get-post/{id}")
+    public ResponseEntity<AbstractResponse> getPostByPostId(@PathVariable int id){
+        return ResponseEntity.ok().body(postService.getPostByPostId(id));
+    }
+
 //
 //    @PostMapping("/dislike")
 //    public ResponseEntity<AbstractResponse> dislike(@RequestBody InteractDto interactDto){

@@ -13,6 +13,7 @@ public interface PostService {
     AbstractResponse search(SearchDto searchDto);
     AbstractResponse getAllParentGroup();
     AbstractResponse getPostInsideThread(Integer id);
+    AbstractResponse getPostByPostId(int id);
 //    AbstractResponse viewAllPostAsc();
 //    AbstractResponse viewAllPostDesc();
 //    AbstractResponse viewMostLikedPost(FilterRequest filterRequest);

@@ -11,7 +11,7 @@ import java.util.List;
 
 public interface PostRepository extends AbstractRepository<Post, Integer>{
 
-//    Post findPostById(Long id);
+    List<Post> findPostById(Integer id);
 //    List<Post> findAllByOrderByIdAsc();
 //    List<Post> findAllByOrderByIdDesc();
 //    List<Post> findAllByRoleIdOrderByTotalLikeAsc(Long id);

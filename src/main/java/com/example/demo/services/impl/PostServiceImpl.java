@@ -21,10 +21,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Slf4j
 @Service
@@ -119,7 +116,7 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public AbstractResponse comment(CommentDto commentDto) {
-        GroupPost groupPost = groupPostRepository.findGroupPostById(commentDto.getId());
+        GroupPost groupPost = groupPostRepository.findGroupPostById(commentDto.getId()).orElse(null);
 
         if (groupPost == null) {
             return new AbstractResponse("FAILED", "POST_NOT_FOUND", 404);
@@ -174,6 +171,20 @@ public class PostServiceImpl implements PostService {
         return new AbstractResponse(postSearchResultDtoList);
     }
 
+    @Override
+    public AbstractResponse getPostByPostId(int id){
+        GroupPost groupPost = groupPostRepository.findGroupPostById(id).orElse(null);
+        List<PostSearchResultDto> postSearchResultDtoList;
+        if (groupPost == null) {
+            return new AbstractResponse("FAILED", "POST_NOT_FOUND", 404);
+        } else {
+            List<GroupPost> groupPostList = new ArrayList<>();
+            groupPostList.add(groupPost);
+            postSearchResultDtoList = convertPostToPostDto(groupPostList);
+        }
+        return new AbstractResponse(postSearchResultDtoList);
+    }
+
     //
 //
 //    @Override
@@ -221,9 +232,51 @@ public class PostServiceImpl implements PostService {
             User user = userRepository.findByEmail(groupPost.getCreatedBy());
             postSearchResultDto.setId(groupPost.getId());
             postSearchResultDto.setTitle(groupPost.getTitle());
-            postSearchResultDto.setContent(postRepository.findByGroupPostOrderById(groupPost).get(0).getContent());
+            if(postRepository.findByGroupPostOrderById(groupPost).size() > 0){
+                postSearchResultDto.setContent(postRepository.findByGroupPostOrderById(groupPost).get(0).getContent());
+            } else {
+                postSearchResultDto.setContent(null);
+            }
             postSearchResultDto.setAuthor(userProfileRepository.findByUser(user).getFullName());
             List<Post> commentList = postRepository.findByGroupPost(groupPost);
+            List<CommentResultDto> commentResultDtoList = new ArrayList<>();
+            if (!CollectionUtils.isEmpty(commentList)) {
+                commentList.forEach(item -> {
+                    CommentResultDto commentResultDto = new CommentResultDto();
+                    commentResultDto.setId(item.getId());
+                    commentResultDto.setContent(item.getContent());
+                    commentResultDto.setCreatedAt(item.getCreatedAt());
+                    User foundUser = userRepository.findByEmail(item.getCreatedBy());
+
+                    UserProfile userProfile = userProfileRepository.findByUser(foundUser);
+
+                    if(userProfile != null){
+                        commentResultDto.setCreatedBy(userProfile.getFullName());
+                    } else {
+                        DoctorProfile doctorProfile = doctorProfileRepository.findByUser(foundUser);
+                        commentResultDto.setCreatedBy(doctorProfile.getFullName());
+                    }
+
+                    commentResultDto.setUpdatedAt(item.getUpdatedAt());
+                    commentResultDtoList.add(commentResultDto);
+                });
+            }
+            postSearchResultDto.setCommentList(commentResultDtoList);
+            data.add(postSearchResultDto);
+        }
+        return data;
+    }
+
+    public List<PostSearchResultDto> convertPostToPostDtoV2(List<Post> postList) {
+        List<PostSearchResultDto> data = new ArrayList<>();
+        for (Post post : postList) {
+            PostSearchResultDto postSearchResultDto = new PostSearchResultDto();
+            User user = userRepository.findByEmail(post.getCreatedBy());
+            postSearchResultDto.setId(post.getId());
+            postSearchResultDto.setTitle(post.getGroupPost().getTitle());
+            postSearchResultDto.setContent(post.getContent());
+            postSearchResultDto.setAuthor(userProfileRepository.findByUser(user).getFullName());
+            List<Post> commentList = postRepository.findByGroupPost(post.getGroupPost());
             List<CommentResultDto> commentResultDtoList = new ArrayList<>();
             if (!CollectionUtils.isEmpty(commentList)) {
                 commentList.forEach(item -> {

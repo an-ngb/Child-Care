@@ -5,12 +5,13 @@ import com.example.demo.entities.Post;
 
 import javax.swing.*;
 import java.util.List;
+import java.util.Optional;
 
 public interface GroupPostRepository extends AbstractRepository<GroupPost, Integer>{
 
     List<GroupPost> findAllByCreatedBy(String email);
 
-    GroupPost findGroupPostById(Integer id);
+    Optional<GroupPost> findGroupPostById(Integer id);
 
     List<GroupPost> findAllByParentGroup(Integer id);
 }
