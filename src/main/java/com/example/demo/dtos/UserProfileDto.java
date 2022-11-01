@@ -26,5 +26,6 @@ public class UserProfileDto {
     private String startWorkAtTime;
     private String endWorkAtTime;
     private String workAt;
+    private String avatar;
     private List<PostSearchResultDto> postSearchResultDtoList;
 }

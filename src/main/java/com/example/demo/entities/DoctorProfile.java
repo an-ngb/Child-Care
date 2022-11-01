@@ -57,7 +57,10 @@ public class DoctorProfile {
     @Column(name = "work_at")
     private String workAt;
 
-    public DoctorProfile(User user,String fullName, String certificate, String degree, String expYear, String specialist, String workingAt, String privateWeb, String startWorkAtTime, String endWorkAtTime, String workAt) {
+    @Column(name = "avatar")
+    private String avatar;
+
+    public DoctorProfile(User user,String fullName, String certificate, String degree, String expYear, String specialist, String workingAt, String privateWeb, String startWorkAtTime, String endWorkAtTime, String workAt, String avatar) {
         this.user = user;
         this.fullName = fullName;
         this.certificate = certificate;
@@ -69,5 +72,6 @@ public class DoctorProfile {
         this.startWorkAtTime = startWorkAtTime;
         this.endWorkAtTime = endWorkAtTime;
         this.workAt = workAt;
+        this.avatar = avatar;
     }
 }

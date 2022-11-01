@@ -211,6 +211,8 @@ public class UserServiceImpl implements UserService {
             UserProfileDto userProfileDto = new UserProfileDto();
             userProfileDto.setId(doctorProfile.getId());
             userProfileDto.setFullName(doctorProfile.getFullName());
+            userProfileDto.setSpecialist(doctorProfile.getSpecialist());
+            userProfileDto.setAvatar(doctorProfile.getAvatar());
             userProfileDtos.add(userProfileDto);
         }
 

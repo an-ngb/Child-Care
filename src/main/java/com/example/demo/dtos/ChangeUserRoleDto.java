@@ -20,4 +20,5 @@ public class ChangeUserRoleDto {
     private String startWorkAtTime;
     private String endWorkAtTime;
     private String workAt;
+    private String avatar;
 }

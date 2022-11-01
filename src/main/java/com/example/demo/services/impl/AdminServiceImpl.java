@@ -55,7 +55,8 @@ public class AdminServiceImpl implements AdminService {
                 changeUserRoleDto.getEndWorkAtTime(),
                 changeUserRoleDto.getStartWorkAtTime(),
                 changeUserRoleDto.getWorkingAt(),
-                changeUserRoleDto.getPrivateWeb());
+                changeUserRoleDto.getPrivateWeb(),
+                changeUserRoleDto.getAvatar());
 
         user.setRole(roleRepository.findRoleById(2));
         userRepository.save(user);
