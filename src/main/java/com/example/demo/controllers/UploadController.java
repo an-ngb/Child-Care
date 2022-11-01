@@ -19,8 +19,8 @@ public class UploadController {
     private final CloudinaryService cloudinaryService;
 
     @PostMapping(value = "/upload", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
-    public ResponseEntity<AbstractResponse> upload(@ModelAttribute MultipartFile file) {
-        return ResponseEntity.ok().body(cloudinaryService.upload(file));
+    public ResponseEntity<AbstractResponse> upload(@ModelAttribute MultipartFile UploadFiles) {
+        return ResponseEntity.ok().body(cloudinaryService.upload(UploadFiles));
     }
 
 //    @PostMapping("/uploadAvatar")
