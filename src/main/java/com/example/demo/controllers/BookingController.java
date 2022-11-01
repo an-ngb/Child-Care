@@ -24,4 +24,14 @@ public class BookingController {
     public ResponseEntity<AbstractResponse> booking(@RequestBody Instant time) {
         return ResponseEntity.ok().body(bookingService.getBookingListByDay(time));
     }
+
+    @PostMapping("/get-booking-list-by-doctor")
+    public ResponseEntity<AbstractResponse> getBookingListByDoctor() {
+        return ResponseEntity.ok().body(bookingService.getBookingListOfDoctor());
+    }
+
+    @PostMapping("/get-booking-list-by-user")
+    public ResponseEntity<AbstractResponse> getBookingListByUser() {
+        return ResponseEntity.ok().body(bookingService.getBookingListByUser());
+    }
 }

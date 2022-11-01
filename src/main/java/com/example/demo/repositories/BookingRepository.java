@@ -11,4 +11,6 @@ public interface BookingRepository extends AbstractRepository<Booking, Integer>{
     List<Booking> findAllByDoctor(User doctor);
 
     List<Booking> findAllByBookedAt(Instant time);
+
+    List<Booking> findAllByCreatedBy(String email);
 }

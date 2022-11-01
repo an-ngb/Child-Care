@@ -107,5 +107,18 @@ public class BookingServiceImpl implements BookingService {
         });
         return new AbstractResponse(bookingSearchResultDtoList);
     }
+
+    @Override
+    public AbstractResponse getBookingListByUser(){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        List<Booking> bookingList = bookingRepository.findAllByCreatedBy(authentication.getName());
+
+        List<BookingSearchResultDto> bookingSearchResultDtoList = new ArrayList<>();
+        bookingList.forEach(item -> {
+            bookingSearchResultDtoList.add(convertBookingToBookingDto(item));
+        });
+
+        return new AbstractResponse(bookingSearchResultDtoList);
+    }
 }
 

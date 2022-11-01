@@ -13,4 +13,7 @@ public interface BookingService {
     AbstractResponse approveOrDisapproveBooking(Integer id, InteractDto interactDto);
 
     AbstractResponse getBookingListByDay(Instant time);
+
+    AbstractResponse getBookingListByUser();
+
 }
