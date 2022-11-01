@@ -241,7 +241,10 @@ public class PostServiceImpl implements PostService {
             List<Post> commentList = postRepository.findByGroupPost(groupPost);
             List<CommentResultDto> commentResultDtoList = new ArrayList<>();
             if (!CollectionUtils.isEmpty(commentList)) {
-                commentList.forEach(item -> {
+                for (Post item : commentList) {
+                    if(postRepository.findByGroupPostOrderById(groupPost).get(0).getContent().equals(item.getContent())){
+                        continue;
+                    }
                     CommentResultDto commentResultDto = new CommentResultDto();
                     commentResultDto.setId(item.getId());
                     commentResultDto.setContent(item.getContent());
@@ -259,7 +262,7 @@ public class PostServiceImpl implements PostService {
 
                     commentResultDto.setUpdatedAt(item.getUpdatedAt());
                     commentResultDtoList.add(commentResultDto);
-                });
+                }
             }
             postSearchResultDto.setCommentList(commentResultDtoList);
             data.add(postSearchResultDto);
