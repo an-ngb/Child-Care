@@ -4,21 +4,15 @@ import com.example.demo.dtos.*;
 import com.example.demo.entities.*;
 import com.example.demo.repositories.*;
 import com.example.demo.services.BookingService;
-import com.example.demo.services.PostService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.BeanWrapper;
-import org.springframework.beans.BeanWrapperImpl;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 @Slf4j
 @Service
@@ -43,7 +37,7 @@ public class BookingServiceImpl implements BookingService {
             return new AbstractResponse("FAILED", "DOCTOR_NOT_FOUND", 404);
         }
 
-        Booking booking = new Booking(user, doctor, bookingDto.getBookedAt(), bookingDto.getBookedTime(), bookingDto.getContent(), bookingDto.getShift());
+        Booking booking = new Booking(user, doctor, bookingDto.getBookedAt(), bookingDto.getBookedTime(), bookingDto.getContent(), bookingDto.getShift(), bookingDto.getConsultBy());
 
         bookingRepository.save(booking);
 

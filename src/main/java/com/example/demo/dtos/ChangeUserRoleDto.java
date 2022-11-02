@@ -1,5 +1,6 @@
 package com.example.demo.dtos;
 
+import com.example.demo.constant.SPECIALIST;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,7 +15,7 @@ public class ChangeUserRoleDto {
     private String certificate;
     private String degree;
     private String expYear;
-    private String specialist;
+    private SPECIALIST specialist;
     private String workingAt;
     private String privateWeb;
     private String startWorkAtTime;

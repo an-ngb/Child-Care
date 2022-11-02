@@ -153,7 +153,7 @@ public class UserServiceImpl implements UserService {
             userProfileDto.setCertificate(doctorProfile.getCertificate());
             userProfileDto.setDegree(doctorProfile.getDegree());
             userProfileDto.setExpYear(doctorProfile.getExpYear());
-            userProfileDto.setSpecialist(doctorProfile.getSpecialist());
+            userProfileDto.setSpecialist(doctorProfile.getSpecialist().getSpecialistName());
             userProfileDto.setWorkingAt(doctorProfile.getWorkingAt());
             userProfileDto.setPrivateWeb(doctorProfile.getPrivateWeb());
             userProfileDto.setStartWorkAtTime(doctorProfile.getStartWorkAtTime());
@@ -192,7 +192,7 @@ public class UserServiceImpl implements UserService {
             userProfileDto.setCertificate(doctorProfile.getCertificate());
             userProfileDto.setDegree(doctorProfile.getDegree());
             userProfileDto.setExpYear(doctorProfile.getExpYear());
-            userProfileDto.setSpecialist(doctorProfile.getSpecialist());
+            userProfileDto.setSpecialist(doctorProfile.getSpecialist().getSpecialistName());
             userProfileDto.setWorkingAt(doctorProfile.getWorkingAt());
             userProfileDto.setPrivateWeb(doctorProfile.getPrivateWeb());
             userProfileDto.setStartWorkAtTime(doctorProfile.getStartWorkAtTime());
@@ -211,7 +211,7 @@ public class UserServiceImpl implements UserService {
             UserProfileDto userProfileDto = new UserProfileDto();
             userProfileDto.setId(doctorProfile.getId());
             userProfileDto.setFullName(doctorProfile.getFullName());
-            userProfileDto.setSpecialist(doctorProfile.getSpecialist());
+            userProfileDto.setSpecialist(doctorProfile.getSpecialist().getSpecialistName());
             userProfileDto.setAvatar(doctorProfile.getAvatar());
             userProfileDtos.add(userProfileDto);
         }

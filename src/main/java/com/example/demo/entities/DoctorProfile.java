@@ -1,5 +1,6 @@
 package com.example.demo.entities;
 
+import com.example.demo.constant.SPECIALIST;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -40,7 +41,7 @@ public class DoctorProfile {
 
     @Column(name = "specialist")
     @Type(type = "org.hibernate.type.TextType")
-    private String specialist;
+    private SPECIALIST specialist;
 
     @Column(name = "working_at")
     private String workingAt;
@@ -60,7 +61,7 @@ public class DoctorProfile {
     @Column(name = "avatar")
     private String avatar;
 
-    public DoctorProfile(User user,String fullName, String certificate, String degree, String expYear, String specialist, String workingAt, String privateWeb, String startWorkAtTime, String endWorkAtTime, String workAt, String avatar) {
+    public DoctorProfile(User user,String fullName, String certificate, String degree, String expYear, SPECIALIST specialist, String workingAt, String privateWeb, String startWorkAtTime, String endWorkAtTime, String workAt, String avatar) {
         this.user = user;
         this.fullName = fullName;
         this.certificate = certificate;
