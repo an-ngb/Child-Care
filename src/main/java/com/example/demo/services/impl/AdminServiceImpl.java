@@ -28,6 +28,8 @@ public class AdminServiceImpl implements AdminService {
     private final BookingServiceImpl bookingService;
     private final PostRepository postRepository;
 
+    private final GroupPostRepository groupPostRepository;
+
     @Override
     public AbstractResponse promoteUserToDoctor(ChangeUserRoleDto changeUserRoleDto) {
 
@@ -89,6 +91,8 @@ public class AdminServiceImpl implements AdminService {
 
     @Override
     public AbstractResponse clearUserList(){
+        clearBookingList();
+        clearPost();
         doctorProfileRepository.deleteAll();
         userProfileRepository.deleteAll();
         userRepository.deleteAll();
@@ -98,6 +102,7 @@ public class AdminServiceImpl implements AdminService {
 
     @Override
     public AbstractResponse clearPost(){
+        groupPostRepository.deleteAll();
         postRepository.deleteAll();
         return new AbstractResponse();
     }
