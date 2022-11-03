@@ -10,6 +10,7 @@ import com.example.demo.services.AdminService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -91,6 +92,7 @@ public class AdminServiceImpl implements AdminService {
         return new AbstractResponse();
     }
 
+    @Transactional
     @Override
     public AbstractResponse clearUserList(){
         clearBookingList();
