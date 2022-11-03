@@ -29,6 +29,8 @@ public class AdminServiceImpl implements AdminService {
     private final PostRepository postRepository;
 
     private final GroupPostRepository groupPostRepository;
+    private final FileRepository fileRepository;
+    private final ParentGroupRepository parentGroupRepository;
 
     @Override
     public AbstractResponse promoteUserToDoctor(ChangeUserRoleDto changeUserRoleDto) {
@@ -93,6 +95,7 @@ public class AdminServiceImpl implements AdminService {
     public AbstractResponse clearUserList(){
         clearBookingList();
         clearPost();
+        parentGroupRepository.deleteAll();
         doctorProfileRepository.deleteAll();
         userProfileRepository.deleteAll();
         userRepository.deleteAll();
