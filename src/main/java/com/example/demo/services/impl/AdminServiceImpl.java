@@ -95,7 +95,6 @@ public class AdminServiceImpl implements AdminService {
     public AbstractResponse clearUserList(){
         clearBookingList();
         clearPost();
-        parentGroupRepository.deleteAll();
         doctorProfileRepository.deleteAll();
         userProfileRepository.deleteAll();
         userRepository.deleteAll();
@@ -104,6 +103,7 @@ public class AdminServiceImpl implements AdminService {
 
     @Override
     public AbstractResponse clearPost(){
+        parentGroupRepository.deleteAll();
         groupPostRepository.deleteAll();
         postRepository.deleteAll();
         return new AbstractResponse();
