@@ -40,7 +40,7 @@ public class DoctorProfile {
     private String expYear;
 
     @Column(name = "specialist")
-    @Type(type = "org.hibernate.type.TextType")
+    @Enumerated(EnumType.STRING)
     private SPECIALIST specialist;
 
     @Column(name = "working_at")
