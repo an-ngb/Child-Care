@@ -8,7 +8,8 @@ public enum SPECIALIST {
     OPTOMETRIST("Optometrist"),
     OPHTHALMOLOGIST("Ophthalmologist"),
     ALLERGIST("Allergist"),
-    DERMATOLOGIST("Dermatologist");
+    DERMATOLOGIST("Dermatologist"),
+    EXAMPLE_SPECIALIST("Example Specialist");
 
     private final String specialistName;
 
