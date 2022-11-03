@@ -95,8 +95,8 @@ public class AdminServiceImpl implements AdminService {
     public AbstractResponse clearUserList(){
         clearBookingList();
         clearPost();
-        doctorProfileRepository.deleteAll();
         userProfileRepository.deleteAll();
+        doctorProfileRepository.deleteAll();
         userRepository.deleteAll();
         return new AbstractResponse();
     }
