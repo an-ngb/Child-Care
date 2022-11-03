@@ -40,7 +40,7 @@ public class DoctorProfile {
     private String expYear;
 
     @Column(name = "specialist")
-    @Enumerated
+    @Enumerated(EnumType.STRING)
     private SPECIALIST specialist;
 
     @Column(name = "working_at")
