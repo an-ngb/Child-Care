@@ -96,7 +96,6 @@ public class AdminServiceImpl implements AdminService {
         doctorProfileRepository.deleteAll();
         userProfileRepository.deleteAll();
         userRepository.deleteAll();
-        postRepository.deleteAll();
         return new AbstractResponse();
     }
 
