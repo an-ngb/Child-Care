@@ -30,6 +30,10 @@ public class Post extends AbstractAuditing{
     @Type(type = "org.hibernate.type.TextType")
     private String content;
 
+    @Column(name = "thumbnail_image")
+    @Type(type = "org.hibernate.type.TextType")
+    private String thumbnailImage;
+
     public Post(GroupPost groupPost) {
         this.groupPost = groupPost;
     }

@@ -1,9 +1,6 @@
 package com.example.demo.services.impl;
 
-import com.example.demo.dtos.AbstractResponse;
-import com.example.demo.dtos.BookingSearchResultDto;
-import com.example.demo.dtos.ChangeUserRoleDto;
-import com.example.demo.dtos.InteractDto;
+import com.example.demo.dtos.*;
 import com.example.demo.entities.*;
 import com.example.demo.repositories.*;
 import com.example.demo.services.AdminService;
@@ -32,6 +29,7 @@ public class AdminServiceImpl implements AdminService {
     private final GroupPostRepository groupPostRepository;
     private final FileRepository fileRepository;
     private final ParentGroupRepository parentGroupRepository;
+    private final PostServiceImpl postService;
 
     @Override
     public AbstractResponse promoteUserToDoctor(ChangeUserRoleDto changeUserRoleDto) {
@@ -113,7 +111,8 @@ public class AdminServiceImpl implements AdminService {
 
     @Override
     public AbstractResponse viewAllPost() {
-        List<Post> list = postRepository.findAll();
-        return new AbstractResponse(list);
+        List<GroupPost> list = groupPostRepository.findAll();
+        List<PostSearchResultDto> postSearchResultDtoList = postService.convertPostToPostDto(list);
+        return new AbstractResponse(postSearchResultDtoList);
     }
 }

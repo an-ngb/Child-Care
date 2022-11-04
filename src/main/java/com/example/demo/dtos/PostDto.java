@@ -16,5 +16,6 @@ public class PostDto {
     private String title;
     private String content;
     private Integer threadId;
+    private String thumbnailImage;
 //    private List<String> tagList;
 }

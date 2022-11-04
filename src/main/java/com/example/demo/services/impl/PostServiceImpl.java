@@ -79,6 +79,7 @@ public class PostServiceImpl implements PostService {
         post.setGroupPost(groupPost);
         post.setContent(postDto.getContent());
         post.setUserId(user.getId());
+        post.setThumbnailImage(postDto.getThumbnailImage());
         postRepository.save(post);
 //        if(postDto.getTagList() != null){
 //            for (String s : postDto.getTagList()) {
@@ -227,11 +228,13 @@ public class PostServiceImpl implements PostService {
 //
     public List<PostSearchResultDto> convertPostToPostDto(List<GroupPost> groupPostList) {
         List<PostSearchResultDto> data = new ArrayList<>();
+        String defaultImg = "http://res.cloudinary.com/annb/image/upload/v1667571608/a8phdesstsrxxuylgdgl.jpg";
         for (GroupPost groupPost : groupPostList) {
             PostSearchResultDto postSearchResultDto = new PostSearchResultDto();
             User user = userRepository.findByEmail(groupPost.getCreatedBy());
             postSearchResultDto.setId(groupPost.getId());
             postSearchResultDto.setTitle(groupPost.getTitle());
+            postSearchResultDto.setThumbnailImage(postRepository.findByGroupPostOrderById(groupPost).get(0).getThumbnailImage() == null ? defaultImg : postRepository.findByGroupPostOrderById(groupPost).get(0).getThumbnailImage());
             if(postRepository.findByGroupPostOrderById(groupPost).size() > 0){
                 postSearchResultDto.setContent(postRepository.findByGroupPostOrderById(groupPost).get(0).getContent());
             } else {
