@@ -103,9 +103,9 @@ public class AdminServiceImpl implements AdminService {
 
     @Override
     public AbstractResponse clearPost(){
-        parentGroupRepository.deleteAll();
-        groupPostRepository.deleteAll();
         postRepository.deleteAll();
+        groupPostRepository.deleteAll();
+        parentGroupRepository.deleteAll();
         return new AbstractResponse();
     }
 
