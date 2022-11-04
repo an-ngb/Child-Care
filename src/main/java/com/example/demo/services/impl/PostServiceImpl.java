@@ -241,6 +241,8 @@ public class PostServiceImpl implements PostService {
                 postSearchResultDto.setContent(null);
             }
             postSearchResultDto.setAuthor(userProfileRepository.findByUser(user).getFullName());
+            postSearchResultDto.setCreateAt(groupPost.getCreatedAt());
+            postSearchResultDto.setUpdatedAt(groupPost.getUpdatedAt());
             List<Post> commentList = postRepository.findByGroupPost(groupPost);
             List<CommentResultDto> commentResultDtoList = new ArrayList<>();
             if (!CollectionUtils.isEmpty(commentList)) {
