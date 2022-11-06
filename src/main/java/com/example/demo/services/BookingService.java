@@ -12,7 +12,7 @@ public interface BookingService {
 
     AbstractResponse approveOrDisapproveBooking(Integer id, InteractDto interactDto);
 
-    AbstractResponse getBookingListByDay(Instant time);
+    AbstractResponse getBookingListByDay(SearchBookingDto searchBookingDto);
 
     AbstractResponse getBookingListByUser();
 

@@ -2,6 +2,7 @@ package com.example.demo.controllers;
 
 import com.example.demo.dtos.AbstractResponse;
 import com.example.demo.dtos.BookingDto;
+import com.example.demo.dtos.SearchBookingDto;
 import com.example.demo.services.BookingService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -21,8 +22,8 @@ public class BookingController {
     }
 
     @PostMapping("/get-booking-list-by-day")
-    public ResponseEntity<AbstractResponse> booking(@RequestBody Instant time) {
-        return ResponseEntity.ok().body(bookingService.getBookingListByDay(time));
+    public ResponseEntity<AbstractResponse> booking(@RequestBody SearchBookingDto searchBookingDto) {
+        return ResponseEntity.ok().body(bookingService.getBookingListByDay(searchBookingDto));
     }
 
     @PostMapping("/get-booking-list-by-doctor")

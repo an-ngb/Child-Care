@@ -11,11 +11,7 @@ import java.time.Instant;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class BookingDto {
+public class SearchBookingDto {
     private Integer doctorId;
     private Instant bookedAt;
-    private Integer bookedTime;
-    private Integer shift;
-    private String content;
-    private String consult;
 }

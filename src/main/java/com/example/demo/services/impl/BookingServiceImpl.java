@@ -10,7 +10,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
-import java.time.Instant;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,20 +27,24 @@ public class BookingServiceImpl implements BookingService {
     @Override
     public AbstractResponse booking(BookingDto bookingDto) {
 
-        User doctor = userRepository.findUserById(bookingDto.getDoctorId());
+        DoctorProfile doctor = doctorProfileRepository.findById(bookingDto.getDoctorId()).orElse(null);
+        if(doctor != null){
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            User user = userRepository.findByEmail(authentication.getName());
 
-        User user = userRepository.findByEmail(authentication.getName());
+            if(doctor == null){
+                return new AbstractResponse("FAILED", "DOCTOR_NOT_FOUND", 404);
+            }
 
-        if(doctor == null){
-            return new AbstractResponse("FAILED", "DOCTOR_NOT_FOUND", 404);
+            ZoneId zoneId = ZoneId.systemDefault();
+
+            Booking booking = new Booking(user, doctor.getUser(), bookingDto.getBookedAt().atZone(zoneId).toLocalDate().atStartOfDay().atZone(zoneId).toInstant(), bookingDto.getBookedTime(), bookingDto.getContent(), bookingDto.getShift(), bookingDto.getConsult());
+
+            bookingRepository.save(booking);
+        } else {
+            return new AbstractResponse("DOCTOR_NOT_FOUND", 404 );
         }
-
-        Booking booking = new Booking(user, doctor, bookingDto.getBookedAt(), bookingDto.getBookedTime(), bookingDto.getContent(), bookingDto.getShift(), bookingDto.getConsultBy());
-
-        bookingRepository.save(booking);
-
         return new AbstractResponse();
     }
 
@@ -93,13 +97,16 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public AbstractResponse getBookingListByDay(Instant time) {
-        List<Booking> bookingList = bookingRepository.findAllByBookedAt(time);
-        List<BookingSearchResultDto> bookingSearchResultDtoList = new ArrayList<>();
-        bookingList.forEach(item -> {
-            bookingSearchResultDtoList.add(convertBookingToBookingDto(item));
-        });
-        return new AbstractResponse(bookingSearchResultDtoList);
+    public AbstractResponse getBookingListByDay(SearchBookingDto searchBookingDto) {
+        DoctorProfile doctorProfile = doctorProfileRepository.findById(searchBookingDto.getDoctorId()).orElse(null);
+        if(doctorProfile != null) {
+            List<Booking> bookingList = bookingRepository.findAllByDoctorAndBookedAt(doctorProfile.getUser(), searchBookingDto.getBookedAt().atZone(ZoneId.systemDefault()).toLocalDate().atStartOfDay().atZone(ZoneId.systemDefault()).toInstant());
+            List<BookingSearchResultDto> bookingSearchResultDtoList = new ArrayList<>();
+            bookingList.forEach(item -> {
+                bookingSearchResultDtoList.add(convertBookingToBookingDto(item));
+            });
+            return new AbstractResponse(bookingSearchResultDtoList);
+        } return new AbstractResponse("DOCTOR_NOT_FOUND", 404);
     }
 
     @Override
