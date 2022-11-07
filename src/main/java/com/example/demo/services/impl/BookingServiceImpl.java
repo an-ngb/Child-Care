@@ -62,6 +62,7 @@ public class BookingServiceImpl implements BookingService {
         bookingSearchResultDto.setBookedShift(booking.getShiftBooked());
         bookingSearchResultDto.setContent(booking.getContent());
         bookingSearchResultDto.setIsApproved(booking.getIsApproved() == null ? null : booking.getIsApproved());
+        bookingSearchResultDto.setConsult(booking.getConsult());
         return bookingSearchResultDto;
     }
 

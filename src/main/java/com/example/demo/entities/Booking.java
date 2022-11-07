@@ -42,18 +42,18 @@ public class Booking extends AbstractAuditing{
     private String content;
 
     @Column(name = "consult_by")
-    private String consultBy;
+    private String consult;
 
     @Column(name = "is_approved")
     private Boolean isApproved;
 
-    public Booking(User user, User doctor, Instant bookedAt, Integer bookedTime, String content, Integer shiftBooked, String consultBy ) {
+    public Booking(User user, User doctor, Instant bookedAt, Integer bookedTime, String content, Integer shiftBooked, String consult) {
         this.user = user;
         this.doctor = doctor;
         this.bookedAt = bookedAt;
         this.bookedTime = bookedTime;
         this.content = content;
         this.shiftBooked = shiftBooked;
-        this.consultBy = consultBy;
+        this.consult = consult;
     }
 }

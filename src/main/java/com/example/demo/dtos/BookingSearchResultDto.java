@@ -24,4 +24,5 @@ public class BookingSearchResultDto {
     private String content;
     private Boolean isApproved;
     private Integer bookedShift;
+    private String consult;
 }
