@@ -3,6 +3,7 @@ package com.example.demo.services.impl;
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
 import com.example.demo.dtos.AbstractResponse;
+import com.example.demo.dtos.ImageAbstractResponse;
 import com.example.demo.dtos.ImageResponseDto;
 import com.example.demo.entities.File;
 import com.example.demo.repositories.FileRepository;
@@ -28,13 +29,13 @@ public class CloudinaryService {
 
     private final UserRepository userRepository;
 
-    public AbstractResponse upload(MultipartFile file) {
+    public ImageAbstractResponse upload(MultipartFile file) {
             try {
                 Map uploadResult = cloudinary.uploader().upload(file.getBytes(), ObjectUtils.emptyMap());
                 File file1 = new File(uploadResult.get("url").toString());
                 fileRepository.save(file1);
                 ImageResponseDto imageResponseDto = new ImageResponseDto(uploadResult.get("url"));
-                return new AbstractResponse(imageResponseDto);
+                return new ImageAbstractResponse(imageResponseDto);
             } catch (Exception ex) {
                 logger.error(ex.getMessage());
                 return null;
