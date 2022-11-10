@@ -3,6 +3,7 @@ package com.example.demo.services.impl;
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
 import com.example.demo.dtos.AbstractResponse;
+import com.example.demo.dtos.ImageResponseDto;
 import com.example.demo.entities.File;
 import com.example.demo.repositories.FileRepository;
 import com.example.demo.repositories.UserRepository;
@@ -32,8 +33,8 @@ public class CloudinaryService {
                 Map uploadResult = cloudinary.uploader().upload(file.getBytes(), ObjectUtils.emptyMap());
                 File file1 = new File(uploadResult.get("url").toString());
                 fileRepository.save(file1);
-                Object imageUrl = uploadResult.get("url");
-                return new AbstractResponse(imageUrl);
+                ImageResponseDto imageResponseDto = new ImageResponseDto(uploadResult.get("url"));
+                return new AbstractResponse(imageResponseDto);
             } catch (Exception ex) {
                 logger.error(ex.getMessage());
                 return null;
