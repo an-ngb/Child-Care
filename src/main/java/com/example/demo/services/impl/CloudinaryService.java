@@ -35,7 +35,7 @@ public class CloudinaryService {
                 File file1 = new File(uploadResult.get("url").toString());
                 fileRepository.save(file1);
                 ImageResponseDto imageResponseDto = new ImageResponseDto(uploadResult.get("url"));
-                return new ImageAbstractResponse(imageResponseDto);
+                return new ImageAbstractResponse(imageResponseDto.getImageUrl());
             } catch (Exception ex) {
                 logger.error(ex.getMessage());
                 return null;
