@@ -248,7 +248,7 @@ public class PostServiceImpl implements PostService {
             List<CommentResultDto> commentResultDtoList = new ArrayList<>();
             if (!CollectionUtils.isEmpty(commentList)) {
                 for (Post item : commentList) {
-                    if(!StringUtils.isEmpty(postRepository.findByGroupPostOrderById(groupPost).get(0).getContent()) && postRepository.findByGroupPostOrderById(groupPost).get(0).getContent().equals(item.getContent())){
+                    if((!StringUtils.isEmpty(postRepository.findByGroupPostOrderById(groupPost).get(0).getContent()) && postRepository.findByGroupPostOrderById(groupPost).get(0).getContent().equals(item.getContent())) || StringUtils.isEmpty(item.getContent())){
                         continue;
                     }
                     CommentResultDto commentResultDto = new CommentResultDto();
