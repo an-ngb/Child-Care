@@ -32,7 +32,7 @@ public class CloudinaryService {
                 Map uploadResult = cloudinary.uploader().upload(file.getBytes(), ObjectUtils.emptyMap());
                 File file1 = new File(uploadResult.get("url").toString());
                 fileRepository.save(file1);
-                String imageUrl = uploadResult.get("url").toString();
+                Object imageUrl = uploadResult.get("url");
                 return new AbstractResponse(imageUrl);
             } catch (Exception ex) {
                 logger.error(ex.getMessage());
