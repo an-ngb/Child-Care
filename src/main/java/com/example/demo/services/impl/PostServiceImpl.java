@@ -1,5 +1,6 @@
 package com.example.demo.services.impl;
 
+import com.cloudinary.utils.StringUtils;
 import com.example.demo.dtos.*;
 import com.example.demo.entities.*;
 import com.example.demo.repositories.*;
@@ -234,7 +235,7 @@ public class PostServiceImpl implements PostService {
             User user = userRepository.findByEmail(groupPost.getCreatedBy());
             postSearchResultDto.setId(groupPost.getId());
             postSearchResultDto.setTitle(groupPost.getTitle());
-            postSearchResultDto.setThumbnailImage(postRepository.findByGroupPostOrderById(groupPost).get(0).getThumbnailImage() == null ? defaultImg : postRepository.findByGroupPostOrderById(groupPost).get(0).getThumbnailImage());
+            postSearchResultDto.setThumbnailImage(StringUtils.isEmpty(postRepository.findByGroupPostOrderById(groupPost).get(0).getThumbnailImage()) ? defaultImg : postRepository.findByGroupPostOrderById(groupPost).get(0).getThumbnailImage());
             if(postRepository.findByGroupPostOrderById(groupPost).size() > 0){
                 postSearchResultDto.setContent(postRepository.findByGroupPostOrderById(groupPost).get(0).getContent());
             } else {
