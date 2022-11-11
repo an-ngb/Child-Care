@@ -15,6 +15,6 @@ public class CommentResultDto {
     private Integer id;
     private String content;
     private String createdBy;
-    private Instant createdAt;
-    private Instant updatedAt;
+    private Long createdAt;
+    private Long updatedAt;
 }
