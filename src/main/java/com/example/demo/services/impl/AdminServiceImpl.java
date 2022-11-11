@@ -89,7 +89,7 @@ public class AdminServiceImpl implements AdminService {
             userProfileDto.setPostSearchResultDtoList(postSearchResultDtoList);
             DoctorProfile doctorProfile = doctorProfileRepository.findByUser(user);
             if (doctorProfile == null) {
-                return new AbstractResponse(userProfileDto);
+                userProfileDtoList.add(userProfileDto);
             } else {
                 userProfileDto.setCertificate(doctorProfile.getCertificate());
                 userProfileDto.setDegree(doctorProfile.getDegree());
