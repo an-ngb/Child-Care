@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.Instant;
 import java.util.*;
 
 @Slf4j
@@ -164,9 +165,9 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public AbstractResponse getPostInsideThread(Integer id) {
+    public AbstractResponse getPostInsideThread(GetPostByThreadDto getPostByThreadDto) {
 
-        List<GroupPost> groupPostList = groupPostRepository.findAllByParentGroup(id);
+        List<GroupPost> groupPostList = groupPostRepository.findAllByParentGroup(getPostByThreadDto.getThreadId());
 
         List<PostSearchResultDto> postSearchResultDtoList = convertPostToPostDto(groupPostList);
 
@@ -242,8 +243,8 @@ public class PostServiceImpl implements PostService {
                 postSearchResultDto.setContent(null);
             }
             postSearchResultDto.setAuthor(userProfileRepository.findByUser(user).getFullName());
-            postSearchResultDto.setCreateAt(groupPost.getCreatedAt());
-            postSearchResultDto.setUpdatedAt(groupPost.getUpdatedAt());
+            postSearchResultDto.setCreateAt(groupPost.getCreatedAt().toEpochMilli());
+            postSearchResultDto.setUpdatedAt(groupPost.getUpdatedAt().toEpochMilli());
             List<Post> commentList = postRepository.findByGroupPost(groupPost);
             List<CommentResultDto> commentResultDtoList = new ArrayList<>();
             if (!CollectionUtils.isEmpty(commentList)) {
@@ -254,7 +255,7 @@ public class PostServiceImpl implements PostService {
                     CommentResultDto commentResultDto = new CommentResultDto();
                     commentResultDto.setId(item.getId());
                     commentResultDto.setContent(item.getContent());
-                    commentResultDto.setCreatedAt(item.getCreatedAt());
+                    commentResultDto.setCreatedAt(item.getCreatedAt().toEpochMilli());
                     User foundUser = userRepository.findByEmail(item.getCreatedBy());
 
                     UserProfile userProfile = userProfileRepository.findByUser(foundUser);
@@ -266,7 +267,7 @@ public class PostServiceImpl implements PostService {
                         commentResultDto.setCreatedBy(doctorProfile.getFullName());
                     }
 
-                    commentResultDto.setUpdatedAt(item.getUpdatedAt());
+                    commentResultDto.setUpdatedAt(item.getUpdatedAt().toEpochMilli());
                     commentResultDtoList.add(commentResultDto);
                 }
             }
@@ -292,7 +293,7 @@ public class PostServiceImpl implements PostService {
                     CommentResultDto commentResultDto = new CommentResultDto();
                     commentResultDto.setId(item.getId());
                     commentResultDto.setContent(item.getContent());
-                    commentResultDto.setCreatedAt(item.getCreatedAt());
+                    commentResultDto.setCreatedAt(item.getCreatedAt().toEpochMilli());
                     User foundUser = userRepository.findByEmail(item.getCreatedBy());
 
                     UserProfile userProfile = userProfileRepository.findByUser(foundUser);
@@ -304,7 +305,7 @@ public class PostServiceImpl implements PostService {
                         commentResultDto.setCreatedBy(doctorProfile.getFullName());
                     }
 
-                    commentResultDto.setUpdatedAt(item.getUpdatedAt());
+                    commentResultDto.setUpdatedAt(item.getUpdatedAt().toEpochMilli());
                     commentResultDtoList.add(commentResultDto);
                 });
             }

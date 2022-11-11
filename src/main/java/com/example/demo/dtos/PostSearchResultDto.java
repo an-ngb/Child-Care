@@ -16,7 +16,7 @@ public class PostSearchResultDto {
     private Integer totalLike;
     private Integer totalDislike;
     private String thumbnailImage;
-    private Instant createAt;
-    private Instant updatedAt;
+    private Long createAt;
+    private Long updatedAt;
     private List<CommentResultDto> commentList;
 }

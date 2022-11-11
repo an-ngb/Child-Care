@@ -12,7 +12,7 @@ public interface PostService {
     AbstractResponse deletePost(DeleteDto deleteDto);
     AbstractResponse search(SearchDto searchDto);
     AbstractResponse getAllParentGroup();
-    AbstractResponse getPostInsideThread(Integer id);
+    AbstractResponse getPostInsideThread(GetPostByThreadDto getPostByThreadDto);
     AbstractResponse getPostByPostId(int id);
     AbstractResponse getPostByLoggedUser(GetPostDto getPostDto);
 //    AbstractResponse viewAllPostAsc();

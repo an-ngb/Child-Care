@@ -5,16 +5,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.Instant;
-
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class CommentResultDto {
-    private Integer id;
-    private String content;
-    private String createdBy;
-    private Long createdAt;
-    private Long updatedAt;
+public class GetPostByThreadDto {
+    private Integer threadId;
 }
