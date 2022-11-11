@@ -6,6 +6,8 @@ import com.example.demo.repositories.*;
 import com.example.demo.services.AdminService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -68,9 +70,40 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    public AbstractResponse getAllUser(){
+    public AbstractResponse getAllUser() {
         List<User> userList = userRepository.findAll();
-        return new AbstractResponse(userList);
+        List<UserProfileDto> userProfileDtoList = new ArrayList<>();
+        for (User user : userList) {
+            UserProfile userProfile = userProfileRepository.findByUser(user);
+            UserProfileDto userProfileDto = new UserProfileDto();
+            userProfileDto.setId(user.getId());
+            userProfileDto.setEmail(user.getEmail());
+            userProfileDto.setRole(user.getRole().getRoleName());
+            userProfileDto.setFullName(userProfile.getFullName());
+            userProfileDto.setAge(userProfile.getAge());
+            userProfileDto.setGender(userProfile.getGender());
+            userProfileDto.setPhone(userProfile.getPhone());
+            List<GroupPost> groupPostList = groupPostRepository.findAllByCreatedBy(user.getEmail());
+            List<PostSearchResultDto> postSearchResultDtoList;
+            postSearchResultDtoList = postService.convertPostToPostDto(groupPostList);
+            userProfileDto.setPostSearchResultDtoList(postSearchResultDtoList);
+            DoctorProfile doctorProfile = doctorProfileRepository.findByUser(user);
+            if (doctorProfile == null) {
+                return new AbstractResponse(userProfileDto);
+            } else {
+                userProfileDto.setCertificate(doctorProfile.getCertificate());
+                userProfileDto.setDegree(doctorProfile.getDegree());
+                userProfileDto.setExpYear(doctorProfile.getExpYear());
+                userProfileDto.setSpecialist(doctorProfile.getSpecialist().getSpecialistName());
+                userProfileDto.setWorkingAt(doctorProfile.getWorkingAt());
+                userProfileDto.setPrivateWeb(doctorProfile.getPrivateWeb());
+                userProfileDto.setStartWorkAtTime(doctorProfile.getStartWorkAtTime());
+                userProfileDto.setEndWorkAtTime(doctorProfile.getEndWorkAtTime());
+                userProfileDto.setWorkAt(doctorProfile.getWorkAt());
+            }
+            userProfileDtoList.add(userProfileDto);
+        }
+        return new AbstractResponse(userProfileDtoList);
     }
 
     @Override
