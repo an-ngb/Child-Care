@@ -92,7 +92,7 @@ public class PostServiceImpl implements PostService {
 //                }
 //            }
 //        }
-        return new AbstractResponse();
+        return new AbstractResponse(new ArrayList<>(convertPostToPostDto(List.of(groupPost))));
     }
 
     @Override
