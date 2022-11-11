@@ -62,7 +62,7 @@ public class ContentController {
         return ResponseEntity.ok().body(postService.getPostByPostId(id));
     }
 
-    @PostMapping("/get-post-by-user/")
+    @PostMapping("/get-post-by-user")
     public ResponseEntity<AbstractResponse> getPostByUser(@RequestBody GetPostDto getPostDto){
         return ResponseEntity.ok().body(postService.getPostByLoggedUser(getPostDto));
     }
