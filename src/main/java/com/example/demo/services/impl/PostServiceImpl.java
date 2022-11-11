@@ -142,10 +142,12 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public AbstractResponse deletePost(DeleteDto deleteDto) {
+
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User user = userRepository.findByEmail(authentication.getName());
         GroupPost groupPost = groupPostRepository.findGroupPostById(deleteDto.getId()).orElse(null);
-        if(groupPost != null){
+        List<Post> postList = postRepository.findByGroupPost(groupPost);
+        if(groupPost != null && postList != null){
+            postRepository.deleteAll(postList);
             groupPostRepository.delete(groupPost);
         } else {
             return new AbstractResponse("FAILED", "POST_NOT_FOUND", 404);
