@@ -13,13 +13,13 @@ import java.time.Instant;
 @AllArgsConstructor
 public class BookingSearchResultDto {
     private Integer id;
-    private Instant createdAt;
-    private Instant updatedAt;
+    private Long createdAt;
+    private Long updatedAt;
     private String createdBy;
     private String updatedBy;
     private Integer doctorId;
     private String doctorName;
-    private Instant bookedAt;
+    private Long bookedAt;
     private Integer bookedTime;
     private String content;
     private Boolean isApproved;

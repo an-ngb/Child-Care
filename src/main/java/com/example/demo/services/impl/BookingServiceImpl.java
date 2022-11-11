@@ -51,13 +51,13 @@ public class BookingServiceImpl implements BookingService {
     public BookingSearchResultDto convertBookingToBookingDto(Booking booking){
         BookingSearchResultDto bookingSearchResultDto = new BookingSearchResultDto();
         bookingSearchResultDto.setId(booking.getId());
-        bookingSearchResultDto.setCreatedAt(booking.getCreatedAt());
-        bookingSearchResultDto.setUpdatedAt(booking.getUpdatedAt());
+        bookingSearchResultDto.setCreatedAt(booking.getCreatedAt().toEpochMilli());
+        bookingSearchResultDto.setUpdatedAt(booking.getUpdatedAt().toEpochMilli());
         bookingSearchResultDto.setCreatedBy(booking.getCreatedBy());
         bookingSearchResultDto.setUpdatedBy(booking.getUpdatedBy());
         bookingSearchResultDto.setDoctorId(booking.getDoctor().getId());
         bookingSearchResultDto.setDoctorName(doctorProfileRepository.findByUser(booking.getDoctor()).getFullName());
-        bookingSearchResultDto.setBookedAt(booking.getBookedAt());
+        bookingSearchResultDto.setBookedAt(booking.getBookedAt().toEpochMilli());
         bookingSearchResultDto.setBookedTime(booking.getBookedTime());
         bookingSearchResultDto.setBookedShift(booking.getShiftBooked());
         bookingSearchResultDto.setContent(booking.getContent());
