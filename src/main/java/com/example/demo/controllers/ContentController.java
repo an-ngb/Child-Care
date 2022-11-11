@@ -53,8 +53,8 @@ public class ContentController {
     }
 
     @PostMapping("/get-post-inside-thread")
-    public ResponseEntity<AbstractResponse> getPostInsideThread(@RequestBody Integer id){
-        return ResponseEntity.ok().body(postService.getPostInsideThread(id));
+    public ResponseEntity<AbstractResponse> getPostInsideThread(@RequestBody GetPostByThreadDto getPostByThreadDto){
+        return ResponseEntity.ok().body(postService.getPostInsideThread(getPostByThreadDto));
     }
 
     @PostMapping("/get-post/{id}")

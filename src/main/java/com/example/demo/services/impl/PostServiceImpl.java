@@ -164,9 +164,9 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public AbstractResponse getPostInsideThread(Integer id) {
+    public AbstractResponse getPostInsideThread(GetPostByThreadDto getPostByThreadDto) {
 
-        List<GroupPost> groupPostList = groupPostRepository.findAllByParentGroup(id);
+        List<GroupPost> groupPostList = groupPostRepository.findAllByParentGroup(getPostByThreadDto.getThreadId());
 
         List<PostSearchResultDto> postSearchResultDtoList = convertPostToPostDto(groupPostList);
 
