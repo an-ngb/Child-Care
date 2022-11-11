@@ -14,6 +14,7 @@ public interface PostService {
     AbstractResponse getAllParentGroup();
     AbstractResponse getPostInsideThread(Integer id);
     AbstractResponse getPostByPostId(int id);
+    AbstractResponse getPostByLoggedUser(GetPostDto getPostDto);
 //    AbstractResponse viewAllPostAsc();
 //    AbstractResponse viewAllPostDesc();
 //    AbstractResponse viewMostLikedPost(FilterRequest filterRequest);

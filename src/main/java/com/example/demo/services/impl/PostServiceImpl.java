@@ -353,5 +353,19 @@ public class PostServiceImpl implements PostService {
 //        postRepository.save(post);
 //        return new AbstractResponse();
 //    }
+@Override
+public AbstractResponse getPostByLoggedUser(GetPostDto getPostDto){
+
+    User user = userRepository.findUserById(getPostDto.getUserId());
+
+    List<GroupPost> groupPostList = groupPostRepository.findAllByCreatedBy(user.getEmail());
+    List<PostSearchResultDto> postSearchResultDtoList;
+    if (groupPostList == null) {
+        return new AbstractResponse("FAILED", "POST_NOT_FOUND", 404);
+    } else {
+        postSearchResultDtoList = convertPostToPostDto(groupPostList);
+    }
+    return new AbstractResponse(postSearchResultDtoList);
+}
 }
 
