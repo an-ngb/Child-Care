@@ -48,4 +48,9 @@ public class AdminController {
     public ResponseEntity<AbstractResponse> clearPost(){
         return ResponseEntity.ok().body(adminService.clearPost());
     }
+
+    @PostMapping("/clear-null-shift")
+    public ResponseEntity<AbstractResponse> clearNullShiftBooking(){
+        return ResponseEntity.ok().body(adminService.clearNullShiftBooking());
+    }
 }

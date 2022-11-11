@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -147,5 +148,12 @@ public class AdminServiceImpl implements AdminService {
         List<GroupPost> list = groupPostRepository.findAll();
         List<PostSearchResultDto> postSearchResultDtoList = postService.convertPostToPostDto(list);
         return new AbstractResponse(postSearchResultDtoList);
+    }
+
+    @Override
+    public AbstractResponse clearNullShiftBooking(){
+        List<Booking> bookingList = bookingRepository.findAll();
+        bookingRepository.deleteAll(bookingList.stream().filter(e -> e.getShiftBooked() == null).collect(Collectors.toList()));
+        return new AbstractResponse();
     }
 }
