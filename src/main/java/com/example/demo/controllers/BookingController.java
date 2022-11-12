@@ -37,7 +37,7 @@ public class BookingController {
         return ResponseEntity.ok().body(bookingService.getBookingListByUser());
     }
 
-    @PostMapping("/booking/approve/{id}")
+    @PostMapping("/approve/{id}")
     public ResponseEntity<AbstractResponse> approveBooking(@PathVariable Integer id, @RequestBody InteractDto interactDto) {
         return ResponseEntity.ok().body(bookingService.approveOrDisapproveBooking(id, interactDto));
     }

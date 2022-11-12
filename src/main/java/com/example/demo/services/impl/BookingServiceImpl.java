@@ -102,7 +102,7 @@ public class BookingServiceImpl implements BookingService {
     public AbstractResponse getBookingListByDay(SearchBookingDto searchBookingDto) {
         DoctorProfile doctorProfile = doctorProfileRepository.findById(searchBookingDto.getDoctorId()).orElse(null);
         if(doctorProfile != null) {
-            List<Booking> bookingList = bookingRepository.findAllByDoctorAndBookedAt(doctorProfile.getUser(), searchBookingDto.getBookedAt().atZone(ZoneId.systemDefault()).toLocalDate().atStartOfDay().atZone(ZoneId.systemDefault()).toInstant());
+            List<Booking> bookingList = bookingRepository.findAllByDoctorAndBookedAt(doctorProfile.getUser(), searchBookingDto.getBookedAt());
             List<BookingSearchResultDto> bookingSearchResultDtoList = new ArrayList<>();
             bookingList.forEach(item -> {
                 bookingSearchResultDtoList.add(convertBookingToBookingDto(item));
