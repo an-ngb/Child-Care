@@ -2,6 +2,7 @@ package com.example.demo.controllers;
 
 import com.example.demo.dtos.AbstractResponse;
 import com.example.demo.dtos.BookingDto;
+import com.example.demo.dtos.InteractDto;
 import com.example.demo.dtos.SearchBookingDto;
 import com.example.demo.services.BookingService;
 import lombok.RequiredArgsConstructor;
@@ -34,5 +35,10 @@ public class BookingController {
     @PostMapping("/get-booking-list-by-user")
     public ResponseEntity<AbstractResponse> getBookingListByUser() {
         return ResponseEntity.ok().body(bookingService.getBookingListByUser());
+    }
+
+    @PostMapping("/booking/approve/{id}")
+    public ResponseEntity<AbstractResponse> approveBooking(@PathVariable Integer id, @RequestBody InteractDto interactDto) {
+        return ResponseEntity.ok().body(bookingService.approveOrDisapproveBooking(id, interactDto));
     }
 }

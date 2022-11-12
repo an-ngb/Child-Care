@@ -21,10 +21,6 @@ public class DoctorController {
         return ResponseEntity.ok().body(bookingService.getBookingListOfDoctor());
     }
 
-    @PostMapping("/booking/approve/{id}")
-    public ResponseEntity<AbstractResponse> approveBooking(@PathVariable Integer id, @RequestBody InteractDto interactDto) {
-        return ResponseEntity.ok().body(bookingService.approveOrDisapproveBooking(id, interactDto));
-    }
 
     @PostMapping("/get-doctor-list")
     public ResponseEntity<AbstractResponse> getDoctorList() {
