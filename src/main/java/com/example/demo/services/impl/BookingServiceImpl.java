@@ -10,6 +10,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
@@ -136,6 +137,19 @@ public class BookingServiceImpl implements BookingService {
         });
 
         return new AbstractResponse(bookingSearchResultDtoList);
+    }
+
+    @Override
+    public AbstractResponse updateBooking(Integer id, UpdateDto updateDto){
+
+        Booking booking = bookingRepository.findById(id).orElse(null);
+
+        if(booking != null){
+            booking.setBookedAt( updateDto.getNewBookedAt() == null ? booking.getBookedAt() : Instant.ofEpochMilli(updateDto.getNewBookedAt()));
+            booking.setShiftBooked(updateDto.getNewShift() == null ? booking.getShiftBooked() : updateDto.getNewShift());
+        }
+
+        return new AbstractResponse();
     }
 }
 

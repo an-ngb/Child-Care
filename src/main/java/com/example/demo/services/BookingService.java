@@ -16,4 +16,5 @@ public interface BookingService {
 
     AbstractResponse getBookingListByUser();
 
+    AbstractResponse updateBooking(Integer id, UpdateDto updateDto);
 }
