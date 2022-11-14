@@ -26,6 +26,6 @@ public class Reaction extends AbstractAuditing{
     @JoinColumn(name = "user_id")
     private User user;
 
-    @Column(name = "is_upvote")
-    private Boolean isUpvote;
+    @Column(name = "isLike")
+    private Boolean like;
 }
