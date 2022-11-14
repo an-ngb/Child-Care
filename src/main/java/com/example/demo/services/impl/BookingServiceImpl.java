@@ -54,8 +54,22 @@ public class BookingServiceImpl implements BookingService {
         bookingSearchResultDto.setId(booking.getId());
         bookingSearchResultDto.setCreatedAt(booking.getCreatedAt().toEpochMilli());
         bookingSearchResultDto.setUpdatedAt(booking.getUpdatedAt().toEpochMilli());
-        bookingSearchResultDto.setCreatedBy(booking.getCreatedBy());
-        bookingSearchResultDto.setUpdatedBy(booking.getUpdatedBy());
+
+        User user = userRepository.findByEmail(booking.getCreatedBy());
+        if(user != null){
+            UserProfile userProfile = userProfileRepository.findByUser(user);
+            bookingSearchResultDto.setCreatedBy(userProfile.getFullName() == null ? null : userProfile.getFullName());
+        } else {
+            bookingSearchResultDto.setCreatedBy(booking.getCreatedBy());
+        }
+        User user2 = userRepository.findByEmail(booking.getUpdatedBy());
+
+        if(user2 != null){
+            UserProfile userProfile2 = userProfileRepository.findByUser(user2);
+            bookingSearchResultDto.setUpdatedBy(userProfile2.getFullName() == null ? null : userProfile2.getFullName());
+        } else {
+            bookingSearchResultDto.setUpdatedBy(booking.getUpdatedBy());
+        }
         bookingSearchResultDto.setDoctorId(booking.getDoctor().getId());
         bookingSearchResultDto.setDoctorName(doctorProfileRepository.findByUser(booking.getDoctor()).getFullName());
         bookingSearchResultDto.setBookedAt(booking.getBookedAt().toEpochMilli());
