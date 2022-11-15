@@ -95,7 +95,9 @@ public class PostServiceImpl implements PostService {
 //                }
 //            }
 //        }
-        return new AbstractResponse();
+        List<GroupPost> groupPostList = new ArrayList<>();
+        groupPostList.add(groupPost);
+        return new AbstractResponse(new ArrayList<>(convertPostToPostDto(groupPostList)));
     }
 
     @Override
@@ -143,14 +145,16 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public AbstractResponse deletePost(DeleteDto deleteDto) {
+
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User user = userRepository.findByEmail(authentication.getName());
-        List<Post> postList = postRepository.findAllByUserId(user.getId());
-        postList.forEach(item -> {
-            if(item.getId().equals(deleteDto.getId())){
-                postRepository.delete(item);
-            }
-        });
+        GroupPost groupPost = groupPostRepository.findGroupPostById(deleteDto.getId()).orElse(null);
+        List<Post> postList = postRepository.findByGroupPost(groupPost);
+        if(groupPost != null && postList != null){
+            postRepository.deleteAll(postList);
+            groupPostRepository.delete(groupPost);
+        } else {
+            return new AbstractResponse("FAILED", "POST_NOT_FOUND", 404);
+        }
         return new AbstractResponse();
     }
 
@@ -362,6 +366,20 @@ public class PostServiceImpl implements PostService {
 //        postRepository.save(post);
 //        return new AbstractResponse();
 //    }
+@Override
+public AbstractResponse getPostByLoggedUser(GetPostDto getPostDto){
+
+    User user = userRepository.findUserById(getPostDto.getUserId());
+
+    List<GroupPost> groupPostList = groupPostRepository.findAllByCreatedBy(user.getEmail());
+    List<PostSearchResultDto> postSearchResultDtoList;
+    if (groupPostList == null) {
+        return new AbstractResponse("FAILED", "POST_NOT_FOUND", 404);
+    } else {
+        postSearchResultDtoList = convertPostToPostDto(groupPostList);
+    }
+    return new AbstractResponse(postSearchResultDtoList);
+}
 
 
     @Override

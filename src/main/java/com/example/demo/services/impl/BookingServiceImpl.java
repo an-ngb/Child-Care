@@ -10,9 +10,11 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -53,8 +55,22 @@ public class BookingServiceImpl implements BookingService {
         bookingSearchResultDto.setId(booking.getId());
         bookingSearchResultDto.setCreatedAt(booking.getCreatedAt().toEpochMilli());
         bookingSearchResultDto.setUpdatedAt(booking.getUpdatedAt().toEpochMilli());
-        bookingSearchResultDto.setCreatedBy(booking.getCreatedBy());
-        bookingSearchResultDto.setUpdatedBy(booking.getUpdatedBy());
+
+        User user = userRepository.findByEmail(booking.getCreatedBy());
+        if(user != null){
+            UserProfile userProfile = userProfileRepository.findByUser(user);
+            bookingSearchResultDto.setCreatedBy(userProfile.getFullName() == null ? null : userProfile.getFullName());
+        } else {
+            bookingSearchResultDto.setCreatedBy(booking.getCreatedBy());
+        }
+        User user2 = userRepository.findByEmail(booking.getUpdatedBy());
+
+        if(user2 != null){
+            UserProfile userProfile2 = userProfileRepository.findByUser(user2);
+            bookingSearchResultDto.setUpdatedBy(userProfile2.getFullName() == null ? null : userProfile2.getFullName());
+        } else {
+            bookingSearchResultDto.setUpdatedBy(booking.getUpdatedBy());
+        }
         bookingSearchResultDto.setDoctorId(booking.getDoctor().getId());
         bookingSearchResultDto.setDoctorName(doctorProfileRepository.findByUser(booking.getDoctor()).getFullName());
         bookingSearchResultDto.setBookedAt(booking.getBookedAt().toEpochMilli());
@@ -101,7 +117,7 @@ public class BookingServiceImpl implements BookingService {
     public AbstractResponse getBookingListByDay(SearchBookingDto searchBookingDto) {
         DoctorProfile doctorProfile = doctorProfileRepository.findById(searchBookingDto.getDoctorId()).orElse(null);
         if(doctorProfile != null) {
-            List<Booking> bookingList = bookingRepository.findAllByDoctorAndBookedAt(doctorProfile.getUser(), searchBookingDto.getBookedAt().atZone(ZoneId.systemDefault()).toLocalDate().atStartOfDay().atZone(ZoneId.systemDefault()).toInstant());
+            List<Booking> bookingList = bookingRepository.findAllByDoctorAndBookedAt(doctorProfile.getUser(), searchBookingDto.getBookedAt());
             List<BookingSearchResultDto> bookingSearchResultDtoList = new ArrayList<>();
             bookingList.forEach(item -> {
                 bookingSearchResultDtoList.add(convertBookingToBookingDto(item));
@@ -121,6 +137,19 @@ public class BookingServiceImpl implements BookingService {
         });
 
         return new AbstractResponse(bookingSearchResultDtoList);
+    }
+
+    @Override
+    public AbstractResponse updateBooking(Integer id, UpdateDto updateDto){
+
+        Booking booking = bookingRepository.findById(id).orElse(null);
+
+        if(booking != null){
+            booking.setBookedAt( updateDto.getNewBookedAt() == null ? booking.getBookedAt() : Instant.ofEpochMilli(updateDto.getNewBookedAt()));
+            booking.setShiftBooked(updateDto.getNewShift() == null ? booking.getShiftBooked() : updateDto.getNewShift());
+        }
+
+        return new AbstractResponse();
     }
 }
 

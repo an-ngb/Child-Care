@@ -39,6 +39,7 @@ public class AdminController {
     public ResponseEntity<AbstractResponse> clearBookingList(){
         return ResponseEntity.ok().body(adminService.clearBookingList());
     }
+
     @PostMapping("/clear-user")
     public ResponseEntity<AbstractResponse> clearUser(){
         return ResponseEntity.ok().body(adminService.clearUserList());
@@ -47,5 +48,10 @@ public class AdminController {
     @PostMapping("/clear-post")
     public ResponseEntity<AbstractResponse> clearPost(){
         return ResponseEntity.ok().body(adminService.clearPost());
+    }
+
+    @PostMapping("/clear-null-shift")
+    public ResponseEntity<AbstractResponse> clearNullShiftBooking(){
+        return ResponseEntity.ok().body(adminService.clearNullShiftBooking());
     }
 }

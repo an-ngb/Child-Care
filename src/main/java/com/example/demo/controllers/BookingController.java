@@ -1,10 +1,9 @@
 package com.example.demo.controllers;
 
-import com.example.demo.dtos.AbstractResponse;
-import com.example.demo.dtos.BookingDto;
-import com.example.demo.dtos.SearchBookingDto;
+import com.example.demo.dtos.*;
 import com.example.demo.services.BookingService;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.sql.Update;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -34,5 +33,15 @@ public class BookingController {
     @PostMapping("/get-booking-list-by-user")
     public ResponseEntity<AbstractResponse> getBookingListByUser() {
         return ResponseEntity.ok().body(bookingService.getBookingListByUser());
+    }
+
+    @PostMapping("/approve/{id}")
+    public ResponseEntity<AbstractResponse> approveBooking(@PathVariable Integer id, @RequestBody InteractDto interactDto) {
+        return ResponseEntity.ok().body(bookingService.approveOrDisapproveBooking(id, interactDto));
+    }
+
+    @PostMapping("/update/{id}")
+    public ResponseEntity<AbstractResponse> updateBooking(@PathVariable Integer id, @RequestBody UpdateDto updateDto){
+        return ResponseEntity.ok().body(bookingService.updateBooking(id, updateDto));
     }
 }

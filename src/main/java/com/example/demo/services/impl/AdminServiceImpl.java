@@ -6,11 +6,14 @@ import com.example.demo.repositories.*;
 import com.example.demo.services.AdminService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -68,9 +71,40 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    public AbstractResponse getAllUser(){
+    public AbstractResponse getAllUser() {
         List<User> userList = userRepository.findAll();
-        return new AbstractResponse(userList);
+        List<UserProfileDto> userProfileDtoList = new ArrayList<>();
+        for (User user : userList) {
+            UserProfile userProfile = userProfileRepository.findByUser(user);
+            UserProfileDto userProfileDto = new UserProfileDto();
+            userProfileDto.setId(user.getId());
+            userProfileDto.setEmail(user.getEmail());
+            userProfileDto.setRole(user.getRole().getRoleName());
+            userProfileDto.setFullName(userProfile.getFullName());
+            userProfileDto.setAge(userProfile.getAge());
+            userProfileDto.setGender(userProfile.getGender());
+            userProfileDto.setPhone(userProfile.getPhone());
+            List<GroupPost> groupPostList = groupPostRepository.findAllByCreatedBy(user.getEmail());
+            List<PostSearchResultDto> postSearchResultDtoList;
+            postSearchResultDtoList = postService.convertPostToPostDto(groupPostList);
+            userProfileDto.setPostSearchResultDtoList(postSearchResultDtoList);
+            DoctorProfile doctorProfile = doctorProfileRepository.findByUser(user);
+            if (doctorProfile == null) {
+                userProfileDtoList.add(userProfileDto);
+            } else {
+                userProfileDto.setCertificate(doctorProfile.getCertificate());
+                userProfileDto.setDegree(doctorProfile.getDegree());
+                userProfileDto.setExpYear(doctorProfile.getExpYear());
+                userProfileDto.setSpecialist(doctorProfile.getSpecialist().getSpecialistName());
+                userProfileDto.setWorkingAt(doctorProfile.getWorkingAt());
+                userProfileDto.setPrivateWeb(doctorProfile.getPrivateWeb());
+                userProfileDto.setStartWorkAtTime(doctorProfile.getStartWorkAtTime());
+                userProfileDto.setEndWorkAtTime(doctorProfile.getEndWorkAtTime());
+                userProfileDto.setWorkAt(doctorProfile.getWorkAt());
+            }
+            userProfileDtoList.add(userProfileDto);
+        }
+        return new AbstractResponse(userProfileDtoList);
     }
 
     @Override
@@ -114,5 +148,12 @@ public class AdminServiceImpl implements AdminService {
         List<GroupPost> list = groupPostRepository.findAll();
         List<PostSearchResultDto> postSearchResultDtoList = postService.convertPostToPostDto(list);
         return new AbstractResponse(postSearchResultDtoList);
+    }
+
+    @Override
+    public AbstractResponse clearNullShiftBooking(){
+        List<Booking> bookingList = bookingRepository.findAll();
+        bookingRepository.deleteAll(bookingList.stream().filter(e -> e.getShiftBooked() == null).collect(Collectors.toList()));
+        return new AbstractResponse();
     }
 }
