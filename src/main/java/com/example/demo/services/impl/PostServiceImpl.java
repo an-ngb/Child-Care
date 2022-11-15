@@ -441,16 +441,19 @@ public AbstractResponse getPostByLoggedUser(GetPostDto getPostDto){
     }
 
     @Override
-    public AbstractResponse interactionCheck(Integer id){
+    public Boolean interactionCheck(Integer id){
         GroupPost groupPost = groupPostRepository.findGroupPostById(id).orElse(null);
-        if(groupPost == null){
-            return new AbstractResponse(groupPost);
-        }
+        Boolean check = null;
+        if(groupPost != null){
             Post post = postRepository.findByGroupPost(groupPost).get(0);
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             User user = userRepository.findByEmail(authentication.getName());
             Reaction reaction = reactionRepository.findByPostAndUser(post, user);
-        return new AbstractResponse(reaction.getIsUpvote() == null ? null : reaction.getIsUpvote());
+            if(reaction != null){
+                return reaction.getIsUpvote();
+            }
+        }
+        return check;
     }
 }
 

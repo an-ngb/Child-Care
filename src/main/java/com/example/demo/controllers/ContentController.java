@@ -82,7 +82,7 @@ public class ContentController {
         return ResponseEntity.ok().body(postService.getCommentListByPost(id));
     }
     @PostMapping("/interaction-check/{id}")
-    public ResponseEntity<AbstractResponse> interactionCheck(@PathVariable Integer id){
+    public ResponseEntity<Boolean> interactionCheck(@PathVariable Integer id){
         return ResponseEntity.ok().body(postService.interactionCheck(id));
     }
 //
