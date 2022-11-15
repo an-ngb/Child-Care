@@ -243,6 +243,9 @@ public class PostServiceImpl implements PostService {
             User user = userRepository.findByEmail(groupPost.getCreatedBy());
             Post post = postRepository.findByGroupPostOrderById(groupPost).get(0);
             postSearchResultDto.setId(groupPost.getId());
+            if(StringUtils.isEmpty(groupPost.getTitle())){
+                continue;
+            }
             postSearchResultDto.setTitle(groupPost.getTitle());
             postSearchResultDto.setThumbnailImage(StringUtils.isEmpty(post.getThumbnailImage()) ? defaultImg : post.getThumbnailImage());
             Integer totalLike = (int) reactionRepository.findAllByPost(post).stream().filter(e -> e.getIsUpvote() != null).map(Reaction::getIsUpvote).count();
@@ -427,7 +430,7 @@ public AbstractResponse getPostByLoggedUser(GetPostDto getPostDto){
             Reaction reaction = new Reaction(post, user, interactWithPostDto.getInteract() == null ? null : interactWithPostDto.getInteract());
             reactionRepository.save(reaction);
         }
-        return new AbstractResponse(true);
+        return new AbstractResponse();
     }
 }
 
