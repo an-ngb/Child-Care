@@ -18,5 +18,6 @@ public class PostSearchResultDto {
     private String thumbnailImage;
     private Long createAt;
     private Long updatedAt;
+    private Integer threadId;
     private List<CommentResultDto> commentList;
 }

@@ -8,6 +8,7 @@ import com.example.demo.services.PostService;
 import com.example.demo.specification.PostSpecs;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.ObjectUtils;
 import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.BeanWrapper;
 import org.springframework.beans.BeanWrapperImpl;
@@ -243,6 +244,7 @@ public class PostServiceImpl implements PostService {
             User user = userRepository.findByEmail(groupPost.getCreatedBy());
             Post post = postRepository.findByGroupPostOrderById(groupPost).get(0);
             postSearchResultDto.setId(groupPost.getId());
+            postSearchResultDto.setThreadId(groupPost.getParentGroup() == null ? null : groupPost.getParentGroup());
             if(StringUtils.isEmpty(groupPost.getTitle())){
                 continue;
             }
@@ -427,8 +429,13 @@ public AbstractResponse getPostByLoggedUser(GetPostDto getPostDto){
             Post post = postRepository.findByGroupPost(groupPost).get(0);
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             User user = userRepository.findByEmail(authentication.getName());
-            Reaction reaction = new Reaction(post, user, interactWithPostDto.getInteract() == null ? null : interactWithPostDto.getInteract());
-            reactionRepository.save(reaction);
+            Reaction findReaction = reactionRepository.findByPostAndUser(post, user);
+            if(findReaction == null){
+                Reaction reaction = new Reaction(post, user, interactWithPostDto.getInteract() == null ? null : interactWithPostDto.getInteract());
+                reactionRepository.save(reaction);
+            } else {
+                return new AbstractResponse();
+            }
         }
         return new AbstractResponse();
     }
@@ -436,16 +443,14 @@ public AbstractResponse getPostByLoggedUser(GetPostDto getPostDto){
     @Override
     public AbstractResponse interactionCheck(Integer id){
         GroupPost groupPost = groupPostRepository.findGroupPostById(id).orElse(null);
-        if(groupPost != null){
+        if(groupPost == null){
+            return new AbstractResponse(groupPost);
+        }
             Post post = postRepository.findByGroupPost(groupPost).get(0);
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             User user = userRepository.findByEmail(authentication.getName());
             Reaction reaction = reactionRepository.findByPostAndUser(post, user);
-            if(reaction != null){
-                return new AbstractResponse(true);
-            }
-        }
-        return new AbstractResponse(false);
+        return new AbstractResponse(reaction.getIsUpvote() == null ? null : reaction.getIsUpvote());
     }
 }
 
