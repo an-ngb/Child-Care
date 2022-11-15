@@ -77,6 +77,10 @@ public class ContentController {
     public ResponseEntity<AbstractResponse> interactPost(@PathVariable Integer id, @RequestBody InteractWithPostDto interactWithPostDto){
         return ResponseEntity.ok().body(postService.interactWithPost(id, interactWithPostDto));
     }
+    @PostMapping("/get-comment/{id}")
+    public ResponseEntity<AbstractResponse> getCommentListByPost(@PathVariable Integer id){
+        return ResponseEntity.ok().body(postService.getCommentListByPost(id));
+    }
 //
 //    @PostMapping("/read/all")
 //    public ResponseEntity<AbstractResponse> viewAllPost(){

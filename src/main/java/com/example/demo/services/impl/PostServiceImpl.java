@@ -326,6 +326,40 @@ public class PostServiceImpl implements PostService {
         }
         return data;
     }
+
+    @Override
+    public AbstractResponse getCommentListByPost(Integer id){
+        GroupPost groupPost = groupPostRepository.findGroupPostById(id).orElse(null);
+        List<CommentResultDto> commentResultDtoList = new ArrayList<>();
+        if(groupPost != null){
+            List<Post> commentList = postRepository.findByGroupPost(groupPost);
+            if (!CollectionUtils.isEmpty(commentList)) {
+                for (Post item : commentList) {
+                    if((!StringUtils.isEmpty(postRepository.findByGroupPostOrderById(groupPost).get(0).getContent()) && postRepository.findByGroupPostOrderById(groupPost).get(0).getContent().equals(item.getContent())) || StringUtils.isEmpty(item.getContent())){
+                        continue;
+                    }
+                    CommentResultDto commentResultDto = new CommentResultDto();
+                    commentResultDto.setId(item.getId());
+                    commentResultDto.setContent(item.getContent());
+                    commentResultDto.setCreatedAt(item.getCreatedAt().toEpochMilli());
+                    User foundUser = userRepository.findByEmail(item.getCreatedBy());
+
+                    UserProfile userProfile = userProfileRepository.findByUser(foundUser);
+
+                    if(userProfile != null){
+                        commentResultDto.setCreatedBy(userProfile.getFullName());
+                    } else {
+                        DoctorProfile doctorProfile = doctorProfileRepository.findByUser(foundUser);
+                        commentResultDto.setCreatedBy(doctorProfile.getFullName());
+                    }
+
+                    commentResultDto.setUpdatedAt(item.getUpdatedAt().toEpochMilli());
+                    commentResultDtoList.add(commentResultDto);
+                }
+            }
+        }
+        return new AbstractResponse(commentResultDtoList);
+    }
 //
 //    @Override
 //    public AbstractResponse like(InteractDto interactDto) {
