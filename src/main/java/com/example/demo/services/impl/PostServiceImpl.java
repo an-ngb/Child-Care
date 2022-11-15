@@ -248,9 +248,9 @@ public class PostServiceImpl implements PostService {
             }
             postSearchResultDto.setTitle(groupPost.getTitle());
             postSearchResultDto.setThumbnailImage(StringUtils.isEmpty(post.getThumbnailImage()) ? defaultImg : post.getThumbnailImage());
-            Integer totalLike = (int) reactionRepository.findAllByPost(post).stream().filter(e -> e.getIsUpvote() != null).map(Reaction::getIsUpvote).count();
+            Integer totalLike = (int) reactionRepository.findAllByPost(post).stream().map(Reaction::getIsUpvote).count();
             postSearchResultDto.setTotalLike(totalLike);
-            Integer totalDislike = (int) reactionRepository.findAllByPost(post).stream().filter(e -> e.getIsUpvote() != null).map(item -> !item.getIsUpvote()).count();
+            Integer totalDislike = (int) reactionRepository.findAllByPost(post).stream().map(item -> !item.getIsUpvote()).count();
             postSearchResultDto.setTotalDislike(totalDislike);
             if(postRepository.findByGroupPostOrderById(groupPost).size() > 0){
                 postSearchResultDto.setContent(StringUtils.isEmpty(post.getContent()) ? null : post.getContent());
@@ -431,6 +431,21 @@ public AbstractResponse getPostByLoggedUser(GetPostDto getPostDto){
             reactionRepository.save(reaction);
         }
         return new AbstractResponse();
+    }
+
+    @Override
+    public AbstractResponse interactionCheck(Integer id){
+        GroupPost groupPost = groupPostRepository.findGroupPostById(id).orElse(null);
+        if(groupPost != null){
+            Post post = postRepository.findByGroupPost(groupPost).get(0);
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            User user = userRepository.findByEmail(authentication.getName());
+            Reaction reaction = reactionRepository.findByPostAndUser(post, user);
+            if(reaction != null){
+                return new AbstractResponse(true);
+            }
+        }
+        return new AbstractResponse(false);
     }
 }
 

@@ -22,4 +22,5 @@ public interface PostService {
     AbstractResponse interactWithPost(Integer id, InteractWithPostDto interactWithPostDto);
     AbstractResponse getCommentListByPost(Integer id);
 //    AbstractResponse dislike(InteractDto interactDto);
+    AbstractResponse interactionCheck(Integer id);
 }
