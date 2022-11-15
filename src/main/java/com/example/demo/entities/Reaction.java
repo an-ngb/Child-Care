@@ -28,4 +28,10 @@ public class Reaction extends AbstractAuditing{
 
     @Column(name = "is_upvote")
     private Boolean isUpvote;
+
+    public Reaction(Post post, User user, Boolean isUpvote) {
+        this.post = post;
+        this.user = user;
+        this.isUpvote = isUpvote;
+    }
 }

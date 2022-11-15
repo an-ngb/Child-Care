@@ -62,11 +62,11 @@ public class ContentController {
         return ResponseEntity.ok().body(postService.getPostByPostId(id));
     }
 
-//
-//    @PostMapping("/dislike")
-//    public ResponseEntity<AbstractResponse> dislike(@RequestBody InteractDto interactDto){
-//        return ResponseEntity.ok().body(postService.dislike(interactDto));
-//    }
+
+    @PostMapping("/interact/{id}")
+    public ResponseEntity<AbstractResponse> interactPost(@PathVariable Integer id, @RequestBody InteractWithPostDto interactWithPostDto){
+        return ResponseEntity.ok().body(postService.interactWithPost(id, interactWithPostDto));
+    }
 //
 //    @PostMapping("/read/all")
 //    public ResponseEntity<AbstractResponse> viewAllPost(){

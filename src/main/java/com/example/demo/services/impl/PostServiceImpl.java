@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.print.DocFlavor;
 import javax.swing.*;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -24,6 +25,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.Instant;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -43,6 +45,7 @@ public class PostServiceImpl implements PostService {
     private final FileRepository fileRepository;
     private final PostFileRepository postFileRepository;
     private final ParentGroupRepository parentGroupRepository;
+    private final ReactionRepository reactionRepository;
 
     public static String[] getNullPropertyNames(Object source) {
         final BeanWrapper src = new BeanWrapperImpl(source);
@@ -234,11 +237,16 @@ public class PostServiceImpl implements PostService {
         for (GroupPost groupPost : groupPostList) {
             PostSearchResultDto postSearchResultDto = new PostSearchResultDto();
             User user = userRepository.findByEmail(groupPost.getCreatedBy());
+            Post post = postRepository.findByGroupPostOrderById(groupPost).get(0);
             postSearchResultDto.setId(groupPost.getId());
             postSearchResultDto.setTitle(groupPost.getTitle());
-            postSearchResultDto.setThumbnailImage(StringUtils.isEmpty(postRepository.findByGroupPostOrderById(groupPost).get(0).getThumbnailImage()) ? defaultImg : postRepository.findByGroupPostOrderById(groupPost).get(0).getThumbnailImage());
+            postSearchResultDto.setThumbnailImage(StringUtils.isEmpty(post.getThumbnailImage()) ? defaultImg : post.getThumbnailImage());
+            Integer totalLike = (int) reactionRepository.findAllByPost(post).stream().filter(e -> e.getIsUpvote() != null).map(Reaction::getIsUpvote).count();
+            postSearchResultDto.setTotalLike(totalLike);
+            Integer totalDislike = (int) reactionRepository.findAllByPost(post).stream().filter(e -> e.getIsUpvote() != null).map(item -> !item.getIsUpvote()).count();
+            postSearchResultDto.setTotalDislike(totalDislike);
             if(postRepository.findByGroupPostOrderById(groupPost).size() > 0){
-                postSearchResultDto.setContent(postRepository.findByGroupPostOrderById(groupPost).get(0).getContent());
+                postSearchResultDto.setContent(StringUtils.isEmpty(post.getContent()) ? null : post.getContent());
             } else {
                 postSearchResultDto.setContent(null);
             }
@@ -354,5 +362,21 @@ public class PostServiceImpl implements PostService {
 //        postRepository.save(post);
 //        return new AbstractResponse();
 //    }
+
+
+    @Override
+    public AbstractResponse interactWithPost(Integer id, InteractWithPostDto interactWithPostDto) {
+
+        GroupPost groupPost = groupPostRepository.findGroupPostById(id).orElse(null);
+
+        if(groupPost != null){
+            Post post = postRepository.findByGroupPost(groupPost).get(0);
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            User user = userRepository.findByEmail(authentication.getName());
+            Reaction reaction = new Reaction(post, user, interactWithPostDto.getInteract() == null ? null : interactWithPostDto.getInteract());
+            reactionRepository.save(reaction);
+        }
+        return new AbstractResponse(true);
+    }
 }
 

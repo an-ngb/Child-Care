@@ -18,6 +18,6 @@ public interface PostService {
 //    AbstractResponse viewAllPostDesc();
 //    AbstractResponse viewMostLikedPost(FilterRequest filterRequest);
 ////    AbstractResponse viewPostByTag(FilterRequest filterRequest);
-//    AbstractResponse like(InteractDto interactDto);
+    AbstractResponse interactWithPost(Integer id, InteractWithPostDto interactWithPostDto);
 //    AbstractResponse dislike(InteractDto interactDto);
 }
