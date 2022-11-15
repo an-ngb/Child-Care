@@ -11,7 +11,10 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
+import java.time.LocalDate;
 import java.time.ZoneId;
+import java.time.ZoneOffset;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -78,6 +81,12 @@ public class BookingServiceImpl implements BookingService {
         bookingSearchResultDto.setBookedShift(booking.getShiftBooked());
         bookingSearchResultDto.setContent(booking.getContent());
         bookingSearchResultDto.setIsApproved(booking.getIsApproved() == null ? null : booking.getIsApproved());
+
+        if(ChronoUnit.DAYS.between(LocalDate.now().atStartOfDay(), booking.getBookedAt().atZone(ZoneOffset.UTC).toLocalDate().atStartOfDay()) <= 1 && booking.getIsApproved() == null){
+            booking.setIsApproved(false);
+            bookingSearchResultDto.setIsApproved(false);
+        }
+
         bookingSearchResultDto.setConsult(booking.getConsult() == null ? null : booking.getConsult());
         return bookingSearchResultDto;
     }

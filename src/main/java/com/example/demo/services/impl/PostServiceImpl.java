@@ -352,7 +352,6 @@ public class PostServiceImpl implements PostService {
                         DoctorProfile doctorProfile = doctorProfileRepository.findByUser(foundUser);
                         commentResultDto.setCreatedBy(doctorProfile.getFullName());
                     }
-
                     commentResultDto.setUpdatedAt(item.getUpdatedAt().toEpochMilli());
                     commentResultDtoList.add(commentResultDto);
                 }
