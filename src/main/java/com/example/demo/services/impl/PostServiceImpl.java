@@ -248,9 +248,9 @@ public class PostServiceImpl implements PostService {
             }
             postSearchResultDto.setTitle(groupPost.getTitle());
             postSearchResultDto.setThumbnailImage(StringUtils.isEmpty(post.getThumbnailImage()) ? defaultImg : post.getThumbnailImage());
-            Integer totalLike = (int) reactionRepository.findAllByPost(post).stream().filter(e -> e.getIsUpvote() != null).map(Reaction::getIsUpvote).count();
+            Integer totalLike = (int) reactionRepository.findAllByPost(post).stream().filter(e -> e.getIsUpvote()).count();
             postSearchResultDto.setTotalLike(totalLike);
-            Integer totalDislike = (int) reactionRepository.findAllByPost(post).stream().filter(e -> e.getIsUpvote() != null).map(item -> !item.getIsUpvote()).count();
+            Integer totalDislike = (int) reactionRepository.findAllByPost(post).stream().filter(e -> !e.getIsUpvote()).count();
             postSearchResultDto.setTotalDislike(totalDislike);
             if(postRepository.findByGroupPostOrderById(groupPost).size() > 0){
                 postSearchResultDto.setContent(StringUtils.isEmpty(post.getContent()) ? null : post.getContent());
