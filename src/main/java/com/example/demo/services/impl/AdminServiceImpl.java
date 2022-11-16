@@ -11,6 +11,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -162,6 +163,20 @@ public class AdminServiceImpl implements AdminService {
     @Override
     public AbstractResponse clearReaction() {
         reactionRepository.deleteAll();
+        return new AbstractResponse();
+    }
+
+    @Override
+    public AbstractResponse clearNullThreadId() {
+        List<GroupPost> groupPostList = groupPostRepository.findAll();
+        for (GroupPost groupPost : groupPostList) {
+            if(groupPost.getParentGroup() != null){
+                continue;
+            }
+            List<Post> postList = postRepository.findByGroupPost(groupPost);
+            postRepository.deleteAll(postList);
+            groupPostRepository.delete(groupPost);
+        }
         return new AbstractResponse();
     }
 }
