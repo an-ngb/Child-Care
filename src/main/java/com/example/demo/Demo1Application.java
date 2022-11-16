@@ -80,11 +80,11 @@ public class Demo1Application {
                 userProfileRepository.save(userProfile);
             }
 
-            parentGroupRepository.save(new ParentGroup(152, "Sức Khỏe Của Bé"));
-            parentGroupRepository.save(new ParentGroup(153, "Dinh Dưỡng Cho Bé"));
-            parentGroupRepository.save(new ParentGroup(154, "Mẹ Và Bé"));
-            parentGroupRepository.save(new ParentGroup(155, "Cẩm Nang Cho Mẹ"));
-            parentGroupRepository.save(new ParentGroup(156, "Chuyện Chị Em"));
+            parentGroupRepository.save(new ParentGroup(152, "Sức khỏe của bé"));
+            parentGroupRepository.save(new ParentGroup(153, "Dinh dưỡng cho bé"));
+            parentGroupRepository.save(new ParentGroup(154, "Mẹ và bé"));
+            parentGroupRepository.save(new ParentGroup(155, "Cẩm nang cho mẹ"));
+            parentGroupRepository.save(new ParentGroup(156, "Chuyện chị em"));
         };
     }
 }
