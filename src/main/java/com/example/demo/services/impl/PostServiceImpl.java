@@ -245,6 +245,7 @@ public class PostServiceImpl implements PostService {
             Post post = postRepository.findByGroupPostOrderById(groupPost).get(0);
             postSearchResultDto.setId(groupPost.getId());
             postSearchResultDto.setThreadId(groupPost.getParentGroup() == null ? null : groupPost.getParentGroup());
+            postSearchResultDto.setUserId(user.getId());
             if(StringUtils.isEmpty(groupPost.getTitle())){
                 continue;
             }
@@ -274,7 +275,7 @@ public class PostServiceImpl implements PostService {
                     commentResultDto.setContent(item.getContent());
                     commentResultDto.setCreatedAt(item.getCreatedAt().toEpochMilli());
                     User foundUser = userRepository.findByEmail(item.getCreatedBy());
-
+                    commentResultDto.setUserId(foundUser.getId());
                     UserProfile userProfile = userProfileRepository.findByUser(foundUser);
 
                     if(userProfile != null){
