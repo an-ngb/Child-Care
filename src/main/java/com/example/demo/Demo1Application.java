@@ -83,11 +83,11 @@ public class Demo1Application {
             }
 
             if(parentGroupRepository.findAll().size() == 0){
-                parentGroupRepository.save(new ParentGroup(1, "THREAD1"));
-                parentGroupRepository.save(new ParentGroup(2, "THREAD2"));
-                parentGroupRepository.save(new ParentGroup(3, "THREAD3"));
-                parentGroupRepository.save(new ParentGroup(4, "THREAD4"));
-                parentGroupRepository.save(new ParentGroup(5, "THREAD5"));
+                parentGroupRepository.save(new ParentGroup(1, "Sức Khỏe Của Bé"));
+                parentGroupRepository.save(new ParentGroup(2, "Dinh Dưỡng Cho Bé"));
+                parentGroupRepository.save(new ParentGroup(3, "Mẹ Và Bé"));
+                parentGroupRepository.save(new ParentGroup(4, "Cẩm Nang Cho Mẹ"));
+                parentGroupRepository.save(new ParentGroup(5, "Chuyện Chị Em"));
             }
         };
     }
