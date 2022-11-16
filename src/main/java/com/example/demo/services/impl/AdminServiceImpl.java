@@ -33,6 +33,7 @@ public class AdminServiceImpl implements AdminService {
     private final FileRepository fileRepository;
     private final ParentGroupRepository parentGroupRepository;
     private final PostServiceImpl postService;
+    private final ReactionRepository reactionRepository;
 
     @Override
     public AbstractResponse promoteUserToDoctor(ChangeUserRoleDto changeUserRoleDto) {
@@ -137,6 +138,7 @@ public class AdminServiceImpl implements AdminService {
 
     @Override
     public AbstractResponse clearPost(){
+        reactionRepository.deleteAll();
         postRepository.deleteAll();
         groupPostRepository.deleteAll();
         parentGroupRepository.deleteAll();
@@ -154,6 +156,12 @@ public class AdminServiceImpl implements AdminService {
     public AbstractResponse clearNullShiftBooking(){
         List<Booking> bookingList = bookingRepository.findAll();
         bookingRepository.deleteAll(bookingList.stream().filter(e -> e.getShiftBooked() == null).collect(Collectors.toList()));
+        return new AbstractResponse();
+    }
+
+    @Override
+    public AbstractResponse clearReaction() {
+        reactionRepository.deleteAll();
         return new AbstractResponse();
     }
 }

@@ -13,4 +13,5 @@ public interface AdminService {
     AbstractResponse clearPost();
     AbstractResponse viewAllPost();
     AbstractResponse clearNullShiftBooking();
+    AbstractResponse clearReaction();
 }
