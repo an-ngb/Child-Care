@@ -42,9 +42,7 @@ public class BookingServiceImpl implements BookingService {
                 return new AbstractResponse("FAILED", "DOCTOR_NOT_FOUND", 404);
             }
 
-            ZoneId zoneId = ZoneId.systemDefault();
-
-            Booking booking = new Booking(user, doctor.getUser(), bookingDto.getBookedAt().atZone(ZoneOffset.UTC).toLocalDate().atStartOfDay().atZone(zoneId).toInstant(), bookingDto.getBookedTime(), bookingDto.getContent(), bookingDto.getShift(), bookingDto.getConsult());
+            Booking booking = new Booking(user, doctor.getUser(), bookingDto.getBookedAt().atZone(ZoneOffset.UTC).toLocalDate().atStartOfDay().atZone(ZoneOffset.UTC).toInstant(), bookingDto.getBookedTime(), bookingDto.getContent(), bookingDto.getShift(), bookingDto.getConsult());
 
             bookingRepository.save(booking);
         } else {
