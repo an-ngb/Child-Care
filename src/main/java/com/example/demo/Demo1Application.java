@@ -15,11 +15,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.domain.AuditorAware;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -65,7 +63,7 @@ public class Demo1Application {
     @Bean
     CommandLineRunner runner(RoleRepository roleRepo, UserRepository userRepository, UserProfileRepository userProfileRepository, PasswordEncoder passwordEncoder, ParentGroupRepository parentGroupRepository) {
         return args -> {
-            if(roleRepo.findRoleById(1) == null && roleRepo.findRoleById(2) == null && roleRepo.findRoleById(3) == null){
+            if (roleRepo.findRoleById(1) == null && roleRepo.findRoleById(2) == null && roleRepo.findRoleById(3) == null) {
                 Role admin = new Role(1, "admin");
                 Role doctor = new Role(2, "doctor");
                 Role user = new Role(3, "user");
@@ -74,32 +72,19 @@ public class Demo1Application {
                 roleRepo.save(user);
             }
 
-            if(userRepository.findByEmail("adminUser@adminUser.com") == null && roleRepo.findRoleById(1) != null){
+            if (userRepository.findByEmail("adminUser@adminUser.com") == null && roleRepo.findRoleById(1) != null) {
                 User user1 = new User("adminUser@adminUser.com", passwordEncoder.encode("Admin123!@#"), roleRepo.findRoleById(1));
-                UserProfile userProfile = new UserProfile(user1, "Admin Fullname", "Admin Address", 25, 1, "Admin Phone Number");
+                UserProfile userProfile = new UserProfile(user1, "Admin", "Ho Chi Minh City", 25, 1, "0912345678");
 
                 userRepository.save(user1);
                 userProfileRepository.save(userProfile);
             }
 
-            if(parentGroupRepository.findAll().size() == 0){
-                parentGroupRepository.save(new ParentGroup(1, "THREAD1"));
-                parentGroupRepository.save(new ParentGroup(2, "THREAD2"));
-                parentGroupRepository.save(new ParentGroup(3, "THREAD3"));
-                parentGroupRepository.save(new ParentGroup(4, "THREAD4"));
-                parentGroupRepository.save(new ParentGroup(5, "THREAD5"));
-            }
-        };
-    }
-
-    @Bean
-    public WebMvcConfigurer corsConfigurer()
-    {
-        return new WebMvcConfigurer() {
-            @Override
-            public void addCorsMappings(CorsRegistry registry) {
-                registry.addMapping("/**").allowedOrigins("http://localhost:1010");
-            }
+            parentGroupRepository.save(new ParentGroup(152, "Sức khỏe của bé"));
+            parentGroupRepository.save(new ParentGroup(153, "Dinh dưỡng cho bé"));
+            parentGroupRepository.save(new ParentGroup(154, "Mẹ và bé"));
+            parentGroupRepository.save(new ParentGroup(155, "Cẩm nang cho mẹ"));
+            parentGroupRepository.save(new ParentGroup(156, "Chuyện chị em"));
         };
     }
 }

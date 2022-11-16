@@ -13,6 +13,7 @@ public class PostSearchResultDto {
     private String title;
     private String content;
     private String author;
+    private Integer userId;
     private Integer totalLike;
     private Integer totalDislike;
     private String thumbnailImage;

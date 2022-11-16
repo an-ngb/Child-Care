@@ -245,12 +245,13 @@ public class PostServiceImpl implements PostService {
             Post post = postRepository.findByGroupPostOrderById(groupPost).get(0);
             postSearchResultDto.setId(groupPost.getId());
             postSearchResultDto.setThreadId(groupPost.getParentGroup() == null ? null : groupPost.getParentGroup());
+            postSearchResultDto.setUserId(user.getId());
             if(StringUtils.isEmpty(groupPost.getTitle())){
                 continue;
             }
             postSearchResultDto.setTitle(groupPost.getTitle());
             postSearchResultDto.setThumbnailImage(StringUtils.isEmpty(post.getThumbnailImage()) ? defaultImg : post.getThumbnailImage());
-            Integer totalLike = (int) reactionRepository.findAllByPost(post).stream().filter(e -> e.getIsUpvote() != null && !e.getIsUpvote()).count();
+            Integer totalLike = (int) reactionRepository.findAllByPost(post).stream().filter(e -> e.getIsUpvote() != null && e.getIsUpvote()).count();
             postSearchResultDto.setTotalLike(totalLike);
             Integer totalDislike = (int) reactionRepository.findAllByPost(post).stream().filter(e -> e.getIsUpvote() != null && !e.getIsUpvote()).count();
             postSearchResultDto.setTotalDislike(totalDislike);
@@ -274,7 +275,7 @@ public class PostServiceImpl implements PostService {
                     commentResultDto.setContent(item.getContent());
                     commentResultDto.setCreatedAt(item.getCreatedAt().toEpochMilli());
                     User foundUser = userRepository.findByEmail(item.getCreatedBy());
-
+                    commentResultDto.setUserId(foundUser.getId());
                     UserProfile userProfile = userProfileRepository.findByUser(foundUser);
 
                     if(userProfile != null){
@@ -348,7 +349,7 @@ public class PostServiceImpl implements PostService {
                     commentResultDto.setContent(item.getContent());
                     commentResultDto.setCreatedAt(item.getCreatedAt().toEpochMilli());
                     User foundUser = userRepository.findByEmail(item.getCreatedBy());
-
+                    commentResultDto.setUserId(foundUser.getId());
                     UserProfile userProfile = userProfileRepository.findByUser(foundUser);
 
                     if(userProfile != null){
@@ -435,25 +436,25 @@ public AbstractResponse getPostByLoggedUser(GetPostDto getPostDto){
                 reactionRepository.save(reaction);
             } else {
                 findReaction.setIsUpvote(interactWithPostDto.getInteract());
+                reactionRepository.save(findReaction);
             }
         }
         return new AbstractResponse();
     }
 
     @Override
-    public Boolean interactionCheck(Integer id){
+    public AbstractResponse interactionCheck(Integer id){
         GroupPost groupPost = groupPostRepository.findGroupPostById(id).orElse(null);
-        Boolean check = null;
         if(groupPost != null){
             Post post = postRepository.findByGroupPost(groupPost).get(0);
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             User user = userRepository.findByEmail(authentication.getName());
             Reaction reaction = reactionRepository.findByPostAndUser(post, user);
             if(reaction != null){
-                return reaction.getIsUpvote();
+                return new AbstractResponse(reaction.getIsUpvote());
             }
         }
-        return check;
+        return new AbstractResponse("FAILED", "POST_NOT_FOUND", 404);
     }
 }
 

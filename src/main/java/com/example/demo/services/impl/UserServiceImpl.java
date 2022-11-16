@@ -213,6 +213,7 @@ public class UserServiceImpl implements UserService {
             userProfileDto.setFullName(doctorProfile.getFullName() == null ? null : doctorProfile.getFullName());
             userProfileDto.setSpecialist(doctorProfile.getSpecialist() == null ? null : doctorProfile.getSpecialist().getSpecialistName());
             userProfileDto.setAvatar(doctorProfile.getAvatar() == null ? null : doctorProfile.getAvatar());
+            userProfileDto.setWorkingAt(doctorProfile.getWorkingAt() == null ? "Child Care Center" : doctorProfile.getWorkingAt());
             userProfileDtos.add(userProfileDto);
         }
 
