@@ -349,7 +349,7 @@ public class PostServiceImpl implements PostService {
                     commentResultDto.setContent(item.getContent());
                     commentResultDto.setCreatedAt(item.getCreatedAt().toEpochMilli());
                     User foundUser = userRepository.findByEmail(item.getCreatedBy());
-
+                    commentResultDto.setUserId(foundUser.getId());
                     UserProfile userProfile = userProfileRepository.findByUser(foundUser);
 
                     if(userProfile != null){
