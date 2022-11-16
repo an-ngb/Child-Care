@@ -442,19 +442,18 @@ public AbstractResponse getPostByLoggedUser(GetPostDto getPostDto){
     }
 
     @Override
-    public Boolean interactionCheck(Integer id){
+    public AbstractResponse interactionCheck(Integer id){
         GroupPost groupPost = groupPostRepository.findGroupPostById(id).orElse(null);
-        Boolean check = null;
         if(groupPost != null){
             Post post = postRepository.findByGroupPost(groupPost).get(0);
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             User user = userRepository.findByEmail(authentication.getName());
             Reaction reaction = reactionRepository.findByPostAndUser(post, user);
             if(reaction != null){
-                return reaction.getIsUpvote();
+                return new AbstractResponse(reaction.getIsUpvote());
             }
         }
-        return check;
+        return new AbstractResponse("FAILED", "POST_NOT_FOUND", 404);
     }
 }
 
