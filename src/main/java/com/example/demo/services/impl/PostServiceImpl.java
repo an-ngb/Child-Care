@@ -435,6 +435,7 @@ public AbstractResponse getPostByLoggedUser(GetPostDto getPostDto){
                 reactionRepository.save(reaction);
             } else {
                 findReaction.setIsUpvote(interactWithPostDto.getInteract());
+                reactionRepository.save(findReaction);
             }
         }
         return new AbstractResponse();
