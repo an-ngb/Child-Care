@@ -44,7 +44,7 @@ public class BookingServiceImpl implements BookingService {
 
             ZoneId zoneId = ZoneId.systemDefault();
 
-            Booking booking = new Booking(user, doctor.getUser(), bookingDto.getBookedAt().atZone(zoneId).toLocalDate().atStartOfDay().atZone(zoneId).toInstant(), bookingDto.getBookedTime(), bookingDto.getContent(), bookingDto.getShift(), bookingDto.getConsult());
+            Booking booking = new Booking(user, doctor.getUser(), bookingDto.getBookedAt().atZone(ZoneOffset.UTC).toLocalDate().atStartOfDay().atZone(zoneId).toInstant(), bookingDto.getBookedTime(), bookingDto.getContent(), bookingDto.getShift(), bookingDto.getConsult());
 
             bookingRepository.save(booking);
         } else {
