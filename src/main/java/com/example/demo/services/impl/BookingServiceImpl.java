@@ -156,8 +156,8 @@ public class BookingServiceImpl implements BookingService {
         if(booking != null){
             booking.setBookedAt( updateDto.getNewBookedAt() == null ? booking.getBookedAt() : Instant.ofEpochMilli(updateDto.getNewBookedAt()));
             booking.setShiftBooked(updateDto.getNewShift() == null ? booking.getShiftBooked() : updateDto.getNewShift());
+            bookingRepository.save(booking);
         }
-
         return new AbstractResponse();
     }
 }
