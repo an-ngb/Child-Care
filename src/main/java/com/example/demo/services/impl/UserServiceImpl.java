@@ -225,7 +225,18 @@ public class UserServiceImpl implements UserService {
                     followRepository.save(follow1);
                 }
             } else {
-                return new AbstractResponse("FAILED", "USER_NOT_FOUND", 404);
+                UserProfile userProfile = userProfileRepository.findById(targetUserId).orElse(null);
+                if (userProfile != null) {
+                    Follow follow = followRepository.findFollowByFollowedByUserAndTargetUser(currentUser, userProfile.getUser());
+                    if (follow != null) {
+                        followRepository.delete(follow);
+                    } else {
+                        Follow follow1 = new Follow(userProfile.getUser(), currentUser);
+                        followRepository.save(follow1);
+                    }
+                } else {
+                    return new AbstractResponse("FAILED", "USER_NOT_FOUND", 404);
+                }
             }
         }
         return new AbstractResponse();
