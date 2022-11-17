@@ -9,6 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
 import java.time.LocalDate;
@@ -149,12 +150,13 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
+    @Transactional
     public AbstractResponse updateBooking(Integer id, UpdateDto updateDto){
 
         Booking booking = bookingRepository.findById(id).orElse(null);
 
         if(booking != null){
-            booking.setBookedAt( updateDto.getNewBookedAt() == null ? booking.getBookedAt() : Instant.ofEpochMilli(updateDto.getNewBookedAt()));
+            booking.setBookedAt(updateDto.getNewBookedAt() == null ? booking.getBookedAt() : Instant.ofEpochMilli(updateDto.getNewBookedAt()));
             booking.setShiftBooked(updateDto.getNewShift() == null ? booking.getShiftBooked() : updateDto.getNewShift());
             bookingRepository.save(booking);
         }
