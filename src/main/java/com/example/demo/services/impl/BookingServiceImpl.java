@@ -76,6 +76,8 @@ public class BookingServiceImpl implements BookingService {
         }
         bookingSearchResultDto.setDoctorId(booking.getDoctor().getId());
         bookingSearchResultDto.setDoctorName(doctorProfileRepository.findByUser(booking.getDoctor()).getFullName());
+        bookingSearchResultDto.setSpecialist(doctorProfileRepository.findByUser(booking.getDoctor()).getSpecialist());
+        bookingSearchResultDto.setWorkingAt(doctorProfileRepository.findByUser(booking.getDoctor()).getWorkingAt() == null ? "Child Care Center" : doctorProfileRepository.findByUser(booking.getDoctor()).getWorkingAt());
         bookingSearchResultDto.setBookedAt(booking.getBookedAt().toEpochMilli());
         bookingSearchResultDto.setBookedTime(booking.getBookedTime());
         bookingSearchResultDto.setBookedShift(booking.getShiftBooked());

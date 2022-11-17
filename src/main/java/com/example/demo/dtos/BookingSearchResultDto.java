@@ -1,5 +1,6 @@
 package com.example.demo.dtos;
 
+import com.example.demo.constant.SPECIALIST;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -25,4 +26,6 @@ public class BookingSearchResultDto {
     private Boolean isApproved;
     private Integer bookedShift;
     private String consult;
+    private SPECIALIST specialist;
+    private String workingAt;
 }
