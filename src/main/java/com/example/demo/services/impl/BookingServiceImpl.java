@@ -43,7 +43,7 @@ public class BookingServiceImpl implements BookingService {
                 return new AbstractResponse("FAILED", "DOCTOR_NOT_FOUND", 404);
             }
 
-            Booking booking = new Booking(user, doctor.getUser(), bookingDto.getBookedAt().atZone(ZoneOffset.UTC).toLocalDate().atStartOfDay().atZone(ZoneOffset.UTC).toInstant(), bookingDto.getBookedTime(), bookingDto.getContent(), bookingDto.getShift(), bookingDto.getConsult());
+            Booking booking = new Booking(user, doctor.getUser(), bookingDto.getBookedAt(), bookingDto.getBookedTime(), bookingDto.getContent(), bookingDto.getShift(), bookingDto.getConsult());
 
             bookingRepository.save(booking);
         } else {
@@ -73,7 +73,8 @@ public class BookingServiceImpl implements BookingService {
         } else {
             bookingSearchResultDto.setUpdatedBy(booking.getUpdatedBy());
         }
-        bookingSearchResultDto.setDoctorId(booking.getDoctor().getId());
+        DoctorProfile doctorProfile = doctorProfileRepository.findByUser(booking.getDoctor());
+        bookingSearchResultDto.setDoctorId(doctorProfile.getId());
         bookingSearchResultDto.setDoctorName(doctorProfileRepository.findByUser(booking.getDoctor()).getFullName());
         bookingSearchResultDto.setSpecialist(doctorProfileRepository.findByUser(booking.getDoctor()).getSpecialist());
         bookingSearchResultDto.setWorkingAt(doctorProfileRepository.findByUser(booking.getDoctor()).getWorkingAt() == null ? "Child Care Center" : doctorProfileRepository.findByUser(booking.getDoctor()).getWorkingAt());
@@ -156,7 +157,7 @@ public class BookingServiceImpl implements BookingService {
         Booking booking = bookingRepository.findById(id).orElse(null);
 
         if(booking != null){
-            booking.setBookedAt(updateDto.getNewBookedAt() == null ? booking.getBookedAt() : Instant.ofEpochMilli(updateDto.getNewBookedAt()).atZone(ZoneOffset.UTC).toLocalDate().atStartOfDay().atZone(ZoneOffset.UTC).toInstant());
+            booking.setBookedAt(updateDto.getNewBookedAt() == null ? booking.getBookedAt() : Instant.ofEpochMilli(updateDto.getNewBookedAt()));
             booking.setShiftBooked(updateDto.getNewShift() == null ? booking.getShiftBooked() : updateDto.getNewShift());
             bookingRepository.save(booking);
         }
