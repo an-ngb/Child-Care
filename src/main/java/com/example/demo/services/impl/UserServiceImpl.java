@@ -50,45 +50,32 @@ public class UserServiceImpl implements UserService {
         assert accessExpired != null;
         long expiredIn = Long.parseLong(accessExpired);
         Algorithm algorithm = Algorithm.HMAC256(key);
-
         return JWT.create().withSubject(user.getUsername()).withExpiresAt(new Date(System.currentTimeMillis() + expiredIn)).withClaim("user", payload).sign(algorithm);
     }
 
     @Override
     public AbstractResponse login(LoginRequestDto loginRequestDto) throws RuntimeException {
-
         String email = loginRequestDto.getEmail();
         String password = loginRequestDto.getPassword();
-
         try {
             Authentication auth = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(email, password));
             SecurityContextHolder.getContext().setAuthentication(auth);
         } catch (BadCredentialsException e) {
             return new AbstractResponse("FAILED", "INCORRECT_EMAIL_OR_PASSWORD", 400);
         }
-
         UserDetails userDetails = userDetailsService.loadUserByUsername(email);
-
         User detectedUser = userRepository.findByEmail(email);
-
         if (detectedUser == null || !detectedUser.getIsActive()) {
             return new AbstractResponse("FAILED", "FORBIDDEN", 400);
         }
-
         Map<String, Object> payload = new HashMap<>();
-
         payload.put("id", detectedUser.getId());
         payload.put("email", detectedUser.getEmail());
         payload.put("role", detectedUser.getRole().getRoleName());
-
         Properties prop = loadProperties("jwt.setting.properties");
-
         String token = generateToken(payload, new org.springframework.security.core.userdetails.User(userDetails.getUsername(), userDetails.getPassword(), userDetails.getAuthorities()));
-
         detectedUser.setToken(token);
-
         userRepository.save(detectedUser);
-
         return new AbstractResponse(new LoginDto("Bearer", token, prop.getProperty("access_expired")));
     }
 
@@ -106,31 +93,24 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public AbstractResponse register(RegisterRequestDto registerRequestDto) {
-
         User foundUser = userRepository.findByEmail(registerRequestDto.getEmail());
-
         if (foundUser != null) {
             return new AbstractResponse("FAILED", "EMAIL_EXISTED", 400);
         }
-
         User user = new User();
-
         user.setEmail(registerRequestDto.getEmail());
         user.setPassword(passwordEncoder.encode(registerRequestDto.getPassword()));
         user.setRole(roleRepository.findRoleById(3));
         user = userRepository.save(user);
-
         UserProfile userProfile = new UserProfile(user, registerRequestDto.getFullName(), registerRequestDto.getAddress(), registerRequestDto.getAge(), registerRequestDto.getGender(), registerRequestDto.getPhone());
-
         userProfileRepository.save(userProfile);
-
         return new AbstractResponse(login(new LoginRequestDto(registerRequestDto.getEmail(), registerRequestDto.getPassword())).getData());
     }
 
     @Override
     public AbstractResponse getUserProfile(Integer id) {
         User user = userRepository.findUserById(id);
-        if(user == null){
+        if (user == null) {
             return new AbstractResponse("FAILED", "USER_NOT_FOUND", 404);
         }
         UserProfile userProfile = userProfileRepository.findByUser(user);
@@ -147,7 +127,7 @@ public class UserServiceImpl implements UserService {
         postSearchResultDtoList = postServiceImpl.convertPostToPostDto(groupPostList);
         userProfileDto.setPostSearchResultDtoList(postSearchResultDtoList);
         DoctorProfile doctorProfile = doctorProfileRepository.findByUser(user);
-        if(doctorProfile == null){
+        if (doctorProfile == null) {
             return new AbstractResponse(userProfileDto);
         } else {
             userProfileDto.setCertificate(doctorProfile.getCertificate());
@@ -166,10 +146,8 @@ public class UserServiceImpl implements UserService {
     @Override
     public AbstractResponse getMyProfile() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
         User user = userRepository.findByEmail(authentication.getName());
-
-        if(user == null){
+        if (user == null) {
             return new AbstractResponse("FAILED", "USER_NOT_FOUND", 404);
         }
         UserProfile userProfile = userProfileRepository.findByUser(user);
@@ -186,7 +164,7 @@ public class UserServiceImpl implements UserService {
         postSearchResultDtoList = postServiceImpl.convertPostToPostDto(groupPostList);
         userProfileDto.setPostSearchResultDtoList(postSearchResultDtoList);
         DoctorProfile doctorProfile = doctorProfileRepository.findByUser(user);
-        if(doctorProfile == null){
+        if (doctorProfile == null) {
             return new AbstractResponse(userProfileDto);
         } else {
             userProfileDto.setCertificate(doctorProfile.getCertificate());
@@ -206,7 +184,6 @@ public class UserServiceImpl implements UserService {
     public AbstractResponse getDoctorList() {
         List<DoctorProfile> doctorProfileList = doctorProfileRepository.findAll();
         List<UserProfileDto> userProfileDtos = new ArrayList<>();
-
         for (DoctorProfile doctorProfile : doctorProfileList) {
             UserProfileDto userProfileDto = new UserProfileDto();
             userProfileDto.setId(doctorProfile.getId());
@@ -216,7 +193,6 @@ public class UserServiceImpl implements UserService {
             userProfileDto.setWorkingAt(doctorProfile.getWorkingAt() == null || doctorProfile.getWorkingAt().equals("exampleWorkAt") ? "Child Care Center - Ho Chi Minh City" : doctorProfile.getWorkingAt());
             userProfileDtos.add(userProfileDto);
         }
-
         return new AbstractResponse(userProfileDtos);
     }
 }

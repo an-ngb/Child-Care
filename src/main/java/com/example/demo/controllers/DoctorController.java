@@ -21,7 +21,6 @@ public class DoctorController {
         return ResponseEntity.ok().body(bookingService.getBookingListOfDoctor());
     }
 
-
     @PostMapping("/get-doctor-list")
     public ResponseEntity<AbstractResponse> getDoctorList() {
         return ResponseEntity.ok().body(userService.getDoctorList());

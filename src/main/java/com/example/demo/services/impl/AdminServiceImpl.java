@@ -38,21 +38,15 @@ public class AdminServiceImpl implements AdminService {
 
     @Override
     public AbstractResponse promoteUserToDoctor(ChangeUserRoleDto changeUserRoleDto) {
-
         User user = userRepository.findByEmail(changeUserRoleDto.getEmail());
-
-        if(user == null){
+        if (user == null) {
             return new AbstractResponse("FAILED", "USER_NOT_FOUND", 404);
         }
-
         DoctorProfile foundDoctorProfile = doctorProfileRepository.findByUser(user);
-
-        if(foundDoctorProfile != null){
+        if (foundDoctorProfile != null) {
             return new AbstractResponse("FAILED", "USER_ALREADY_DOCTOR", 400);
         }
-
         UserProfile userProfile = userProfileRepository.findByUser(user);
-
         DoctorProfile doctorProfile = new DoctorProfile(user,
                 userProfile.getFullName(),
                 changeUserRoleDto.getCertificate(),
@@ -65,7 +59,6 @@ public class AdminServiceImpl implements AdminService {
                 changeUserRoleDto.getWorkingAt(),
                 changeUserRoleDto.getPrivateWeb(),
                 changeUserRoleDto.getAvatar());
-
         user.setRole(roleRepository.findRoleById(2));
         userRepository.save(user);
         doctorProfileRepository.save(doctorProfile);
@@ -113,7 +106,7 @@ public class AdminServiceImpl implements AdminService {
     public AbstractResponse getAllBooking() {
         List<Booking> bookingList = bookingRepository.findAll();
         List<BookingSearchResultDto> bookingSearchResultDtoList = new ArrayList<>();
-        bookingList.forEach(item ->{
+        bookingList.forEach(item -> {
             BookingSearchResultDto bookingSearchResultDto = bookingService.convertBookingToBookingDto(item);
             bookingSearchResultDtoList.add(bookingSearchResultDto);
         });
@@ -121,14 +114,14 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    public AbstractResponse clearBookingList(){
+    public AbstractResponse clearBookingList() {
         bookingRepository.deleteAll();
         return new AbstractResponse();
     }
 
     @Transactional
     @Override
-    public AbstractResponse clearUserList(){
+    public AbstractResponse clearUserList() {
         clearBookingList();
         clearPost();
         userProfileRepository.deleteAll();
@@ -138,7 +131,7 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    public AbstractResponse clearPost(){
+    public AbstractResponse clearPost() {
         reactionRepository.deleteAll();
         postRepository.deleteAll();
         groupPostRepository.deleteAll();
@@ -154,7 +147,7 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    public AbstractResponse clearNullShiftBooking(){
+    public AbstractResponse clearNullShiftBooking() {
         List<Booking> bookingList = bookingRepository.findAll();
         bookingRepository.deleteAll(bookingList.stream().filter(e -> e.getShiftBooked() == null).collect(Collectors.toList()));
         return new AbstractResponse();
@@ -170,7 +163,7 @@ public class AdminServiceImpl implements AdminService {
     public AbstractResponse clearNullThreadId() {
         List<GroupPost> groupPostList = groupPostRepository.findAll();
         for (GroupPost groupPost : groupPostList) {
-            if(groupPost.getParentGroup() != null){
+            if (groupPost.getParentGroup() != null) {
                 continue;
             }
             List<Post> postList = postRepository.findByGroupPost(groupPost);

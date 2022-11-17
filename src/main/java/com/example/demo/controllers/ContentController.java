@@ -67,47 +67,18 @@ public class ContentController {
         return ResponseEntity.ok().body(postService.getPostByLoggedUser(getPostDto));
     }
 
-//
-//    @PostMapping("/dislike")
-//    public ResponseEntity<AbstractResponse> dislike(@RequestBody InteractDto interactDto){
-//        return ResponseEntity.ok().body(postService.dislike(interactDto));
-//    }
-
     @PostMapping("/interact/{id}")
     public ResponseEntity<AbstractResponse> interactPost(@PathVariable Integer id, @RequestBody InteractWithPostDto interactWithPostDto){
         return ResponseEntity.ok().body(postService.interactWithPost(id, interactWithPostDto));
     }
+
     @PostMapping("/get-comment/{id}")
     public ResponseEntity<AbstractResponse> getCommentListByPost(@PathVariable Integer id){
         return ResponseEntity.ok().body(postService.getCommentListByPost(id));
     }
+
     @PostMapping("/interaction-check/{id}")
     public ResponseEntity<AbstractResponse> interactionCheck(@PathVariable Integer id){
         return ResponseEntity.ok().body(postService.interactionCheck(id));
     }
-//
-//    @PostMapping("/read/all")
-//    public ResponseEntity<AbstractResponse> viewAllPost(){
-//        return ResponseEntity.ok().body(postService.viewAllPost());
-//    }
-//
-//    @PostMapping("/read/all/asc")
-//    public ResponseEntity<AbstractResponse> viewAllPostAsc(){
-//        return ResponseEntity.ok().body(postService.viewAllPostAsc());
-//    }
-//
-//    @PostMapping("/read/all/desc")
-//    public ResponseEntity<AbstractResponse> viewAllPostDesc(){
-//        return ResponseEntity.ok().body(postService.viewAllPostDesc());
-//    }
-//
-//    @PostMapping("/read/all/sort-by-most-liked")
-//    public ResponseEntity<AbstractResponse> viewAllPostWithMostLiked(@RequestBody FilterRequest filterRequest){
-//        return ResponseEntity.ok().body(postService.viewMostLikedPost(filterRequest));
-//    }
-
-//    @PostMapping("/search")
-//    public ResponseEntity<AbstractResponse> viewPostByTag(@RequestBody FilterRequest filterRequest){
-//        return ResponseEntity.ok().body(postService.viewPostByTag(filterRequest));
-//    }
 }

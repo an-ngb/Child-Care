@@ -32,42 +32,35 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     public AbstractResponse booking(BookingDto bookingDto) {
-
         DoctorProfile doctor = doctorProfileRepository.findById(bookingDto.getDoctorId()).orElse(null);
-        if(doctor != null){
+        if (doctor != null) {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
             User user = userRepository.findByEmail(authentication.getName());
-
-            if(doctor == null){
+            if (doctor == null) {
                 return new AbstractResponse("FAILED", "DOCTOR_NOT_FOUND", 404);
             }
-
             Booking booking = new Booking(user, doctor.getUser(), bookingDto.getBookedAt(), bookingDto.getBookedTime(), bookingDto.getContent(), bookingDto.getShift(), bookingDto.getConsult());
-
             bookingRepository.save(booking);
         } else {
-            return new AbstractResponse("DOCTOR_NOT_FOUND", 404 );
+            return new AbstractResponse("DOCTOR_NOT_FOUND", 404);
         }
         return new AbstractResponse();
     }
 
-    public BookingSearchResultDto convertBookingToBookingDto(Booking booking){
+    public BookingSearchResultDto convertBookingToBookingDto(Booking booking) {
         BookingSearchResultDto bookingSearchResultDto = new BookingSearchResultDto();
         bookingSearchResultDto.setId(booking.getId());
         bookingSearchResultDto.setCreatedAt(booking.getCreatedAt().toEpochMilli());
         bookingSearchResultDto.setUpdatedAt(booking.getUpdatedAt().toEpochMilli());
-
         User user = userRepository.findByEmail(booking.getCreatedBy());
-        if(user != null){
+        if (user != null) {
             UserProfile userProfile = userProfileRepository.findByUser(user);
             bookingSearchResultDto.setCreatedBy(userProfile.getFullName() == null ? null : userProfile.getFullName());
         } else {
             bookingSearchResultDto.setCreatedBy(booking.getCreatedBy());
         }
         User user2 = userRepository.findByEmail(booking.getUpdatedBy());
-
-        if(user2 != null){
+        if (user2 != null) {
             UserProfile userProfile2 = userProfileRepository.findByUser(user2);
             bookingSearchResultDto.setUpdatedBy(userProfile2.getFullName() == null ? null : userProfile2.getFullName());
         } else {
@@ -83,12 +76,10 @@ public class BookingServiceImpl implements BookingService {
         bookingSearchResultDto.setBookedShift(booking.getShiftBooked());
         bookingSearchResultDto.setContent(booking.getContent());
         bookingSearchResultDto.setIsApproved(booking.getIsApproved() == null ? null : booking.getIsApproved());
-
-        if(ChronoUnit.DAYS.between(LocalDate.now().atStartOfDay(), booking.getBookedAt().atZone(ZoneOffset.UTC).toLocalDate().atStartOfDay()) <= 1 && booking.getIsApproved() == null){
+        if (ChronoUnit.DAYS.between(LocalDate.now().atStartOfDay(), booking.getBookedAt().atZone(ZoneOffset.UTC).toLocalDate().atStartOfDay()) <= 1 && booking.getIsApproved() == null) {
             booking.setIsApproved(false);
             bookingSearchResultDto.setIsApproved(false);
         }
-
         bookingSearchResultDto.setConsult(booking.getConsult() == null ? null : booking.getConsult());
         return bookingSearchResultDto;
     }
@@ -96,7 +87,6 @@ public class BookingServiceImpl implements BookingService {
     @Override
     public AbstractResponse getBookingListOfDoctor() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
         User user = userRepository.findByEmail(authentication.getName());
         List<Booking> bookingList = bookingRepository.findAllByDoctor(user);
         List<BookingSearchResultDto> bookingSearchResultDtoList = new ArrayList<>();
@@ -108,17 +98,13 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     public AbstractResponse approveOrDisapproveBooking(Integer id, InteractDto interactDto) {
-
         Booking booking = bookingRepository.findById(id).orElse(null);
-
-        if(booking == null){
+        if (booking == null) {
             return new AbstractResponse("FAILED", "BOOKING_SESSION_NOT_FOUND", 404);
         }
-
-        if(booking.getIsApproved() != null && booking.getIsApproved()){
+        if (booking.getIsApproved() != null && booking.getIsApproved()) {
             return new AbstractResponse("FAILED", "BOOKING_SESSION_ALREADY_APPROVED", 400);
         }
-
         booking.setIsApproved(interactDto.getApprove());
         bookingRepository.save(booking);
         return new AbstractResponse();
@@ -127,36 +113,33 @@ public class BookingServiceImpl implements BookingService {
     @Override
     public AbstractResponse getBookingListByDay(SearchBookingDto searchBookingDto) {
         DoctorProfile doctorProfile = doctorProfileRepository.findById(searchBookingDto.getDoctorId()).orElse(null);
-        if(doctorProfile != null) {
+        if (doctorProfile != null) {
             List<Booking> bookingList = bookingRepository.findAllByDoctorAndBookedAt(doctorProfile.getUser(), searchBookingDto.getBookedAt());
             List<BookingSearchResultDto> bookingSearchResultDtoList = new ArrayList<>();
             bookingList.forEach(item -> {
                 bookingSearchResultDtoList.add(convertBookingToBookingDto(item));
             });
             return new AbstractResponse(bookingSearchResultDtoList);
-        } return new AbstractResponse("DOCTOR_NOT_FOUND", 404);
+        }
+        return new AbstractResponse("DOCTOR_NOT_FOUND", 404);
     }
 
     @Override
-    public AbstractResponse getBookingListByUser(){
+    public AbstractResponse getBookingListByUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         List<Booking> bookingList = bookingRepository.findAllByCreatedBy(authentication.getName());
-
         List<BookingSearchResultDto> bookingSearchResultDtoList = new ArrayList<>();
         bookingList.forEach(item -> {
             bookingSearchResultDtoList.add(convertBookingToBookingDto(item));
         });
-
         return new AbstractResponse(bookingSearchResultDtoList);
     }
 
     @Override
     @Transactional
-    public AbstractResponse updateBooking(Integer id, UpdateDto updateDto){
-
+    public AbstractResponse updateBooking(Integer id, UpdateDto updateDto) {
         Booking booking = bookingRepository.findById(id).orElse(null);
-
-        if(booking != null){
+        if (booking != null) {
             booking.setBookedAt(updateDto.getNewBookedAt() == null ? booking.getBookedAt() : Instant.ofEpochMilli(updateDto.getNewBookedAt()));
             booking.setShiftBooked(updateDto.getNewShift() == null ? booking.getShiftBooked() : updateDto.getNewShift());
             bookingRepository.save(booking);

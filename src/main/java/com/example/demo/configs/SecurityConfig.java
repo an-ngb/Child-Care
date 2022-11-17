@@ -51,7 +51,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.csrf().disable().exceptionHandling();
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         http.addFilterBefore(new JwtHandlerFilter(userDetailsService), BasicAuthenticationFilter.class);
-//        http.authorizeRequests().antMatchers("/api/admin/**").hasAuthority("admin");
         http.authorizeRequests().anyRequest().permitAll();
     }
 
@@ -61,50 +60,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         source.registerCorsConfiguration("/**", new CorsConfiguration().applyPermitDefaultValues());
         return source;
     }
-
-
-//    @Bean
-//    public FilterRegistrationBean corsFilter() {
-//        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-//        CorsConfiguration config = new CorsConfiguration();
-//        config.addAllowedOrigin("*");
-//        config.addAllowedHeader("*");
-//        config.addAllowedMethod("*");
-//        source.registerCorsConfiguration("/**", config);
-//        FilterRegistrationBean bean = new FilterRegistrationBean(new CorsFilter(source));
-//        bean.setOrder(0);
-//        return bean;
-//    }
-
-//    @Bean
-//    CorsConfigurationSource corsConfigurationSource() {
-//        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-//        source.registerCorsConfiguration("/**", new CorsConfiguration().applyPermitDefaultValues());
-//        return source;
-//    }
-
-//    @EnableWebSecurity
-//    public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
-//
-//        @Override
-//        protected void configure(HttpSecurity http) throws Exception {
-//            http.cors();
-//        }
-//    }
-//
-//    @EnableWebMvc
-//    public class CorsConfig implements WebMvcConfigurer {
-//        @Bean
-//        public WebMvcConfigurer corsConfigurer() {
-//            return new WebMvcConfigurerAdapter() {
-//                @Override
-//                public void addCorsMappings(CorsRegistry registry) {
-//                    registry.addMapping("/**").allowedMethods("GET", "POST", "PUT", "DELETE").allowedOrigins("*")
-//                            .allowedHeaders("*");
-//                }
-//            };
-//        }
-//    }
 
     @Bean
     @Override

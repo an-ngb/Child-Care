@@ -61,11 +61,6 @@ public class PostServiceImpl implements PostService {
     }
 
     private void saveUploadedFile(Post post, MultipartFile file) throws IOException {
-//        if (!file.isEmpty()) {
-//            byte[] bytes = file.getBytes();
-//            Path path = Paths.get(UPLOADED_FOLDER + file.getOriginalFilename());
-//            Files.write(path, bytes);
-//        }
         Path fileNameAndPath = Paths.get(UPLOADED_FOLDER, file.getOriginalFilename());
         Files.write(fileNameAndPath, file.getBytes());
         File file1 = new File(fileNameAndPath.toString());
@@ -76,7 +71,6 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public AbstractResponse post(PostDto postDto) throws IOException {
-
         GroupPost groupPost = new GroupPost(postDto.getTitle(), postDto.getThreadId());
         groupPostRepository.save(groupPost);
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -87,15 +81,6 @@ public class PostServiceImpl implements PostService {
         post.setUserId(user.getId());
         post.setThumbnailImage(postDto.getThumbnailImage());
         postRepository.save(post);
-//        if(postDto.getTagList() != null){
-//            for (String s : postDto.getTagList()) {
-//                GroupTag tag = groupTagRepository.findGroupTagByName(s);
-//                if (tag != null){
-//                    GroupPostTag groupPostTag = new GroupPostTag(groupPost, tag);
-//                    groupPostTagRepository.save(groupPostTag);
-//                }
-//            }
-//        }
         List<GroupPost> groupPostList = new ArrayList<>();
         groupPostList.add(groupPost);
         return new AbstractResponse(new ArrayList<>(convertPostToPostDto(groupPostList)));
@@ -107,17 +92,14 @@ public class PostServiceImpl implements PostService {
         if (groupPost == null) {
             return new AbstractResponse("FAILED", "POST_NOT_FOUND", 404);
         }
-
         if (editDto.getTitle() != null) {
             groupPost.setTitle(editDto.getTitle());
         }
-
         List<Post> postList = new ArrayList<>();
         if (editDto.getContent() != null) {
             postList = postRepository.findByGroupPost(groupPost);
             postList.get(0).setContent(editDto.getContent());
         }
-
         groupPostRepository.save(groupPost);
         postRepository.saveAll(postList);
         return new AbstractResponse();
@@ -126,31 +108,24 @@ public class PostServiceImpl implements PostService {
     @Override
     public AbstractResponse comment(CommentDto commentDto) {
         GroupPost groupPost = groupPostRepository.findGroupPostById(commentDto.getId()).orElse(null);
-
         if (groupPost == null) {
             return new AbstractResponse("FAILED", "POST_NOT_FOUND", 404);
         }
-
-        //Comment
         Post comment = new Post(groupPost);
         comment.setContent(commentDto.getContent());
-
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User user = userRepository.findByEmail(authentication.getName());
-
         comment.setUserId(user.getId());
-
         postRepository.save(comment);
         return new AbstractResponse();
     }
 
     @Override
     public AbstractResponse deletePost(DeleteDto deleteDto) {
-
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         GroupPost groupPost = groupPostRepository.findGroupPostById(deleteDto.getId()).orElse(null);
         List<Post> postList = postRepository.findByGroupPost(groupPost);
-        if(groupPost != null && postList != null){
+        if (groupPost != null && postList != null) {
             postRepository.deleteAll(postList);
             groupPostRepository.delete(groupPost);
         } else {
@@ -161,7 +136,7 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public AbstractResponse search(SearchDto searchDto) {
-        if(Strings.isEmpty(searchDto.getKey())){
+        if (Strings.isEmpty(searchDto.getKey())) {
             return new AbstractResponse();
         }
         return new AbstractResponse(postRepository.findAll(PostSpecs.search(searchDto)));
@@ -174,16 +149,13 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public AbstractResponse getPostInsideThread(GetPostByThreadDto getPostByThreadDto) {
-
         List<GroupPost> groupPostList = groupPostRepository.findAllByParentGroup(getPostByThreadDto.getThreadId());
-
         List<PostSearchResultDto> postSearchResultDtoList = convertPostToPostDto(groupPostList);
-
         return new AbstractResponse(postSearchResultDtoList);
     }
 
     @Override
-    public AbstractResponse getPostByPostId(int id){
+    public AbstractResponse getPostByPostId(int id) {
         GroupPost groupPost = groupPostRepository.findGroupPostById(id).orElse(null);
         List<PostSearchResultDto> postSearchResultDtoList;
         if (groupPost == null) {
@@ -196,46 +168,6 @@ public class PostServiceImpl implements PostService {
         return new AbstractResponse(postSearchResultDtoList);
     }
 
-    //
-//
-//    @Override
-//    public AbstractResponse viewAllPostAsc() {
-//        if(sessionService.isTokenExpire()){
-//            return new AbstractResponse("FAILED", "TOKEN_EXPIRED", 400);
-//        }
-//        List<Post> list = postRepository.findAllByOrderByIdAsc();
-//        return new AbstractResponse(list);
-//    }
-//
-//    @Override
-//    public AbstractResponse viewAllPostDesc() {
-//        if(sessionService.isTokenExpire()){
-//            return new AbstractResponse("FAILED", "TOKEN_EXPIRED", 400);
-//        }
-//        List<Post> list = postRepository.findAllByOrderByIdDesc();
-//        return new AbstractResponse(list);
-//    }
-//
-//    @Override
-//    public AbstractResponse viewMostLikedPost(FilterRequest filterRequest) {
-//        if(sessionService.isTokenExpire()){
-//            return new AbstractResponse("FAILED", "TOKEN_EXPIRED", 400);
-//        }
-//        List<Post> postList = postRepository.findAllByRoleIdOrderByTotalLikeAsc(filterRequest.getRoleId());
-//        List<PostSearchResultDto> postSearchResultDtoList = convertPostToPostDto(postList);
-//        return new AbstractResponse(postSearchResultDtoList);
-//    }
-//
-////    @Override
-////    public AbstractResponse viewPostByTag(FilterRequest filterRequest) {
-////        if(sessionService.isTokenExpire()){
-////            return new AbstractResponse("FAILED", "TOKEN_EXPIRED", 400);
-////        }
-////        List<Post> postList = postRepository.findAll(PostSpecs.search(filterRequest));
-////        List<PostSearchResultDto> postSearchResultDtoList = convertPostToPostDto(postList);
-////        return new AbstractResponse(postSearchResultDtoList);
-////    }
-//
     public List<PostSearchResultDto> convertPostToPostDto(List<GroupPost> groupPostList) {
         List<PostSearchResultDto> data = new ArrayList<>();
         String defaultImg = "http://res.cloudinary.com/annb/image/upload/v1667571608/a8phdesstsrxxuylgdgl.jpg";
@@ -246,7 +178,7 @@ public class PostServiceImpl implements PostService {
             postSearchResultDto.setId(groupPost.getId());
             postSearchResultDto.setThreadId(groupPost.getParentGroup() == null ? null : groupPost.getParentGroup());
             postSearchResultDto.setUserId(user.getId());
-            if(StringUtils.isEmpty(groupPost.getTitle())){
+            if (StringUtils.isEmpty(groupPost.getTitle())) {
                 continue;
             }
             postSearchResultDto.setTitle(groupPost.getTitle());
@@ -255,7 +187,7 @@ public class PostServiceImpl implements PostService {
             postSearchResultDto.setTotalLike(totalLike);
             Integer totalDislike = (int) reactionRepository.findAllByPost(post).stream().filter(e -> e.getIsUpvote() != null && !e.getIsUpvote()).count();
             postSearchResultDto.setTotalDislike(totalDislike);
-            if(postRepository.findByGroupPostOrderById(groupPost).size() > 0){
+            if (postRepository.findByGroupPostOrderById(groupPost).size() > 0) {
                 postSearchResultDto.setContent(StringUtils.isEmpty(post.getContent()) ? null : post.getContent());
             } else {
                 postSearchResultDto.setContent(null);
@@ -267,7 +199,7 @@ public class PostServiceImpl implements PostService {
             List<CommentResultDto> commentResultDtoList = new ArrayList<>();
             if (!CollectionUtils.isEmpty(commentList)) {
                 for (Post item : commentList) {
-                    if((!StringUtils.isEmpty(postRepository.findByGroupPostOrderById(groupPost).get(0).getContent()) && postRepository.findByGroupPostOrderById(groupPost).get(0).getContent().equals(item.getContent())) || StringUtils.isEmpty(item.getContent())){
+                    if ((!StringUtils.isEmpty(postRepository.findByGroupPostOrderById(groupPost).get(0).getContent()) && postRepository.findByGroupPostOrderById(groupPost).get(0).getContent().equals(item.getContent())) || StringUtils.isEmpty(item.getContent())) {
                         continue;
                     }
                     CommentResultDto commentResultDto = new CommentResultDto();
@@ -277,14 +209,12 @@ public class PostServiceImpl implements PostService {
                     User foundUser = userRepository.findByEmail(item.getCreatedBy());
                     commentResultDto.setUserId(foundUser.getId());
                     UserProfile userProfile = userProfileRepository.findByUser(foundUser);
-
-                    if(userProfile != null){
+                    if (userProfile != null) {
                         commentResultDto.setCreatedBy(userProfile.getFullName());
                     } else {
                         DoctorProfile doctorProfile = doctorProfileRepository.findByUser(foundUser);
                         commentResultDto.setCreatedBy(doctorProfile.getFullName());
                     }
-
                     commentResultDto.setUpdatedAt(item.getUpdatedAt().toEpochMilli());
                     commentResultDtoList.add(commentResultDto);
                 }
@@ -313,16 +243,13 @@ public class PostServiceImpl implements PostService {
                     commentResultDto.setContent(item.getContent());
                     commentResultDto.setCreatedAt(item.getCreatedAt().toEpochMilli());
                     User foundUser = userRepository.findByEmail(item.getCreatedBy());
-
                     UserProfile userProfile = userProfileRepository.findByUser(foundUser);
-
-                    if(userProfile != null){
+                    if (userProfile != null) {
                         commentResultDto.setCreatedBy(userProfile.getFullName());
                     } else {
                         DoctorProfile doctorProfile = doctorProfileRepository.findByUser(foundUser);
                         commentResultDto.setCreatedBy(doctorProfile.getFullName());
                     }
-
                     commentResultDto.setUpdatedAt(item.getUpdatedAt().toEpochMilli());
                     commentResultDtoList.add(commentResultDto);
                 });
@@ -334,14 +261,14 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public AbstractResponse getCommentListByPost(Integer id){
+    public AbstractResponse getCommentListByPost(Integer id) {
         GroupPost groupPost = groupPostRepository.findGroupPostById(id).orElse(null);
         List<CommentResultDto> commentResultDtoList = new ArrayList<>();
-        if(groupPost != null){
+        if (groupPost != null) {
             List<Post> commentList = postRepository.findByGroupPost(groupPost);
             if (!CollectionUtils.isEmpty(commentList)) {
                 for (Post item : commentList) {
-                    if((!StringUtils.isEmpty(postRepository.findByGroupPostOrderById(groupPost).get(0).getContent()) && postRepository.findByGroupPostOrderById(groupPost).get(0).getContent().equals(item.getContent())) || StringUtils.isEmpty(item.getContent())){
+                    if ((!StringUtils.isEmpty(postRepository.findByGroupPostOrderById(groupPost).get(0).getContent()) && postRepository.findByGroupPostOrderById(groupPost).get(0).getContent().equals(item.getContent())) || StringUtils.isEmpty(item.getContent())) {
                         continue;
                     }
                     CommentResultDto commentResultDto = new CommentResultDto();
@@ -351,8 +278,7 @@ public class PostServiceImpl implements PostService {
                     User foundUser = userRepository.findByEmail(item.getCreatedBy());
                     commentResultDto.setUserId(foundUser.getId());
                     UserProfile userProfile = userProfileRepository.findByUser(foundUser);
-
-                    if(userProfile != null){
+                    if (userProfile != null) {
                         commentResultDto.setCreatedBy(userProfile.getFullName());
                     } else {
                         DoctorProfile doctorProfile = doctorProfileRepository.findByUser(foundUser);
@@ -365,73 +291,30 @@ public class PostServiceImpl implements PostService {
         }
         return new AbstractResponse(commentResultDtoList);
     }
-//
-//    @Override
-//    public AbstractResponse like(InteractDto interactDto) {
-//        if(sessionService.isTokenExpire()){
-//            return new AbstractResponse("FAILED", "TOKEN_EXPIRED", 400);
-//        }
-//        Post post = postRepository.findPostById(interactDto.getId());
-//        if (post == null) {
-//            return new AbstractResponse("FAILED", "POST_NOT_FOUND", 404);
-//        }
-//
-//        //Prev likes of post.
-//        Integer prevLikes = post.getTotalLike();
-//        if (prevLikes == null) {
-//            prevLikes = 0;
-//        }
-//        post.setTotalLike(prevLikes + 1);
-//        postRepository.save(post);
-//        return new AbstractResponse();
-//    }
-//
-//    @Override
-//    public AbstractResponse dislike(InteractDto interactDto) {
-//        if(sessionService.isTokenExpire()){
-//            return new AbstractResponse("FAILED", "TOKEN_EXPIRED", 400);
-//        }
-//        Post post = postRepository.findPostById(interactDto.getId());
-//        if (post == null) {
-//            return new AbstractResponse("FAILED", "POST_NOT_FOUND", 404);
-//        }
-//
-//        //Prev dislikes of post.
-//        Integer prevDislikes = post.getTotalDislike();
-//        if (prevDislikes == null) {
-//            prevDislikes = 0;
-//        }
-//        post.setTotalDislike(prevDislikes + 1);
-//        postRepository.save(post);
-//        return new AbstractResponse();
-//    }
-@Override
-public AbstractResponse getPostByLoggedUser(GetPostDto getPostDto){
 
-    User user = userRepository.findUserById(getPostDto.getUserId());
-
-    List<GroupPost> groupPostList = groupPostRepository.findAllByCreatedBy(user.getEmail());
-    List<PostSearchResultDto> postSearchResultDtoList;
-    if (groupPostList == null) {
-        return new AbstractResponse("FAILED", "POST_NOT_FOUND", 404);
-    } else {
-        postSearchResultDtoList = convertPostToPostDto(groupPostList);
+    @Override
+    public AbstractResponse getPostByLoggedUser(GetPostDto getPostDto) {
+        User user = userRepository.findUserById(getPostDto.getUserId());
+        List<GroupPost> groupPostList = groupPostRepository.findAllByCreatedBy(user.getEmail());
+        List<PostSearchResultDto> postSearchResultDtoList;
+        if (groupPostList == null) {
+            return new AbstractResponse("FAILED", "POST_NOT_FOUND", 404);
+        } else {
+            postSearchResultDtoList = convertPostToPostDto(groupPostList);
+        }
+        return new AbstractResponse(postSearchResultDtoList);
     }
-    return new AbstractResponse(postSearchResultDtoList);
-}
 
 
     @Override
     public AbstractResponse interactWithPost(Integer id, InteractWithPostDto interactWithPostDto) {
-
         GroupPost groupPost = groupPostRepository.findGroupPostById(id).orElse(null);
-
-        if(groupPost != null){
+        if (groupPost != null) {
             Post post = postRepository.findByGroupPost(groupPost).get(0);
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             User user = userRepository.findByEmail(authentication.getName());
             Reaction findReaction = reactionRepository.findByPostAndUser(post, user);
-            if(findReaction == null){
+            if (findReaction == null) {
                 Reaction reaction = new Reaction(post, user, interactWithPostDto.getInteract() == null ? null : interactWithPostDto.getInteract());
                 reactionRepository.save(reaction);
             } else {
@@ -443,14 +326,14 @@ public AbstractResponse getPostByLoggedUser(GetPostDto getPostDto){
     }
 
     @Override
-    public AbstractResponse interactionCheck(Integer id){
+    public AbstractResponse interactionCheck(Integer id) {
         GroupPost groupPost = groupPostRepository.findGroupPostById(id).orElse(null);
-        if(groupPost != null){
+        if (groupPost != null) {
             Post post = postRepository.findByGroupPost(groupPost).get(0);
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             User user = userRepository.findByEmail(authentication.getName());
             Reaction reaction = reactionRepository.findByPostAndUser(post, user);
-            if(reaction != null){
+            if (reaction != null) {
                 return new AbstractResponse(reaction.getIsUpvote());
             }
         }

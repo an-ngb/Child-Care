@@ -17,10 +17,10 @@ public class SessionServiceImpl implements SessionService {
     private final UserRepository userRepository;
 
     @Override
-    public Boolean isTokenExpire(){
+    public Boolean isTokenExpire() {
         Payload payload = (Payload) SecurityContextHolder.getContext().getAuthentication().getCredentials();
         User user = userRepository.findByEmail(payload.getEmail());
-        if(user.getToken() == null){
+        if (user.getToken() == null) {
             return true;
         }
         return false;

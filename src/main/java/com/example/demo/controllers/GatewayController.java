@@ -18,7 +18,6 @@ import java.util.Map;
 @RequestMapping("/api")
 public class GatewayController {
     private final UserService userService;
-
     @CrossOrigin
     @PostMapping("/login")
     public ResponseEntity<AbstractResponse> login(@RequestBody @Valid LoginRequestDto loginRequest) {
