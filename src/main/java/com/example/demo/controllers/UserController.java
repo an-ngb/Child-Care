@@ -33,4 +33,9 @@ public class UserController {
     public ResponseEntity<AbstractResponse> getMyProfile() {
         return ResponseEntity.ok().body(userService.getMyProfile());
     }
+
+    @PostMapping("/follow/{id}")
+    public ResponseEntity<AbstractResponse> followUser(@PathVariable("id") Integer id){
+        return ResponseEntity.ok().body(userService.followUser(id));
+    }
 }

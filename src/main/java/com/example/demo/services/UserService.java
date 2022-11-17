@@ -7,14 +7,11 @@ import com.example.demo.dtos.RegisterRequestDto;
 public interface UserService {
 
     AbstractResponse login (LoginRequestDto loginRequestDto);
-
     AbstractResponse logout(String token);
     AbstractResponse register(RegisterRequestDto registerRequestDto);
     AbstractResponse getUserProfile(Integer id);
 
     AbstractResponse getDoctorList();
-
     AbstractResponse getMyProfile();
-
     AbstractResponse followUser(Integer targetUserId);
 }

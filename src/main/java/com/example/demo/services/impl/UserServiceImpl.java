@@ -123,6 +123,8 @@ public class UserServiceImpl implements UserService {
         userProfileDto.setAge(userProfile.getAge());
         userProfileDto.setGender(userProfile.getGender());
         userProfileDto.setPhone(userProfile.getPhone());
+        List<Follow> followList = followRepository.findAllByTargetUser(user);
+        userProfileDto.setTotalFollower(followList.size());
         List<GroupPost> groupPostList = groupPostRepository.findAllByCreatedBy(user.getEmail());
         List<PostSearchResultDto> postSearchResultDtoList;
         postSearchResultDtoList = postServiceImpl.convertPostToPostDto(groupPostList);
@@ -160,6 +162,8 @@ public class UserServiceImpl implements UserService {
         userProfileDto.setAge(userProfile.getAge());
         userProfileDto.setGender(userProfile.getGender());
         userProfileDto.setPhone(userProfile.getPhone());
+        List<Follow> followList = followRepository.findAllByTargetUser(user);
+        userProfileDto.setTotalFollower(followList.size());
         List<GroupPost> groupPostList = groupPostRepository.findAllByCreatedBy(user.getEmail());
         List<PostSearchResultDto> postSearchResultDtoList;
         postSearchResultDtoList = postServiceImpl.convertPostToPostDto(groupPostList);
