@@ -156,7 +156,7 @@ public class BookingServiceImpl implements BookingService {
         Booking booking = bookingRepository.findById(id).orElse(null);
 
         if(booking != null){
-            booking.setBookedAt(updateDto.getNewBookedAt() == null ? booking.getBookedAt() : Instant.ofEpochMilli(updateDto.getNewBookedAt()));
+            booking.setBookedAt(updateDto.getNewBookedAt() == null ? booking.getBookedAt() : Instant.ofEpochMilli(updateDto.getNewBookedAt()).atZone(ZoneOffset.UTC).toLocalDate().atStartOfDay().atZone(ZoneOffset.UTC).toInstant());
             booking.setShiftBooked(updateDto.getNewShift() == null ? booking.getShiftBooked() : updateDto.getNewShift());
             bookingRepository.save(booking);
         }
