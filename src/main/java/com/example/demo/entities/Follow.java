@@ -25,4 +25,9 @@ public class Follow {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "followed_by_user_id")
     private User followedByUser;
+
+    public Follow(User targetUser, User followedByUser) {
+        this.targetUser = targetUser;
+        this.followedByUser = followedByUser;
+    }
 }

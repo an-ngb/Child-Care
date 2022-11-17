@@ -15,4 +15,6 @@ public interface UserService {
     AbstractResponse getDoctorList();
 
     AbstractResponse getMyProfile();
+
+    AbstractResponse followUser(Integer targetUserId);
 }

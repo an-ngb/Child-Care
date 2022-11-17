@@ -47,6 +47,7 @@ public class PostServiceImpl implements PostService {
     private final PostFileRepository postFileRepository;
     private final ParentGroupRepository parentGroupRepository;
     private final ReactionRepository reactionRepository;
+    private final FollowRepository followRepository;
 
     public static String[] getNullPropertyNames(Object source) {
         final BeanWrapper src = new BeanWrapperImpl(source);
@@ -175,6 +176,12 @@ public class PostServiceImpl implements PostService {
             PostSearchResultDto postSearchResultDto = new PostSearchResultDto();
             User user = userRepository.findByEmail(groupPost.getCreatedBy());
             Post post = postRepository.findByGroupPostOrderById(groupPost).get(0);
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            User currentUser = userRepository.findByEmail(authentication.getName());
+            Follow follow = followRepository.findFollowByFollowedByUserAndTargetUser(currentUser, user);
+            if(follow != null){
+                postSearchResultDto.setIsFollowed(true);
+            }
             postSearchResultDto.setId(groupPost.getId());
             postSearchResultDto.setThreadId(groupPost.getParentGroup() == null ? null : groupPost.getParentGroup());
             postSearchResultDto.setUserId(user.getId());

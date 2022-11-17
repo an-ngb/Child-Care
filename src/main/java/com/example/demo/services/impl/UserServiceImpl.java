@@ -38,6 +38,7 @@ public class UserServiceImpl implements UserService {
     private final PasswordEncoder passwordEncoder;
     private final RoleRepository roleRepository;
     private final PostRepository postRepository;
+    private final FollowRepository followRepository;
     private final PostServiceImpl postServiceImpl;
     private final SessionServiceImpl sessionService;
 
@@ -194,5 +195,35 @@ public class UserServiceImpl implements UserService {
             userProfileDtos.add(userProfileDto);
         }
         return new AbstractResponse(userProfileDtos);
+    }
+
+    @Override
+    public AbstractResponse followUser(Integer targetUserId) {
+        User user = userRepository.findUserById(targetUserId);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User currentUser = userRepository.findByEmail(authentication.getName());
+        if (user != null) {
+            Follow follow = followRepository.findFollowByFollowedByUserAndTargetUser(currentUser, user);
+            if (follow != null) {
+                followRepository.delete(follow);
+            } else {
+                Follow follow1 = new Follow(user, currentUser);
+                followRepository.save(follow1);
+            }
+        } else {
+            DoctorProfile doctorProfile = doctorProfileRepository.findById(targetUserId).orElse(null);
+            if (doctorProfile != null) {
+                Follow follow = followRepository.findFollowByFollowedByUserAndTargetUser(currentUser, doctorProfile.getUser());
+                if (follow != null) {
+                    followRepository.delete(follow);
+                } else {
+                    Follow follow1 = new Follow(doctorProfile.getUser(), currentUser);
+                    followRepository.save(follow1);
+                }
+            } else {
+                return new AbstractResponse("FAILED", "USER_NOT_FOUND", 404);
+            }
+        }
+        return new AbstractResponse();
     }
 }
