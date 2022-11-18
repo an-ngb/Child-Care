@@ -210,7 +210,13 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findUserById(targetUserId);
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User currentUser = userRepository.findByEmail(authentication.getName());
+
         if (user != null) {
+
+            if (user.equals(currentUser)) {
+                return new AbstractResponse("FAILED", "USER_NOT_FOUND", 404);
+            }
+
             List<Follow> followList = followRepository.findFollowByFollowedByUserAndTargetUser(currentUser, user);
             if (!CollectionUtils.isEmpty(followList)) {
                 followRepository.deleteAll(followList);
