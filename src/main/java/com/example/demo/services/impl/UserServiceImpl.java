@@ -284,7 +284,7 @@ public class UserServiceImpl implements UserService {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User currentUser = userRepository.findByEmail(authentication.getName());
         List<Follow> followList = followRepository.findAllByTargetUser(currentUser);
-        List<FollowDto> followDtoList = new ArrayList<>();
+        List<FollowedByDto> followedByDtoList = new ArrayList<>();
         followList.forEach(item -> {
             String fullName;
             if (Objects.nonNull(item.getFollowedByUser())) {
@@ -295,11 +295,31 @@ public class UserServiceImpl implements UserService {
                 } else {
                     fullName = userProfile.getFullName();
                 }
-                FollowDto followDto = new FollowDto(item.getFollowedByUser().getId(), fullName);
-                followDtoList.add(followDto);
+                FollowedByDto followedByDto = new FollowedByDto(item.getFollowedByUser().getId(), fullName);
+                followedByDtoList.add(followedByDto);
             }
         });
-        return new AbstractResponse(followDtoList);
+
+        List<Follow> followList2 = followRepository.findAllByFollowedByUser(currentUser);
+        List<FollowingDto> followingDtoList = new ArrayList<>();
+        followList2.forEach(item -> {
+            String fullName;
+            if (Objects.nonNull(item.getFollowedByUser())) {
+                UserProfile userProfile = userProfileRepository.findByUser(item.getTargetUser());
+                if (userProfile == null) {
+                    DoctorProfile doctorProfile = doctorProfileRepository.findByUser(item.getTargetUser());
+                    fullName = doctorProfile.getFullName();
+                } else {
+                    fullName = userProfile.getFullName();
+                }
+                FollowingDto followingDto = new FollowingDto(item.getTargetUser().getId(), fullName);
+                followingDtoList.add(followingDto);
+            }
+        });
+
+        FollowDto followDto = new FollowDto(followedByDtoList, followingDtoList);
+
+        return new AbstractResponse(followDto);
     }
 
     @Override
@@ -319,7 +339,7 @@ public class UserServiceImpl implements UserService {
             }
         }
         List<Follow> followList = followRepository.findAllByTargetUser(user);
-        List<FollowDto> followDtoList = new ArrayList<>();
+        List<FollowedByDto> followedByDtoList = new ArrayList<>();
         followList.forEach(item -> {
             String fullName;
             if (Objects.nonNull(item.getFollowedByUser())) {
@@ -330,10 +350,30 @@ public class UserServiceImpl implements UserService {
                 } else {
                     fullName = userProfile.getFullName();
                 }
-                FollowDto followDto = new FollowDto(item.getFollowedByUser().getId(), fullName);
-                followDtoList.add(followDto);
+                FollowedByDto followedByDto = new FollowedByDto(item.getFollowedByUser().getId(), fullName);
+                followedByDtoList.add(followedByDto);
             }
         });
-        return new AbstractResponse(followDtoList);
+
+        List<Follow> followList2 = followRepository.findAllByFollowedByUser(user);
+        List<FollowingDto> followingDtoList = new ArrayList<>();
+        followList2.forEach(item -> {
+            String fullName;
+            if (Objects.nonNull(item.getFollowedByUser())) {
+                UserProfile userProfile = userProfileRepository.findByUser(item.getTargetUser());
+                if (userProfile == null) {
+                    DoctorProfile doctorProfile = doctorProfileRepository.findByUser(item.getTargetUser());
+                    fullName = doctorProfile.getFullName();
+                } else {
+                    fullName = userProfile.getFullName();
+                }
+                FollowingDto followingDto = new FollowingDto(item.getTargetUser().getId(), fullName);
+                followingDtoList.add(followingDto);
+            }
+        });
+
+        FollowDto followDto = new FollowDto(followedByDtoList, followingDtoList);
+
+        return new AbstractResponse(followDto);
     }
 }
