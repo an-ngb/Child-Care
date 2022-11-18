@@ -17,6 +17,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.util.*;
 
@@ -206,9 +207,9 @@ public class UserServiceImpl implements UserService {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User currentUser = userRepository.findByEmail(authentication.getName());
         if (user != null) {
-            Follow follow = followRepository.findFollowByFollowedByUserAndTargetUser(currentUser, user);
-            if (follow != null) {
-                followRepository.delete(follow);
+            List<Follow> followList = followRepository.findFollowByFollowedByUserAndTargetUser(currentUser, user);
+            if (!CollectionUtils.isEmpty(followList)) {
+                followRepository.deleteAll(followList);
             } else {
                 Follow follow1 = new Follow(user, currentUser);
                 followRepository.save(follow1);
@@ -216,9 +217,9 @@ public class UserServiceImpl implements UserService {
         } else {
             DoctorProfile doctorProfile = doctorProfileRepository.findById(targetUserId).orElse(null);
             if (doctorProfile != null) {
-                Follow follow = followRepository.findFollowByFollowedByUserAndTargetUser(currentUser, doctorProfile.getUser());
-                if (follow != null) {
-                    followRepository.delete(follow);
+                List<Follow> followList = followRepository.findFollowByFollowedByUserAndTargetUser(currentUser, doctorProfile.getUser());
+                if (!CollectionUtils.isEmpty(followList)) {
+                    followRepository.deleteAll(followList);
                 } else {
                     Follow follow1 = new Follow(doctorProfile.getUser(), currentUser);
                     followRepository.save(follow1);
@@ -226,9 +227,9 @@ public class UserServiceImpl implements UserService {
             } else {
                 UserProfile userProfile = userProfileRepository.findById(targetUserId).orElse(null);
                 if (userProfile != null) {
-                    Follow follow = followRepository.findFollowByFollowedByUserAndTargetUser(currentUser, userProfile.getUser());
-                    if (follow != null) {
-                        followRepository.delete(follow);
+                    List<Follow> followList = followRepository.findFollowByFollowedByUserAndTargetUser(currentUser, userProfile.getUser());
+                    if (!CollectionUtils.isEmpty(followList)) {
+                        followRepository.deleteAll(followList);
                     } else {
                         Follow follow1 = new Follow(userProfile.getUser(), currentUser);
                         followRepository.save(follow1);
@@ -247,8 +248,8 @@ public class UserServiceImpl implements UserService {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User currentUser = userRepository.findByEmail(authentication.getName());
         if (user != null) {
-            Follow follow = followRepository.findFollowByFollowedByUserAndTargetUser(currentUser, user);
-            if (follow != null) {
+            List<Follow> followList = followRepository.findFollowByFollowedByUserAndTargetUser(currentUser, user);
+            if (!CollectionUtils.isEmpty(followList)) {
                 return new AbstractResponse(true);
             } else {
                 return new AbstractResponse(false);
@@ -256,8 +257,8 @@ public class UserServiceImpl implements UserService {
         } else {
             DoctorProfile doctorProfile = doctorProfileRepository.findById(targetUserId).orElse(null);
             if (doctorProfile != null) {
-                Follow follow = followRepository.findFollowByFollowedByUserAndTargetUser(currentUser, doctorProfile.getUser());
-                if (follow != null) {
+                List<Follow> followList = followRepository.findFollowByFollowedByUserAndTargetUser(currentUser, doctorProfile.getUser());
+                if (!CollectionUtils.isEmpty(followList)) {
                     return new AbstractResponse(true);
                 } else {
                     return new AbstractResponse(false);
@@ -265,8 +266,8 @@ public class UserServiceImpl implements UserService {
             } else {
                 UserProfile userProfile = userProfileRepository.findById(targetUserId).orElse(null);
                 if (userProfile != null) {
-                    Follow follow = followRepository.findFollowByFollowedByUserAndTargetUser(currentUser, userProfile.getUser());
-                    if (follow != null) {
+                    List<Follow> followList = followRepository.findFollowByFollowedByUserAndTargetUser(currentUser, userProfile.getUser());
+                    if (!CollectionUtils.isEmpty(followList)) {
                         return new AbstractResponse(true);
                     } else {
                         return new AbstractResponse(false);

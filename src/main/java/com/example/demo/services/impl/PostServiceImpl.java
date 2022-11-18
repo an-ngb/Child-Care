@@ -176,8 +176,8 @@ public class PostServiceImpl implements PostService {
             Post post = postRepository.findByGroupPostOrderById(groupPost).get(0);
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             User currentUser = userRepository.findByEmail(authentication.getName());
-            Follow follow = followRepository.findFollowByFollowedByUserAndTargetUser(currentUser, user);
-            if(follow != null){
+            List<Follow> followList = followRepository.findFollowByFollowedByUserAndTargetUser(currentUser, user);
+            if(!CollectionUtils.isEmpty(followList)){
                 postSearchResultDto.setIsFollowed(true);
             }
             postSearchResultDto.setId(groupPost.getId());
