@@ -1,13 +1,13 @@
 package com.example.demo.controllers;
 
 import com.example.demo.dtos.AbstractResponse;
-import com.example.demo.dtos.BookingDto;
-import com.example.demo.dtos.InteractDto;
 import com.example.demo.services.BookingService;
 import com.example.demo.services.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/doctor")

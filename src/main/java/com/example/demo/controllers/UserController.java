@@ -38,4 +38,19 @@ public class UserController {
     public ResponseEntity<AbstractResponse> followUser(@PathVariable("id") Integer id){
         return ResponseEntity.ok().body(userService.followUser(id));
     }
+
+    @PostMapping("/follow-check/{id}")
+    public ResponseEntity<AbstractResponse> checkFollow(@PathVariable("id") Integer id){
+        return ResponseEntity.ok().body(userService.checkFollow(id));
+    }
+
+    @PostMapping("/my-follow")
+    public ResponseEntity<AbstractResponse> getMyFollowList(){
+        return ResponseEntity.ok().body(userService.getFollowListOfLoggedUser());
+    }
+
+    @PostMapping("/follow-list/{id}")
+    public ResponseEntity<AbstractResponse> getFollowListOfUser(@PathVariable("id") Integer id){
+        return ResponseEntity.ok().body(userService.getFollowListOfUser(id));
+    }
 }

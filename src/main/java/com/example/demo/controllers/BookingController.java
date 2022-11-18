@@ -3,11 +3,8 @@ package com.example.demo.controllers;
 import com.example.demo.dtos.*;
 import com.example.demo.services.BookingService;
 import lombok.RequiredArgsConstructor;
-import org.hibernate.sql.Update;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.time.Instant;
 
 @RestController
 @RequestMapping("/api/booking")

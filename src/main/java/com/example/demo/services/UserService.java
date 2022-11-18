@@ -14,4 +14,7 @@ public interface UserService {
     AbstractResponse getDoctorList();
     AbstractResponse getMyProfile();
     AbstractResponse followUser(Integer targetUserId);
+    AbstractResponse checkFollow(Integer targetUserId);
+    AbstractResponse getFollowListOfLoggedUser();
+    AbstractResponse getFollowListOfUser(Integer id);
 }

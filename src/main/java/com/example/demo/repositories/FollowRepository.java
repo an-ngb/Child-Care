@@ -9,4 +9,6 @@ public interface FollowRepository extends AbstractRepository<Follow, Integer> {
     Follow findFollowByFollowedByUserAndTargetUser(User followedByUser, User targetUser);
 
     List<Follow> findAllByTargetUser(User user);
+
+    List<Follow> findAllByFollowedByUser(User user);
 }

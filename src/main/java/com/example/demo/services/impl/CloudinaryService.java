@@ -2,7 +2,6 @@ package com.example.demo.services.impl;
 
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
-import com.example.demo.dtos.AbstractResponse;
 import com.example.demo.dtos.ImageAbstractResponse;
 import com.example.demo.dtos.ImageResponseDto;
 import com.example.demo.entities.File;

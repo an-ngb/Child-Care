@@ -1,8 +1,14 @@
 package com.example.demo.services.impl;
 
 import com.example.demo.dtos.*;
-import com.example.demo.entities.*;
-import com.example.demo.repositories.*;
+import com.example.demo.entities.Booking;
+import com.example.demo.entities.DoctorProfile;
+import com.example.demo.entities.User;
+import com.example.demo.entities.UserProfile;
+import com.example.demo.repositories.BookingRepository;
+import com.example.demo.repositories.DoctorProfileRepository;
+import com.example.demo.repositories.UserProfileRepository;
+import com.example.demo.repositories.UserRepository;
 import com.example.demo.services.BookingService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -13,12 +19,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
 import java.time.LocalDate;
-import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Service

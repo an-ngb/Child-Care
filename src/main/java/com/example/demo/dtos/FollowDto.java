@@ -9,6 +9,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ImageResponseDto {
-    private Object imageUrl;
+public class FollowDto {
+    private Integer userId;
+    private String fullName;
 }

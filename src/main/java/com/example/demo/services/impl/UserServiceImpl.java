@@ -19,7 +19,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import static com.example.demo.utils.Utils.loadProperties;
 
@@ -240,5 +239,100 @@ public class UserServiceImpl implements UserService {
             }
         }
         return new AbstractResponse();
+    }
+
+    @Override
+    public AbstractResponse checkFollow(Integer targetUserId) {
+        User user = userRepository.findUserById(targetUserId);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User currentUser = userRepository.findByEmail(authentication.getName());
+        if (user != null) {
+            Follow follow = followRepository.findFollowByFollowedByUserAndTargetUser(currentUser, user);
+            if (follow != null) {
+                return new AbstractResponse(true);
+            } else {
+                return new AbstractResponse(false);
+            }
+        } else {
+            DoctorProfile doctorProfile = doctorProfileRepository.findById(targetUserId).orElse(null);
+            if (doctorProfile != null) {
+                Follow follow = followRepository.findFollowByFollowedByUserAndTargetUser(currentUser, doctorProfile.getUser());
+                if (follow != null) {
+                    return new AbstractResponse(true);
+                } else {
+                    return new AbstractResponse(false);
+                }
+            } else {
+                UserProfile userProfile = userProfileRepository.findById(targetUserId).orElse(null);
+                if (userProfile != null) {
+                    Follow follow = followRepository.findFollowByFollowedByUserAndTargetUser(currentUser, userProfile.getUser());
+                    if (follow != null) {
+                        return new AbstractResponse(true);
+                    } else {
+                        return new AbstractResponse(false);
+                    }
+                } else {
+                    return new AbstractResponse("FAILED", "USER_NOT_FOUND", 404);
+                }
+            }
+        }
+    }
+
+    @Override
+    public AbstractResponse getFollowListOfLoggedUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User currentUser = userRepository.findByEmail(authentication.getName());
+        List<Follow> followList = followRepository.findAllByTargetUser(currentUser);
+        List<FollowDto> followDtoList = new ArrayList<>();
+        followList.forEach(item -> {
+            String fullName;
+            if (Objects.nonNull(item.getFollowedByUser())) {
+                UserProfile userProfile = userProfileRepository.findByUser(item.getFollowedByUser());
+                if (userProfile == null) {
+                    DoctorProfile doctorProfile = doctorProfileRepository.findByUser(item.getFollowedByUser());
+                    fullName = doctorProfile.getFullName();
+                } else {
+                    fullName = userProfile.getFullName();
+                }
+                FollowDto followDto = new FollowDto(item.getFollowedByUser().getId(), fullName);
+                followDtoList.add(followDto);
+            }
+        });
+        return new AbstractResponse(followDtoList);
+    }
+
+    @Override
+    public AbstractResponse getFollowListOfUser(Integer id) {
+        User user = userRepository.findUserById(id);
+        if (user == null) {
+            UserProfile userProfile = userProfileRepository.findById(id).orElse(null);
+            if (userProfile != null) {
+                user = userProfile.getUser();
+            } else {
+                DoctorProfile doctorProfile = doctorProfileRepository.findById(id).orElse(null);
+                if (doctorProfile != null) {
+                    user = doctorProfile.getUser();
+                } else {
+                    return new AbstractResponse("FAILED", "USER_NOT_FOUND", 404);
+                }
+            }
+        }
+        List<Follow> followList = followRepository.findAllByTargetUser(user);
+        List<FollowDto> followDtoList = new ArrayList<>();
+        followList.forEach(item -> {
+            String fullName;
+            if (Objects.nonNull(item.getFollowedByUser())) {
+                UserProfile userProfile = userProfileRepository.findByUser(item.getFollowedByUser());
+                if (userProfile == null) {
+                    DoctorProfile doctorProfile = doctorProfileRepository.findByUser(item.getFollowedByUser());
+                    fullName = doctorProfile.getFullName();
+                } else {
+                    fullName = userProfile.getFullName();
+                }
+                FollowDto followDto = new FollowDto(item.getFollowedByUser().getId(), fullName);
+                followDtoList.add(followDto);
+            }
+        });
+        return new AbstractResponse(followDtoList);
     }
 }
