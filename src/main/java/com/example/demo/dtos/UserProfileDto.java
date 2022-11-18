@@ -28,5 +28,6 @@ public class UserProfileDto {
     private String workAt;
     private String avatar;
     private Integer totalFollower;
+    private Integer totalFollowing;
     private List<PostSearchResultDto> postSearchResultDtoList;
 }
