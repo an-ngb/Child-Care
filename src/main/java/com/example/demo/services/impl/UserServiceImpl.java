@@ -395,6 +395,37 @@ public class UserServiceImpl implements UserService {
         if (Strings.isEmpty(searchDto.getKey())) {
             return new AbstractResponse();
         }
-        return new AbstractResponse(userProfileRepository.findAll(UserSpecs.search(searchDto)));
+        List<UserProfile> userProfileList = userProfileRepository.findAll(UserSpecs.search(searchDto));
+        List<UserProfileDto> userProfileDtoList = new ArrayList<>();
+        for (UserProfile user : userProfileList) {
+            UserProfileDto userProfileDto = new UserProfileDto();
+            userProfileDto.setId(user.getUser().getId());
+            userProfileDto.setEmail(user.getUser().getEmail());
+            userProfileDto.setRole(user.getUser().getRole().getRoleName());
+            userProfileDto.setFullName(user.getFullName());
+            userProfileDto.setAge(user.getAge());
+            userProfileDto.setGender(user.getGender());
+            userProfileDto.setPhone(user.getPhone());
+            List<GroupPost> groupPostList = groupPostRepository.findAllByCreatedBy(user.getUser().getEmail());
+            List<PostSearchResultDto> postSearchResultDtoList;
+            postSearchResultDtoList = postServiceImpl.convertPostToPostDto(groupPostList);
+            userProfileDto.setPostSearchResultDtoList(postSearchResultDtoList);
+            DoctorProfile doctorProfile = doctorProfileRepository.findByUser(user.getUser());
+            if (doctorProfile == null) {
+                userProfileDtoList.add(userProfileDto);
+            } else {
+                userProfileDto.setCertificate(doctorProfile.getCertificate());
+                userProfileDto.setDegree(doctorProfile.getDegree());
+                userProfileDto.setExpYear(doctorProfile.getExpYear());
+                userProfileDto.setSpecialist(doctorProfile.getSpecialist().getSpecialistName());
+                userProfileDto.setWorkingAt(doctorProfile.getWorkingAt());
+                userProfileDto.setPrivateWeb(doctorProfile.getPrivateWeb());
+                userProfileDto.setStartWorkAtTime(doctorProfile.getStartWorkAtTime());
+                userProfileDto.setEndWorkAtTime(doctorProfile.getEndWorkAtTime());
+                userProfileDto.setWorkAt(doctorProfile.getWorkAt());
+            }
+            userProfileDtoList.add(userProfileDto);
+        }
+        return new AbstractResponse(userProfileDtoList);
     }
 }
