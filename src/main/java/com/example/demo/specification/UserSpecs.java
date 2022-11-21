@@ -11,7 +11,7 @@ import java.util.List;
 
 public class UserSpecs {
 
-    public static Specification<User> search(SearchDto searchDto) {
+    public static Specification<UserProfile> search(SearchDto searchDto) {
         return (root, query, builder) -> {
             List<Predicate> conditions = new ArrayList<>();
 

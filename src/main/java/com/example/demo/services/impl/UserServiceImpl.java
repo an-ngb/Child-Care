@@ -395,6 +395,6 @@ public class UserServiceImpl implements UserService {
         if (Strings.isEmpty(searchDto.getKey())) {
             return new AbstractResponse();
         }
-        return new AbstractResponse(userRepository.findAll(UserSpecs.search(searchDto)));
+        return new AbstractResponse(userProfileRepository.findAll(UserSpecs.search(searchDto)));
     }
 }
