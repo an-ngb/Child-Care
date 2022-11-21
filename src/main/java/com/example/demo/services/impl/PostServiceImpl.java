@@ -169,7 +169,6 @@ public class PostServiceImpl implements PostService {
 
     public List<PostSearchResultDto> convertPostToPostDto(List<GroupPost> groupPostList) {
         List<PostSearchResultDto> data = new ArrayList<>();
-        String defaultImg = "http://res.cloudinary.com/annb/image/upload/v1667571608/a8phdesstsrxxuylgdgl.jpg";
         for (GroupPost groupPost : groupPostList) {
             PostSearchResultDto postSearchResultDto = new PostSearchResultDto();
             User user = userRepository.findByEmail(groupPost.getCreatedBy());
@@ -187,7 +186,7 @@ public class PostServiceImpl implements PostService {
                 continue;
             }
             postSearchResultDto.setTitle(groupPost.getTitle());
-            postSearchResultDto.setThumbnailImage(StringUtils.isEmpty(post.getThumbnailImage()) ? defaultImg : post.getThumbnailImage());
+            postSearchResultDto.setThumbnailImage(StringUtils.isEmpty(post.getThumbnailImage()) ? null : post.getThumbnailImage());
             Integer totalLike = (int) reactionRepository.findAllByPost(post).stream().filter(e -> e.getIsUpvote() != null && e.getIsUpvote()).count();
             postSearchResultDto.setTotalLike(totalLike);
             Integer totalDislike = (int) reactionRepository.findAllByPost(post).stream().filter(e -> e.getIsUpvote() != null && !e.getIsUpvote()).count();
