@@ -16,7 +16,7 @@ public class UserSpecs {
             List<Predicate> conditions = new ArrayList<>();
 
             if(Strings.isNotEmpty(searchDto.getKey())){
-                conditions.add(builder.like(builder.upper(root.get(UserProfile_.FULL_NAME) == null ? root.get(DoctorProfile_.FULL_NAME) : root.get(UserProfile_.FULL_NAME)), '%' + searchDto.getKey().toUpperCase() + '%'));
+                conditions.add(builder.like(builder.upper(root.get(UserProfile_.FULL_NAME)), '%' + searchDto.getKey().toUpperCase() + '%'));
             }
 
             return builder.and(conditions.toArray(new Predicate[0]));
