@@ -3,6 +3,7 @@ package com.example.demo.services;
 import com.example.demo.dtos.AbstractResponse;
 import com.example.demo.dtos.LoginRequestDto;
 import com.example.demo.dtos.RegisterRequestDto;
+import com.example.demo.dtos.SearchDto;
 
 public interface UserService {
 
@@ -17,4 +18,5 @@ public interface UserService {
     AbstractResponse checkFollow(Integer targetUserId);
     AbstractResponse getFollowListOfLoggedUser();
     AbstractResponse getFollowListOfUser(Integer id);
+    AbstractResponse search(SearchDto searchDto);
 }

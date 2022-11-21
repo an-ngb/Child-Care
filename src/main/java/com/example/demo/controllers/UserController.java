@@ -2,6 +2,7 @@ package com.example.demo.controllers;
 
 import com.example.demo.dtos.AbstractResponse;
 import com.example.demo.dtos.RegisterRequestDto;
+import com.example.demo.dtos.SearchDto;
 import com.example.demo.services.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
@@ -52,5 +53,10 @@ public class UserController {
     @PostMapping("/follow-list/{id}")
     public ResponseEntity<AbstractResponse> getFollowListOfUser(@PathVariable("id") Integer id){
         return ResponseEntity.ok().body(userService.getFollowListOfUser(id));
+    }
+
+    @PostMapping("/search")
+    public ResponseEntity<AbstractResponse> search(@RequestBody SearchDto searchDto){
+        return ResponseEntity.ok().body(userService.search(searchDto));
     }
 }

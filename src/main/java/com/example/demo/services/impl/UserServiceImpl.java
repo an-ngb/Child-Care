@@ -6,8 +6,11 @@ import com.example.demo.dtos.*;
 import com.example.demo.entities.*;
 import com.example.demo.repositories.*;
 import com.example.demo.services.UserService;
+import com.example.demo.specification.PostSpecs;
+import com.example.demo.specification.UserSpecs;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.logging.log4j.util.Strings;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -385,5 +388,13 @@ public class UserServiceImpl implements UserService {
         FollowDto followDto = new FollowDto(followedByDtoList, followingDtoList);
 
         return new AbstractResponse(followDto);
+    }
+
+    @Override
+    public AbstractResponse search(SearchDto searchDto) {
+        if (Strings.isEmpty(searchDto.getKey())) {
+            return new AbstractResponse();
+        }
+        return new AbstractResponse(userRepository.findAll(UserSpecs.search(searchDto)));
     }
 }
