@@ -33,6 +33,7 @@ public class BookingServiceImpl implements BookingService {
     private final DoctorProfileRepository doctorProfileRepository;
     private final SessionServiceImpl sessionService;
     private final BookingRepository bookingRepository;
+    private final NotificationServiceImpl notificationService;
 
     @Override
     public AbstractResponse booking(BookingDto bookingDto) {
@@ -45,6 +46,13 @@ public class BookingServiceImpl implements BookingService {
             }
             Booking booking = new Booking(user, doctor.getUser(), bookingDto.getBookedAt(), bookingDto.getBookedTime(), bookingDto.getContent(), bookingDto.getShift(), bookingDto.getConsult());
             bookingRepository.save(booking);
+
+            UserProfile userProfile = userProfileRepository.findByUser(user);
+
+            List<String> emailList = new ArrayList<>();
+            emailList.add(user.getEmail());
+            emailList.add(doctor.getUser().getEmail());
+            notificationService.notifyToApproverApproval(new MailRequest(emailList, userProfile.getFullName()));
         } else {
             return new AbstractResponse("DOCTOR_NOT_FOUND", 404);
         }
