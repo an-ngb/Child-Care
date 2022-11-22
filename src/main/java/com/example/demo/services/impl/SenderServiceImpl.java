@@ -27,10 +27,10 @@ public class SenderServiceImpl implements SenderService {
     @Autowired
     private MailSenderService mailSenderService;
 
-    public static NotificationTemplateDto parseContentNotification(NotificationTemplateDto template, Instant date, String creator){
+    public static NotificationTemplateDto parseContentNotification(NotificationTemplateDto template, Instant date, String creator, String receiver){
         final val dateString = DateFormatUtils.format(Date.from(date),"yyyy-MM-dd");
-        template.setTitle(parseTitleNotification(template.getTitle(), creator, Strings.EMPTY));
-        template.setContent(parseTitleNotification(template.getContent(), creator, Strings.EMPTY));
+        template.setTitle(parseTitleNotification(template.getTitle(), creator, receiver));
+        template.setContent(parseTitleNotification(template.getContent(), creator, receiver));
         template.setDate(template.getDate()
                 .replace("XDateX", dateString));
         template.setMailContent(replaceContentTemplate(template));
@@ -52,7 +52,7 @@ public class SenderServiceImpl implements SenderService {
     @Override
     public void sendMessage(MailRequest req, MessageDto messageDto) {
         Instant now  = Instant.now();
-        final var contentNotification = parseContentNotification(messageDto.getContent(), now, req.getCreator());
+        final var contentNotification = parseContentNotification(messageDto.getContent(), now, req.getCreator(), req.getReceiver());
         List<String> lstEmail = req.getLstEmail().parallelStream().distinct().collect(Collectors.toList());
         if(!CollectionUtils.isEmpty(req.getLstEmail())){
             log.info("Started send email to: {} and title: {}", lstEmail, contentNotification.getTitle());

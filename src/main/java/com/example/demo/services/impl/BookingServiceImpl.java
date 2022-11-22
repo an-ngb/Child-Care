@@ -52,7 +52,7 @@ public class BookingServiceImpl implements BookingService {
             List<String> emailList = new ArrayList<>();
             emailList.add(user.getEmail());
             emailList.add(doctor.getUser().getEmail());
-            notificationService.notifyToApproverApproval(new MailRequest(emailList, userProfile.getFullName()));
+            notificationService.notifyToApproverApproval(new MailRequest(emailList, userProfile.getFullName(), doctor.getFullName()));
         } else {
             return new AbstractResponse("DOCTOR_NOT_FOUND", 404);
         }

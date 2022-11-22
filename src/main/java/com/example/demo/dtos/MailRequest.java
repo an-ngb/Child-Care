@@ -16,4 +16,5 @@ import java.util.List;
 public class MailRequest {
     List<String> lstEmail;
     String creator;
+    String receiver;
 }
