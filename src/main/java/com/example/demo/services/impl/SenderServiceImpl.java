@@ -33,7 +33,15 @@ public class SenderServiceImpl implements SenderService {
         template.setContent(parseTitleNotification(template.getContent(), creator, Strings.EMPTY));
         template.setDate(template.getDate()
                 .replace("XDateX", dateString));
+        template.setMailContent(replaceContentTemplate(template));
         return template;
+    }
+
+    private static String replaceContentTemplate(NotificationTemplateDto template) {
+        return template.getMailContent().replace("XContentX", StringUtils.stripToEmpty(template.getContent()))
+                .replace("XPendingX", StringUtils.stripToEmpty(template.getPending()))
+                .replace("XStatusX", StringUtils.stripToEmpty(template.getStatus()))
+                .replace("XDateX", StringUtils.stripToEmpty(template.getDate()));
     }
 
     public static String parseTitleNotification(final String title, final String creator, final String receiver){
@@ -48,7 +56,7 @@ public class SenderServiceImpl implements SenderService {
         List<String> lstEmail = req.getLstEmail().parallelStream().distinct().collect(Collectors.toList());
         if(!CollectionUtils.isEmpty(req.getLstEmail())){
             log.info("Started send email to: {} and title: {}", lstEmail, contentNotification.getTitle());
-            mailSenderService.sendSimpleMessage(contentNotification.getTitle(),contentNotification.getContent(),lstEmail);
+            mailSenderService.sendSimpleMessage(contentNotification.getTitle(),contentNotification.getMailContent(),lstEmail);
         }
     }
 
