@@ -5,5 +5,4 @@ import com.example.demo.dtos.MessageDto;
 
 public interface SenderService {
     void sendMessage(MailRequest req, MessageDto messageDto);
-
 }

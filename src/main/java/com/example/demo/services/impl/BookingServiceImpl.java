@@ -119,6 +119,18 @@ public class BookingServiceImpl implements BookingService {
         }
         booking.setIsApproved(interactDto.getApprove());
         bookingRepository.save(booking);
+        List<String> emailList = new ArrayList<>();
+        emailList.add(booking.getUser().getEmail());
+        emailList.add(booking.getDoctor().getEmail());
+        UserProfile userProfile = userProfileRepository.findByUser(booking.getUser());
+        DoctorProfile doctorProfile = doctorProfileRepository.findByUser(booking.getDoctor());
+        if(booking.getIsApproved() != null){
+            if(booking.getIsApproved()){
+                notificationService.notifyToCreatorApproval(new MailRequest(emailList, userProfile.getFullName(), doctorProfile.getFullName()));
+            } else {
+                notificationService.notifyToCreatorRejection(new MailRequest(emailList, userProfile.getFullName(), doctorProfile.getFullName()));;
+            }
+        }
         return new AbstractResponse();
     }
 

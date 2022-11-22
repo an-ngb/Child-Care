@@ -14,7 +14,15 @@ import java.util.List;
 @NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class MailRequest {
-    List<String> lstEmail;
-    String creator;
-    String receiver;
+    private List<String> lstEmail;
+    private String creator;
+    private String receiver;
+    private String status;
+
+
+    public MailRequest(List<String> lstEmail, String creator, String receiver) {
+        this.lstEmail = lstEmail;
+        this.creator = creator;
+        this.receiver = receiver;
+    }
 }
