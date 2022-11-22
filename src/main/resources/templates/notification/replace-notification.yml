@@ -6,7 +6,7 @@ notification:
     approve:
         title: A Booking from XUserX is waiting for you to check
         content: |
-          A Booking is pending for approval by XReceiverX
+          A Booking is pending for approval by XReceiverX or Admin
         status: |
           Status: Pending for Approval
     rejection:
