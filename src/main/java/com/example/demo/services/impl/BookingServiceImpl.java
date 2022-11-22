@@ -123,12 +123,18 @@ public class BookingServiceImpl implements BookingService {
         emailList.add(booking.getUser().getEmail());
         emailList.add(booking.getDoctor().getEmail());
         UserProfile userProfile = userProfileRepository.findByUser(booking.getUser());
-        DoctorProfile doctorProfile = doctorProfileRepository.findByUser(booking.getDoctor());
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User user = userRepository.findByEmail(authentication.getName());
+        UserProfile userProfile1 = userProfileRepository.findByUser(user);
+        DoctorProfile doctorProfile = new DoctorProfile();
+        if(userProfile1 == null){
+            doctorProfile = doctorProfileRepository.findByUser(user);
+        }
         if(booking.getIsApproved() != null){
             if(booking.getIsApproved()){
-                notificationService.notifyToCreatorApproval(new MailRequest(emailList, userProfile.getFullName(), doctorProfile.getFullName()));
+                notificationService.notifyToCreatorApproval(new MailRequest(emailList, userProfile.getFullName(), userProfile1 == null ? doctorProfile.getFullName() : userProfile1.getFullName()));
             } else {
-                notificationService.notifyToCreatorRejection(new MailRequest(emailList, userProfile.getFullName(), doctorProfile.getFullName()));;
+                notificationService.notifyToCreatorRejection(new MailRequest(emailList, userProfile.getFullName(), userProfile1 == null ? doctorProfile.getFullName() : userProfile1.getFullName()));;
             }
         }
         return new AbstractResponse();
