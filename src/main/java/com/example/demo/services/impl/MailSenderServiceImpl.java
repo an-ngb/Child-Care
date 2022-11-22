@@ -2,6 +2,7 @@ package com.example.demo.services.impl;
 
 import com.example.demo.services.MailSenderService;
 import lombok.extern.slf4j.Slf4j;
+import lombok.var;
 import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -37,8 +38,14 @@ public class MailSenderServiceImpl implements MailSenderService {
                 if (!Strings.isEmpty(fromEmail)) {
                     messageHelper.setFrom(fromEmail, fromPersonal);
                 }
+                String[] emails = new String[lstEmail.size()];
+                int i = 0;
+                for (String email : lstEmail) {
+                    emails[i] = email;
+                    i++;
+                }
                 messageHelper.setSubject(title);
-                messageHelper.setTo(lstEmail.toArray(String[]::new));
+                messageHelper.setTo(emails);
                 messageHelper.setText(content, true);
                 emailSender.send(mineMessage);
             } catch (final Exception e) {

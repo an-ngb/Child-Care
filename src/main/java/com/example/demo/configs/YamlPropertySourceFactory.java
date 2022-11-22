@@ -1,5 +1,6 @@
 package com.example.demo.configs;
 
+import lombok.var;
 import org.springframework.beans.factory.config.YamlPropertiesFactoryBean;
 import org.springframework.core.env.PropertiesPropertySource;
 import org.springframework.core.env.PropertySource;

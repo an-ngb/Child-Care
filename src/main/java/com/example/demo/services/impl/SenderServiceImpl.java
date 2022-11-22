@@ -7,6 +7,7 @@ import com.example.demo.services.MailSenderService;
 import com.example.demo.services.SenderService;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
+import lombok.var;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.apache.logging.log4j.util.Strings;
