@@ -1,0 +1,25 @@
+notification:
+  template:
+    common:
+      date: |
+        Date: XDateX
+    approve:
+        title: A Booking from XUserX is waiting for you to check
+        content: |
+          A Booking is pending for approval by XReceiverX
+        to: XReceiverX
+        status: |
+          Status: Pending for Approval
+    rejection:
+        title: A Booking has been rejected by XReceiverX
+        content: |
+          A Booking has been rejected by XReceiverX
+        creator:
+        status: |
+          Status: Rejected
+    approved:
+      title: A Booking has been approved
+      content: |
+        A Booking has been approved by XReceiverX
+      status: |
+        Status: Approved
