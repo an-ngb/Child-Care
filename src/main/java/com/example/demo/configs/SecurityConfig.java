@@ -1,6 +1,7 @@
 package com.example.demo.configs;
 
 import lombok.RequiredArgsConstructor;
+import org.hibernate.validator.internal.util.stereotypes.Immutable;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -25,8 +26,10 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 
 @Configuration
 @EnableWebSecurity
@@ -47,19 +50,49 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.cors().and().csrf().disable();
-        http.csrf().disable().exceptionHandling();
-        http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-        http.addFilterBefore(new JwtHandlerFilter(userDetailsService), BasicAuthenticationFilter.class);
-        http.authorizeRequests().anyRequest().permitAll();
+        http.cors().and().csrf().disable().authorizeRequests()
+                .antMatchers("/get/**").permitAll()
+                .antMatchers("/update/**").hasRole("ADMIN")
+                .anyRequest().authenticated()
+                .and()
+                .httpBasic();
+        http.sessionManagement()
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
     }
 
     @Bean
-    CorsConfigurationSource corsConfigurationSource() {
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", new CorsConfiguration().applyPermitDefaultValues());
+    public CorsConfigurationSource corsConfigurationSource() {
+        final CorsConfiguration configuration = new CorsConfiguration();
+        List<String> stringList = new ArrayList<>();
+        stringList.add("*");
+        stringList = Collections.unmodifiableList(stringList);
+
+        List<String> allowedMethods = new ArrayList<>();
+        allowedMethods.add("POST");
+
+        List<String> allowedHeaders = new ArrayList<>();
+        allowedHeaders.add("Authorization");
+        allowedHeaders.add("Cache-Control");
+        allowedHeaders.add("Content-Type");
+
+        configuration.setAllowedOrigins(stringList); // www - obligatory
+//        configuration.setAllowedOrigins(ImmutableList.of("*"));  //set access from all domains
+        configuration.setAllowedMethods(allowedMethods);
+        configuration.setAllowCredentials(true);
+        configuration.setAllowedHeaders(allowedHeaders);
+
+        final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+
         return source;
     }
+
+//    @Bean
+//    CorsConfigurationSource corsConfigurationSource() {
+//        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+//        source.registerCorsConfiguration("/**", new CorsConfiguration().applyPermitDefaultValues());
+//        return source;
+//    }
 
     @Bean
     @Override
@@ -67,14 +100,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
         return super.authenticationManagerBean();
     }
 
-    @Bean
-    public WebMvcConfigurer corsConfigurer() {
-        return new WebMvcConfigurerAdapter() {
-            @Override
-            public void addCorsMappings(CorsRegistry registry) {
-                registry.addMapping("/**")
-                        .allowedMethods("HEAD", "GET", "PUT", "POST", "DELETE", "PATCH");
-            }
-        };
-    }
+//    @Bean
+//    public WebMvcConfigurer corsConfigurer() {
+//        return new WebMvcConfigurerAdapter() {
+//            @Override
+//            public void addCorsMappings(CorsRegistry registry) {
+//                registry.addMapping("/**")
+//                        .allowedMethods("HEAD", "GET", "PUT", "POST", "DELETE", "PATCH");
+//            }
+//        };
+//    }
 }
