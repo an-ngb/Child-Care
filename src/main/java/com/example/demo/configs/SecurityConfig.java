@@ -31,7 +31,7 @@ import java.util.Collections;
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
-public class SecurityConfig extends WebSecurityConfigurerAdapter {
+public class SecurityConfig extends WebSecurityConfigurerAdapter implements WebMvcConfigurer {
 
     private final UserDetailsService userDetailsService;
 
@@ -52,6 +52,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         http.addFilterBefore(new JwtHandlerFilter(userDetailsService), BasicAuthenticationFilter.class);
         http.authorizeRequests().anyRequest().permitAll();
+    }
+
+    @Override
+    public void addCorsMappings(CorsRegistry registry) {
+        registry.addMapping("/**");
     }
 
     @Bean
