@@ -16,4 +16,5 @@ public class CommentResultDto {
     private Integer userId;
     private Long createdAt;
     private Long updatedAt;
+    private Boolean isDoctor;
 }

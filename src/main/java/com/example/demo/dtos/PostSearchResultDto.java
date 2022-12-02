@@ -20,5 +20,6 @@ public class PostSearchResultDto {
     private Long updatedAt;
     private Integer threadId;
     private Boolean isFollowed;
+    private Boolean isDoctor;
     private List<CommentResultDto> commentList;
 }

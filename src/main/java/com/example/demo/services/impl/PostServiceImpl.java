@@ -199,6 +199,11 @@ public class PostServiceImpl implements PostService {
             postSearchResultDto.setAuthor(userProfileRepository.findByUser(user).getFullName());
             postSearchResultDto.setCreateAt(groupPost.getCreatedAt().toEpochMilli());
             postSearchResultDto.setUpdatedAt(groupPost.getUpdatedAt().toEpochMilli());
+
+            if (doctorProfileRepository.findByUser(user) != null) {
+                postSearchResultDto.setIsDoctor((doctorProfileRepository.findByUser(user) != null) ? true : null);
+            }
+
             List<Post> commentList = postRepository.findByGroupPost(groupPost);
             List<CommentResultDto> commentResultDtoList = new ArrayList<>();
             if (!CollectionUtils.isEmpty(commentList)) {
@@ -218,6 +223,7 @@ public class PostServiceImpl implements PostService {
                     } else {
                         DoctorProfile doctorProfile = doctorProfileRepository.findByUser(foundUser);
                         commentResultDto.setCreatedBy(doctorProfile.getFullName());
+                        commentResultDto.setIsDoctor(true);
                     }
                     commentResultDto.setUpdatedAt(item.getUpdatedAt().toEpochMilli());
                     commentResultDtoList.add(commentResultDto);
