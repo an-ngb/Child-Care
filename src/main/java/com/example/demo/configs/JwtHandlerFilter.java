@@ -41,7 +41,11 @@ public class JwtHandlerFilter extends OncePerRequestFilter {
         assert token.startsWith("Bearer");
         token = token.split(" ")[1];
         try {
-            response.setHeader("Access-Control-Allow-Origin", request.getHeader("Origin"));
+            response.addHeader("Access-Control-Allow-Origin", "*");
+            response.addHeader("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT, PATCH, HEAD");
+            response.addHeader("Access-Control-Allow-Headers", "Origin, Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers");
+            response.addHeader("Access-Control-Expose-Headers", "Access-Control-Allow-Origin, Access-Control-Allow-Credentials");
+            response.addHeader("Access-Control-Allow-Credentials", "true");
             Properties prop = Utils.loadProperties("jwt.setting.properties");
             assert prop != null;
             String secret = prop.getProperty("key");
