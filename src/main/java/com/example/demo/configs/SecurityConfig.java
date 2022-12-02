@@ -47,7 +47,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.cors();
+        http.cors().and().csrf().disable();
         http.csrf().disable().exceptionHandling();
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         http.addFilterBefore(new JwtHandlerFilter(userDetailsService), BasicAuthenticationFilter.class);
@@ -65,5 +65,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
     @Override
     public AuthenticationManager authenticationManagerBean() throws Exception {
         return super.authenticationManagerBean();
+    }
+
+    @Bean
+    public WebMvcConfigurer corsConfigurer() {
+        return new WebMvcConfigurerAdapter() {
+            @Override
+            public void addCorsMappings(CorsRegistry registry) {
+                registry.addMapping("/**")
+                        .allowedMethods("HEAD", "GET", "PUT", "POST", "DELETE", "PATCH");
+            }
+        };
     }
 }
