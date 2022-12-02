@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/notification")
+@CrossOrigin(origins = "https://child-care.vercel.app")
 public class NotificationController {
 
     @Autowired

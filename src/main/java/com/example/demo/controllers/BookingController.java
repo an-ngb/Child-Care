@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/booking")
 @RequiredArgsConstructor
+@CrossOrigin(origins = "https://child-care.vercel.app")
 public class BookingController {
     private final BookingService bookingService;
 
