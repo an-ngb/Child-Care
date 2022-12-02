@@ -33,7 +33,6 @@ public class JwtHandlerFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        response.setHeader("Access-Control-Allow-Origin", request.getHeader("Origin"));
         if (request.getHeader("Authorization") == null) {
             filterChain.doFilter(request, response);
             return;
@@ -42,6 +41,7 @@ public class JwtHandlerFilter extends OncePerRequestFilter {
         assert token.startsWith("Bearer");
         token = token.split(" ")[1];
         try {
+            response.setHeader("Access-Control-Allow-Origin", request.getHeader("Origin"));
             Properties prop = Utils.loadProperties("jwt.setting.properties");
             assert prop != null;
             String secret = prop.getProperty("key");
