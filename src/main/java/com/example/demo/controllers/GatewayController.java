@@ -18,7 +18,7 @@ import java.util.Map;
 @RequestMapping("/api")
 public class GatewayController {
     private final UserService userService;
-    @CrossOrigin
+    @CrossOrigin(origins = "https://child-care.vercel.app", allowedHeaders = "Requestor-Type", exposedHeaders = "X-Get-Header")
     @PostMapping("/login")
     public ResponseEntity<AbstractResponse> login(@RequestBody @Valid LoginRequestDto loginRequest) {
         try {
