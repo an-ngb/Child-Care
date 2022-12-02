@@ -63,8 +63,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
     public CorsConfigurationSource corsConfigurationSource() {
         final CorsConfiguration configuration = new CorsConfiguration();
         List<String> stringList = new ArrayList<>();
-        stringList.add("*");
-        stringList = Collections.unmodifiableList(stringList);
+        stringList.add("https://child-care.vercel.app");
 
         List<String> allowedMethods = new ArrayList<>();
         allowedMethods.add("POST");
