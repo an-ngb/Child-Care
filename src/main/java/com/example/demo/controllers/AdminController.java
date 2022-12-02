@@ -33,37 +33,37 @@ public class AdminController {
     }
 
     @PostMapping("/post/all")
-    public ResponseEntity<AbstractResponse> getAllPost(){
+    public ResponseEntity<AbstractResponse> getAllPost() {
         return ResponseEntity.ok().body(adminService.viewAllPost());
     }
 
     @PostMapping("/clear-booking-list")
-    public ResponseEntity<AbstractResponse> clearBookingList(){
+    public ResponseEntity<AbstractResponse> clearBookingList() {
         return ResponseEntity.ok().body(adminService.clearBookingList());
     }
 
     @PostMapping("/clear-user")
-    public ResponseEntity<AbstractResponse> clearUser(){
+    public ResponseEntity<AbstractResponse> clearUser() {
         return ResponseEntity.ok().body(adminService.clearUserList());
     }
 
     @PostMapping("/clear-post")
-    public ResponseEntity<AbstractResponse> clearPost(){
+    public ResponseEntity<AbstractResponse> clearPost() {
         return ResponseEntity.ok().body(adminService.clearPost());
     }
 
     @PostMapping("/clear-null-shift")
-    public ResponseEntity<AbstractResponse> clearNullShiftBooking(){
+    public ResponseEntity<AbstractResponse> clearNullShiftBooking() {
         return ResponseEntity.ok().body(adminService.clearNullShiftBooking());
     }
 
     @PostMapping("/clear-reaction")
-    public ResponseEntity<AbstractResponse> clearReaction(){
+    public ResponseEntity<AbstractResponse> clearReaction() {
         return ResponseEntity.ok().body(adminService.clearReaction());
     }
 
     @PostMapping("/clear-null-threadid")
-    public ResponseEntity<AbstractResponse> clearNullThreadId(){
+    public ResponseEntity<AbstractResponse> clearNullThreadId() {
         return ResponseEntity.ok().body(adminService.clearNullThreadId());
     }
 }

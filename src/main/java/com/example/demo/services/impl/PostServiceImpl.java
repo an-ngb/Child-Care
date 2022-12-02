@@ -176,7 +176,7 @@ public class PostServiceImpl implements PostService {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             User currentUser = userRepository.findByEmail(authentication.getName());
             List<Follow> followList = followRepository.findFollowByFollowedByUserAndTargetUser(currentUser, user);
-            if(!CollectionUtils.isEmpty(followList)){
+            if (!CollectionUtils.isEmpty(followList)) {
                 postSearchResultDto.setIsFollowed(true);
             }
             postSearchResultDto.setId(groupPost.getId());
@@ -342,6 +342,26 @@ public class PostServiceImpl implements PostService {
             }
         }
         return new AbstractResponse("FAILED", "POST_NOT_FOUND", 404);
+    }
+
+    @Override
+    public AbstractResponse getPostByFollowedUsers() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User user = userRepository.findByEmail(authentication.getName());
+
+        List<Follow> followList = followRepository.findAllByFollowedByUser(user);
+
+        List<PostSearchResultDto> postSearchResultDtoList = new ArrayList<>();
+
+        if (!CollectionUtils.isEmpty(followList)) {
+            followList.forEach(item -> {
+                List<GroupPost> groupPostList = groupPostRepository.findAllByCreatedBy(item.getTargetUser().getEmail());
+                if (!CollectionUtils.isEmpty(groupPostList)) {
+                    postSearchResultDtoList.addAll(convertPostToPostDto(groupPostList));
+                }
+            });
+        }
+        return new AbstractResponse(postSearchResultDtoList);
     }
 }
 

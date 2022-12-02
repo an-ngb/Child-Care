@@ -28,57 +28,62 @@ public class ContentController {
     }
 
     @PostMapping("/comment")
-    public ResponseEntity<AbstractResponse> comment(@RequestBody CommentDto commentDto){
+    public ResponseEntity<AbstractResponse> comment(@RequestBody CommentDto commentDto) {
         return ResponseEntity.ok().body(postService.comment(commentDto));
     }
 
     @PostMapping("/edit")
-    public ResponseEntity<AbstractResponse> edit(@RequestBody EditDto editDto){
+    public ResponseEntity<AbstractResponse> edit(@RequestBody EditDto editDto) {
         return ResponseEntity.ok().body(postService.edit(editDto));
     }
 
     @PostMapping("/delete")
-    public ResponseEntity<AbstractResponse> delete(@RequestBody DeleteDto deleteDto){
+    public ResponseEntity<AbstractResponse> delete(@RequestBody DeleteDto deleteDto) {
         return ResponseEntity.ok().body(postService.deletePost(deleteDto));
     }
 
     @PostMapping("/search")
-    public ResponseEntity<AbstractResponse> search(@RequestBody SearchDto searchDto){
+    public ResponseEntity<AbstractResponse> search(@RequestBody SearchDto searchDto) {
         return ResponseEntity.ok().body(postService.search(searchDto));
     }
 
     @PostMapping("/get-all-thread")
-    public ResponseEntity<AbstractResponse> getAllParentGroup(){
+    public ResponseEntity<AbstractResponse> getAllParentGroup() {
         return ResponseEntity.ok().body(postService.getAllParentGroup());
     }
 
     @PostMapping("/get-post-inside-thread")
-    public ResponseEntity<AbstractResponse> getPostInsideThread(@RequestBody GetPostByThreadDto getPostByThreadDto){
+    public ResponseEntity<AbstractResponse> getPostInsideThread(@RequestBody GetPostByThreadDto getPostByThreadDto) {
         return ResponseEntity.ok().body(postService.getPostInsideThread(getPostByThreadDto));
     }
 
     @PostMapping("/get-post/{id}")
-    public ResponseEntity<AbstractResponse> getPostByPostId(@PathVariable int id){
+    public ResponseEntity<AbstractResponse> getPostByPostId(@PathVariable int id) {
         return ResponseEntity.ok().body(postService.getPostByPostId(id));
     }
 
     @PostMapping("/get-post-by-user")
-    public ResponseEntity<AbstractResponse> getPostByUser(@RequestBody GetPostDto getPostDto){
+    public ResponseEntity<AbstractResponse> getPostByUser(@RequestBody GetPostDto getPostDto) {
         return ResponseEntity.ok().body(postService.getPostByLoggedUser(getPostDto));
     }
 
     @PostMapping("/interact/{id}")
-    public ResponseEntity<AbstractResponse> interactPost(@PathVariable Integer id, @RequestBody InteractWithPostDto interactWithPostDto){
+    public ResponseEntity<AbstractResponse> interactPost(@PathVariable Integer id, @RequestBody InteractWithPostDto interactWithPostDto) {
         return ResponseEntity.ok().body(postService.interactWithPost(id, interactWithPostDto));
     }
 
     @PostMapping("/get-comment/{id}")
-    public ResponseEntity<AbstractResponse> getCommentListByPost(@PathVariable Integer id){
+    public ResponseEntity<AbstractResponse> getCommentListByPost(@PathVariable Integer id) {
         return ResponseEntity.ok().body(postService.getCommentListByPost(id));
     }
 
     @PostMapping("/interaction-check/{id}")
-    public ResponseEntity<AbstractResponse> interactionCheck(@PathVariable Integer id){
+    public ResponseEntity<AbstractResponse> interactionCheck(@PathVariable Integer id) {
         return ResponseEntity.ok().body(postService.interactionCheck(id));
+    }
+
+    @PostMapping("/get-post-by-followed-users")
+    public ResponseEntity<AbstractResponse> getPostByFollowedUsers() {
+        return ResponseEntity.ok().body(postService.getPostByFollowedUsers());
     }
 }
