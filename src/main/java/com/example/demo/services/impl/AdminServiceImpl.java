@@ -136,7 +136,6 @@ public class AdminServiceImpl implements AdminService {
         reactionRepository.deleteAll();
         postRepository.deleteAll();
         groupPostRepository.deleteAll();
-        parentGroupRepository.deleteAll();
         return new AbstractResponse();
     }
 
