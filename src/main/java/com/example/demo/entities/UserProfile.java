@@ -37,10 +37,6 @@ public class UserProfile {
 
     @Column(name = "phone")
     private String phone;
-
-    @Column(name = "is_vip")
-    private Boolean isVip = false;
-
     public UserProfile(User user, String fullName, String address, Integer age, Integer gender, String phone) {
         this.user = user;
         this.fullName = fullName;
