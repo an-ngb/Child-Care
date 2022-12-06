@@ -40,7 +40,6 @@ public class PostServiceImpl implements PostService {
     private final GroupTagRepository groupTagRepository;
     private final GroupPostRepository groupPostRepository;
     private final GroupPostTagRepository groupPostTagRepository;
-    private final SessionServiceImpl sessionService;
     private final FileRepository fileRepository;
     private final PostFileRepository postFileRepository;
     private final ParentGroupRepository parentGroupRepository;

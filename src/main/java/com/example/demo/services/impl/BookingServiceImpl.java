@@ -31,7 +31,6 @@ public class BookingServiceImpl implements BookingService {
     private final UserRepository userRepository;
     private final UserProfileRepository userProfileRepository;
     private final DoctorProfileRepository doctorProfileRepository;
-    private final SessionServiceImpl sessionService;
     private final BookingRepository bookingRepository;
     private final NotificationServiceImpl notificationService;
 

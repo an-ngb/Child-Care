@@ -27,7 +27,6 @@ public class AdminServiceImpl implements AdminService {
     private final UserProfileRepository userProfileRepository;
     private final DoctorProfileRepository doctorProfileRepository;
     private final BookingRepository bookingRepository;
-    private final SessionServiceImpl sessionService;
     private final BookingServiceImpl bookingService;
     private final PostRepository postRepository;
 

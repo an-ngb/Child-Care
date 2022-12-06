@@ -43,7 +43,6 @@ public class UserServiceImpl implements UserService {
     private final PostRepository postRepository;
     private final FollowRepository followRepository;
     private final PostServiceImpl postServiceImpl;
-    private final SessionServiceImpl sessionService;
 
     public static String generateToken(Map<String, Object> payload, org.springframework.security.core.userdetails.User user) {
         Properties prop = loadProperties("jwt.setting.properties");
