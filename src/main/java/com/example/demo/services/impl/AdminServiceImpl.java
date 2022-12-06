@@ -19,6 +19,7 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class AdminServiceImpl implements AdminService {
+    private final GroupTagRepository groupTagRepository;
     private final FollowRepository followRepository;
 
     private final RoleRepository roleRepository;
@@ -124,6 +125,7 @@ public class AdminServiceImpl implements AdminService {
     public AbstractResponse clearUserList() {
         clearBookingList();
         clearPost();
+        groupTagRepository.deleteAll();
         userProfileRepository.deleteAll();
         doctorProfileRepository.deleteAll();
         followRepository.deleteAll();
