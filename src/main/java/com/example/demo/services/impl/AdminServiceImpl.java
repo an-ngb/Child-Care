@@ -125,7 +125,7 @@ public class AdminServiceImpl implements AdminService {
     public AbstractResponse clearUserList() {
         clearBookingList();
         clearPost();
-        groupTagRepository.deleteAll();
+        parentGroupRepository.deleteAll();
         userProfileRepository.deleteAll();
         doctorProfileRepository.deleteAll();
         followRepository.deleteAll();
