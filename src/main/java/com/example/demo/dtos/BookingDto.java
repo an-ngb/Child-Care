@@ -14,7 +14,6 @@ import java.time.Instant;
 public class BookingDto {
     private Integer doctorId;
     private Instant bookedAt;
-    private Integer bookedTime;
     private Integer shift;
     private String content;
     private String consult;

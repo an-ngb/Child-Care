@@ -44,7 +44,18 @@ public class AdminServiceImpl implements AdminService {
         }
         DoctorProfile foundDoctorProfile = doctorProfileRepository.findByUser(user);
         if (foundDoctorProfile != null) {
-            return new AbstractResponse("FAILED", "USER_ALREADY_DOCTOR", 400);
+            foundDoctorProfile.setAvatar(changeUserRoleDto.getAvatar());
+            foundDoctorProfile.setCertificate(changeUserRoleDto.getCertificate());
+            foundDoctorProfile.setDegree(changeUserRoleDto.getDegree());
+            foundDoctorProfile.setSpecialist(changeUserRoleDto.getSpecialist());
+            foundDoctorProfile.setExpYear(changeUserRoleDto.getExpYear());
+            foundDoctorProfile.setEndWorkAtTime(changeUserRoleDto.getEndWorkAtTime());
+            foundDoctorProfile.setStartWorkAtTime(changeUserRoleDto.getStartWorkAtTime());
+            foundDoctorProfile.setPrivateWeb(changeUserRoleDto.getPrivateWeb());
+            foundDoctorProfile.setWorkAt(changeUserRoleDto.getWorkAt());
+            foundDoctorProfile.setWorkingAt(changeUserRoleDto.getWorkingAt());
+            doctorProfileRepository.save(foundDoctorProfile);
+            return new AbstractResponse();
         }
         UserProfile userProfile = userProfileRepository.findByUser(user);
         DoctorProfile doctorProfile = new DoctorProfile(user,
