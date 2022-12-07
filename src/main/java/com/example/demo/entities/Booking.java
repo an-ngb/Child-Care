@@ -31,9 +31,6 @@ public class Booking extends AbstractAuditing{
     @Column(name = "booked_at")
     private Instant bookedAt;
 
-    @Column(name = "booked_time")
-    private Integer bookedTime;
-
     @Column(name = "shiftBooked")
     private Integer shiftBooked;
 
@@ -47,11 +44,10 @@ public class Booking extends AbstractAuditing{
     @Column(name = "is_approved")
     private Boolean isApproved;
 
-    public Booking(User user, User doctor, Instant bookedAt, Integer bookedTime, String content, Integer shiftBooked, String consult) {
+    public Booking(User user, User doctor, Instant bookedAt, String content, Integer shiftBooked, String consult) {
         this.user = user;
         this.doctor = doctor;
         this.bookedAt = bookedAt;
-        this.bookedTime = bookedTime;
         this.content = content;
         this.shiftBooked = shiftBooked;
         this.consult = consult;

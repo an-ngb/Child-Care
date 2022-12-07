@@ -43,7 +43,7 @@ public class BookingServiceImpl implements BookingService {
             if (doctor == null) {
                 return new AbstractResponse("FAILED", "DOCTOR_NOT_FOUND", 404);
             }
-            Booking booking = new Booking(user, doctor.getUser(), bookingDto.getBookedAt(), bookingDto.getBookedTime(), bookingDto.getContent(), bookingDto.getShift(), bookingDto.getConsult());
+            Booking booking = new Booking(user, doctor.getUser(), bookingDto.getBookedAt(), bookingDto.getContent(), bookingDto.getShift(), bookingDto.getConsult());
             bookingRepository.save(booking);
 
             UserProfile userProfile = userProfileRepository.findByUser(user);
@@ -83,7 +83,6 @@ public class BookingServiceImpl implements BookingService {
         bookingSearchResultDto.setSpecialist(doctorProfileRepository.findByUser(booking.getDoctor()).getSpecialist());
         bookingSearchResultDto.setWorkingAt(doctorProfileRepository.findByUser(booking.getDoctor()).getWorkingAt() == null || "exampleWorkAt".equals(doctorProfile.getWorkingAt()) ? "Child Care Center - Ho Chi Minh City" : doctorProfileRepository.findByUser(booking.getDoctor()).getWorkingAt());
         bookingSearchResultDto.setBookedAt(booking.getBookedAt().toEpochMilli());
-        bookingSearchResultDto.setBookedTime(booking.getBookedTime());
         bookingSearchResultDto.setBookedShift(booking.getShiftBooked());
         bookingSearchResultDto.setContent(booking.getContent());
         bookingSearchResultDto.setIsApproved(booking.getIsApproved() == null ? null : booking.getIsApproved());
