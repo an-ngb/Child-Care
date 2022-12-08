@@ -83,6 +83,7 @@ public class ContentController {
         return ResponseEntity.ok().body(postService.interactionCheck(id));
     }
 
+    @CrossOrigin(origins = "https://child-care.vercel.app")
     @PostMapping("/get-post-by-followed-users")
     public ResponseEntity<AbstractResponse> getPostByFollowedUsers() {
         return ResponseEntity.ok().body(postService.getPostByFollowedUsers());
