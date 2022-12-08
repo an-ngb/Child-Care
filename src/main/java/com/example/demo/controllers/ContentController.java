@@ -13,7 +13,7 @@ import java.io.IOException;
 @RestController
 @RequestMapping("/api/content")
 @RequiredArgsConstructor
-@CrossOrigin(origins = "https://child-care.vercel.app")
+@CrossOrigin
 public class ContentController {
     private final UserService userService;
     private final PostService postService;
@@ -83,7 +83,7 @@ public class ContentController {
         return ResponseEntity.ok().body(postService.interactionCheck(id));
     }
 
-    @CrossOrigin(origins = "https://child-care.vercel.app")
+
     @PostMapping("/get-post-by-followed-users")
     public ResponseEntity<AbstractResponse> getPostByFollowedUsers() {
         return ResponseEntity.ok().body(postService.getPostByFollowedUsers());
