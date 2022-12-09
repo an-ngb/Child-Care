@@ -197,7 +197,7 @@ public class UserServiceImpl implements UserService {
         List<UserProfileDto> userProfileDtos = new ArrayList<>();
         for (DoctorProfile doctorProfile : doctorProfileList) {
             UserProfileDto userProfileDto = new UserProfileDto();
-            userProfileDto.setId(doctorProfile.getId());
+            userProfileDto.setId(doctorProfile.getUser().getId());
             userProfileDto.setFullName(doctorProfile.getFullName() == null ? null : doctorProfile.getFullName());
             userProfileDto.setSpecialist(doctorProfile.getSpecialist() == null ? null : doctorProfile.getSpecialist().getSpecialistName());
             userProfileDto.setAvatar(doctorProfile.getAvatar() == null ? null : doctorProfile.getAvatar());
