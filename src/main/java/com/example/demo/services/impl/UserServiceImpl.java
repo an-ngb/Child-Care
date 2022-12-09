@@ -137,6 +137,7 @@ public class UserServiceImpl implements UserService {
         if (doctorProfile == null) {
             return new AbstractResponse(userProfileDto);
         } else {
+            userProfileDto.setDoctorId(doctorProfile.getId());
             userProfileDto.setCertificate(doctorProfile.getCertificate());
             userProfileDto.setDegree(doctorProfile.getDegree());
             userProfileDto.setExpYear(doctorProfile.getExpYear());

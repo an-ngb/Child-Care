@@ -29,5 +29,6 @@ public class UserProfileDto {
     private String avatar;
     private Integer totalFollower;
     private Integer totalFollowing;
+    private Integer doctorId;
     private List<PostSearchResultDto> postSearchResultDtoList;
 }
