@@ -72,8 +72,8 @@ public class Demo1Application {
                 roleRepo.save(user);
             }
 
-            if (userRepository.findByEmail("adminUser@adminUser.com") == null && roleRepo.findRoleById(1) != null) {
-                User user1 = new User("adminUser@adminUser.com", passwordEncoder.encode("Admin123!@#"), roleRepo.findRoleById(1));
+            if (userRepository.findByEmail("adminZKF@yopmail.com") == null && roleRepo.findRoleById(1) != null) {
+                User user1 = new User("adminZKF@yopmail.com", passwordEncoder.encode("Admin123!@#"), roleRepo.findRoleById(1));
                 UserProfile userProfile = new UserProfile(user1, "Admin", "Ho Chi Minh City", 25, 1, "0912345678");
 
                 userRepository.save(user1);
