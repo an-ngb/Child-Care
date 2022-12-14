@@ -201,8 +201,8 @@ public class UserServiceImpl implements UserService {
             userProfileDto.setId(doctorProfile.getId());
             userProfileDto.setFullName(doctorProfile.getFullName() == null ? null : doctorProfile.getFullName());
             userProfileDto.setSpecialist(doctorProfile.getSpecialist() == null ? null : doctorProfile.getSpecialist().getSpecialistName());
-            userProfileDto.setAvatar(doctorProfile.getAvatar() == null ? null : doctorProfile.getAvatar());
             userProfileDto.setWorkingAt(doctorProfile.getWorkingAt() == null || "exampleWorkAt".equals(doctorProfile.getWorkingAt()) ? "Child Care Center - Ho Chi Minh City" : doctorProfile.getWorkingAt());
+            userProfileDto.setAvatar(doctorProfile.getAvatar() == null ? null : doctorProfile.getAvatar());
             userProfileDtos.add(userProfileDto);
         }
         return new AbstractResponse(userProfileDtos);
