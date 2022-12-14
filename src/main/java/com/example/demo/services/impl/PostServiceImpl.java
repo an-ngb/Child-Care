@@ -200,7 +200,9 @@ public class PostServiceImpl implements PostService {
             postSearchResultDto.setUpdatedAt(groupPost.getUpdatedAt().toEpochMilli());
 
             if (doctorProfileRepository.findByUser(user) != null) {
-                postSearchResultDto.setIsDoctor((doctorProfileRepository.findByUser(user) != null) ? true : false);
+                postSearchResultDto.setIsDoctor(true);
+            } else {
+                postSearchResultDto.setIsDoctor(false);
             }
 
             List<Post> commentList = postRepository.findByGroupPost(groupPost);
